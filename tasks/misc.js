@@ -39,9 +39,18 @@ task.registerBasicTask('mkdirs', 'Prepares the build dirs', function(data, name)
   });
 
   files.forEach(function(f) {
+    // only relevant on windows platform, where glob-whatev seems to also return
+    // dirs, with a trailing `/`
     if(f.charAt(f.length - 1) === '/') return file.mkdir(path.resolve(dirname, f));
     file.write(path.resolve(dirname, f), file.read(f));
   });
+
+
+  // temporary posix fix on empty dirs that we know we want created
+  // to avoid a ENOTFOUND error in file.expand of rev:img
+  if(!win32) {
+    file.mkdir(path.resolve(dirname, 'img'));
+  }
 
   log.writeln('Copy done for ' + name);
 });
