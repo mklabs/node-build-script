@@ -22,7 +22,7 @@ task.registerBasicTask('usemin', 'Replaces references to non-minified scripts / 
       })[0];
 
       // guess the relative prefix path from one of the script, needs rework obviously
-      var prefix = match.match(/<script.+src=["'](.*)\/script.js["']\s*><\/script>/);
+      prefix = match.match(/<script.+src=["'](.*)\/script.js["']\s*><\/script>/);
       prefix = (prefix && prefix[1]) || '';
       return '<script defer src=":file"></script>'.replace(':file', [prefix, file].join('/'));
     });
