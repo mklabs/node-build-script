@@ -1,13 +1,9 @@
 
-var child = require('child_process'),
+var fs = require('fs'),
   path = require('path'),
-  // use the new execFile if available, otherwise just use the good ol' exec
-  exec = child.execFile || child.exec,
+  url = require('url'),
+  child = require('child_process'),
   win32 = process.platform === 'win32';
-
-//
-// ### Tasks
-//
 
 task.registerBasicTask('serve', 'Spawns up a local http server', function(data, name) {
 
@@ -26,7 +22,8 @@ task.registerBasicTask('serve', 'Spawns up a local http server', function(data, 
   // * don't use serve, but an express or connect static server, basically
   // redoing much of what serve do.
   //
-  // todo: was developped and tested on 0.6.7 posix, needs basic tests on windows
+  // todo: was developped and tested on 0.6.7 posix, needs basic tests on windows.
+  //
 
   var cmd = win32 ? '"..\\node_modules\\.bin\\serve.cmd"' : '../node_modules/.bin/serve';
 
