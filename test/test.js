@@ -25,7 +25,7 @@ vows.describe("Build Script").addBatch({
         // Oddly enough, setting up a slight setTimeout with
         // a delay obviously shorther than the build time triggers
         // the vows accordingly right after the build is done.
-        setTimeout(em.emit.bind(em, 'success'), 10);
+        setTimeout(em.emit.bind(em, 'success'), 2000);
       } catch(e) {
         em.emit('error', e);
       }
