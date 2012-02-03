@@ -144,7 +144,6 @@ The only configurable option here is the port, but other relevant config
 may be added soon (logs format, hostname, should serve dirs as well,  etc.)
 
 ### watch
-<div id="watch"></div>
 
 The watch task is a built-in grunt task and allows you to run predefined
 tasks whenever watched files change.
@@ -171,11 +170,10 @@ There is a special watch configuration for the reload task:
 Only differences is that it'll also trigger the `emit` task at the end
 of the build script (and reload your pages &#9731;)
 
-### connect (reload)
-<div id="connect"></div>
+### connect
 
-The connect (soon to be renamed into reload) is a special little utility
-task working in tandem with the watch one.
+The connect is a special little utility task working in tandem with the
+watch one.
 
 It's a slight variation of the serve command, but includes / injects
 some socket.io magic to be able to reload any opened webpage in your

@@ -12,10 +12,15 @@ var fs = require('fs'),
 // ### Tasks
 //
 
-// #### task:foo
-task.registerBasicTask('foo', 'A basic tasks that emits event over socket.io', function(data, name) {
-  var socket = config('socket');
-  socket && socket.emit('changed');
+//reload tasks, works in tandem with connect task
+task.registerTask('emit', 'A basic task that emits events over socket.io', function(data, name) {
+  var sockets = config('sockets'),
+    errors = config('errors') || [];
+
+  sockets && Object.keys(sockets).forEach(function(s) {
+    if(errors.length) return sockets[s].emit('error', errors);
+    sockets[s].emit('changed');
+  });
 });
 
 
@@ -40,7 +45,7 @@ task.registerBasicTask('foo', 'A basic tasks that emits event over socket.io', f
 //
 // todo: that tasks begins to get pretty long, might be worth moving the custom middleware, into
 // a grunt helper or a simple function defined elsewhere (probably in its own module)
-task.registerBasicTask('connect', 'Spawns up a local http server', function(data, name) {
+task.registerBasicTask('connect', 'Spawns up a local http server with socket.io enabled', function(data, name) {
 
   // path
   var dirname = path.resolve(name);
@@ -58,7 +63,22 @@ task.registerBasicTask('connect', 'Spawns up a local http server', function(data
   io.set('log level', 5);
 
   // store the socket object in grunt's config, so that we can interract from other tasks
-  io.sockets.on('connection', config.bind(config, 'socket'));
+  io.sockets.on('connection', function(socket) {
+    var sockets = config('sockets') || {};
+    // should support multiple-connections
+
+    // should also catch up client disconnection and clean
+    // the stored socket
+    socket.on('disconnect', function() {
+      if(sockets[socket.id]) delete sockets[socket.id];
+
+      // restore sockets back in config
+      config('sockets', sockets);
+    });
+
+    sockets[socket.id] = socket;
+    config('sockets',  sockets);
+  });
 
   // ignore favicon
   server.use(connect.favicon());
@@ -116,7 +136,6 @@ task.registerBasicTask('connect', 'Spawns up a local http server', function(data
           ].join('\n');
         });
 
-        res.setHeader('Content-Length', body.length);
         res.end(body);
       });
     });

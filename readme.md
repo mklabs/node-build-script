@@ -190,7 +190,8 @@ there are a few additionnal tasks to help you in the process:
   intermediate folder with different ports).
 * **connect**:  Spawns up local http sever with socket.io configured,
   it'll inject a tiny client side script + socket.io lib on `*.html`
-  response. (to be renamed into *reload*).
+  response.
+* **reload**: Alias for `connect watch:reload`.
 
 You may find a slightly more detailed documentation for each tasks in
 the [`tasks/`

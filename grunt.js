@@ -43,12 +43,12 @@ config.init({
   },
 
   watch: {
-    files: '<config:lint.build>',
-    tasks: 'lint:build',
+    files: ['js/*.js', 'css/**', '*.html'],
+    tasks: 'default',
 
     reload: {
-      files: '<config:lint.build>',
-      tasks: 'foo'
+      files: '<config:watch.files>',
+      tasks: 'default emit'
     }
   },
 
@@ -59,25 +59,21 @@ config.init({
 
   connect: {
     intermediate: {
+      hostname: 'localhost',
       port: 3000,
       logs: 'dev',
       dirs: true
     },
     publish: {
+      hostname: 'localhost',
       port: 3001,
       logs: 'default',
       dirs: true
     }
-  },
-
-  foo: {
-    bar: []
   }
-
 });
 
 // Run the following tasks...
-task.registerTask('default', 'lint:build intro clean mkdirs concat css min rev usemin manifest serve');
-task.registerTask('nolint', 'intro clean mkdirs concat css min rev usemin manifest');
+task.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
 
-task.registerTask('connect-watch', 'connect watch:reload');
+task.registerTask('reload', 'connect watch:reload');
