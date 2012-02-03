@@ -9,7 +9,7 @@ var path = require('path'),
 // ### Tasks
 //
 
-task.registerBasicTask('intro', 'Kindly inform the developer about the impending magic', function(data, name) {
+task.registerTask('intro', 'Kindly inform the developer about the impending magic', function(data, name) {
 
   var output = [
     "=====================================================================",

@@ -5,12 +5,6 @@
 
 config.init({
 
-  pkg: '<json:package.json>',
-
-  intro: {
-    pkg: '<config:pkg>'
-  },
-
   clean: '<config:mkdirs>',
 
   mkdirs: {
@@ -19,7 +13,6 @@ config.init({
   },
 
   concat: {
-    'intermediate/js/libs.js': [ 'js/mylibs/*' ],
     'intermediate/js/scripts.js': [ 'js/plugins.js', 'js/script.js' ],
     'intermediate/css/style.css': [ 'css/*.css' ]
   },
@@ -29,7 +22,6 @@ config.init({
   },
 
   min: {
-    'publish/js/libs.js': [ 'intermediate/js/libs.js' ],
     'publish/js/scripts.js': [ 'intermediate/js/scripts.js' ]
   },
 
@@ -47,7 +39,7 @@ config.init({
 
   lint: {
     files: ['js/*.js'],
-    build: ['grunt.js', 'build/tasks/*.js']
+    build: ['grunt.js', 'tasks/*.js']
   },
 
   watch: {
