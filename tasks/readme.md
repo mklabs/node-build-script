@@ -1,9 +1,9 @@
-H5BP Build Script: A node-based website optimization system
-===========================================================
 
 The h5bp build script based on ant has been ported to use node as a build tool.
 
-There was a first attempt using cake and coffeescript to do that. This port has been itself ported to use grunt instead. Here we'll go through grunt usage and the h5bp build script documentation based on it.
+There was a first attempt using cake and coffeescript to do that. This
+port has been itself ported to use grunt instead. Here we'll go through
+grunt usage and the h5bp build script documentation based on it.
 
 ## Features
 
@@ -41,15 +41,9 @@ Clone or download this repo. Then, `cd` into it and run the `npm
 install` command.
 
     # will most likely change to map the new location / repo / branch
-    git clone git://github.com/mklabs/html5-boilerplate.git
-
-    cd html5-boilerplate/
-
-    # additionnal checkout to the correct branch step
-    git checkout -b gruntify origin/gruntify
+    git clone git://github.com/h5bp/node-build-script.git
 
     # install the dependencies
-
     # locally to play with it from the repo
     npm install
 
@@ -62,12 +56,12 @@ Note that all of these can be shorten to one single command, very much
 like if it was published on npm. Append a `-g` flag if you'd like to
 install globally and have the h5bp binary installed.
 
-    npm install https://github.com/mklabs/html5-boilerplate/tarball/gruntify
+    npm install https://github.com/h5bp/node-build-script/tarball/master
 
-Proxies don't like redirections, if you get problem if this command, try
+Proxies don't like redirections, if you get problem with this command, try
 this instead:
 
-    npm install http://nodeload.github.com/mklabs/html5-boilerplate/tarball/gruntify
+    npm install http://nodeload.github.com/h5bp/node-build-script/tarball/master
 
 ### Download the build script with all dependencies built-in
 
@@ -204,8 +198,6 @@ For what it's worth, here's the basic current configuration for the build script
     //
     config.init({
 
-      pkg: '<json:package.json>',
-
       intro: {
         pkg: '<config:pkg>'
       },
@@ -218,7 +210,6 @@ For what it's worth, here's the basic current configuration for the build script
       },
 
       concat: {
-        'intermediate/js/libs.js': [ 'js/mylibs/*' ],
         'intermediate/js/scripts.js': [ 'js/plugins.js', 'js/script.js' ],
         'intermediate/css/style.css': [ 'css/*.css' ]
       },
@@ -228,7 +219,6 @@ For what it's worth, here's the basic current configuration for the build script
       },
 
       min: {
-        'publish/js/libs.js': [ 'intermediate/js/libs.js' ],
         'publish/js/scripts.js': [ 'intermediate/js/scripts.js' ]
       },
 
@@ -346,7 +336,6 @@ Concat is a built-in grunt task and allows you to easily concatenate a
 list of files.
 
       concat: {
-        'intermediate/js/libs.js': [ 'js/mylibs/*' ],
         'intermediate/js/scripts.js': [ 'js/plugins.js', 'js/script.js' ],
         'intermediate/css/style.css': [ 'css/*.css' ]
       },
@@ -390,7 +379,6 @@ Min is another built-in grunt task that allows you to easily compress
 JavaScript files through [UglifyJS][uglify].
 
     min: {
-      'publish/js/libs.js': [ 'intermediate/js/libs.js' ],
       'publish/js/scripts.js': [ 'intermediate/js/scripts.js' ]
     },
 
@@ -419,8 +407,8 @@ change.
 
 #### usemin
 
-Usemin is probably the trickiest one. It'll replace reference to non
-minified scripts / stylesheets to their optimized / versioned
+Usemin task is probably the trickiest one. It'll replace references to
+non minified scripts / stylesheets to their optimized / versioned
 equivalent.
 
     usemin: {
