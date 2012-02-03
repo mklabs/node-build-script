@@ -16,15 +16,15 @@ vows.describe("Build Script").addBatch({
       // Unfortunately, there seems to have no way to passin a callback
       // to be fired on build completion, so we're relying on a setTimeout
       // to do that, but that's not ideal.
+      //
       // todo: investigate further
+
       try {
         grunt.tasks(['nolint'], {
-          tasks: [path.join(__dirname, '../tasks')]
+          tasks: [path.join(__dirname, '../tasks')],
+          base: path.join(__dirname, 'fixtures')
         });
 
-        // Oddly enough, setting up a slight setTimeout with
-        // a delay obviously shorther than the build time triggers
-        // the vows accordingly right after the build is done.
         setTimeout(em.emit.bind(em, 'success'), 2000);
       } catch(e) {
         em.emit('error', e);

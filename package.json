@@ -21,6 +21,8 @@
     "vows": "~0.6.1"
   },
   "scripts": {
-    "test": "node node_modules/vows/bin/vows test/test.js --spec"
+    "pretest": "node test/helpers/pretest.js",
+    "test": "node node_modules/vows/bin/vows test/test.js --spec",
+    "posttest": "node test/helpers/posttest.js"
   }
 }
