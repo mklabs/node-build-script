@@ -1,0 +1,26 @@
+{
+  "author": "Paul Irish, Divya Manian",
+  "name": "html5-boilerplate",
+  "description": "Professional front-end template. So much goodness baked in by default",
+  "version": "0.0.0",
+  "homepage": "http://h5bp.com",
+  "bin": {
+    "html5-boilerplate": "./bin/h5bp",
+    "h5bp": "./bin/h5bp"
+  },
+  "dependencies": {
+    "clean-css": "~0.3.1",
+    "minimatch": "~0.1.3",
+    "rimraf": "~1.0.9",
+    "grunt": "~0.1.0",
+    "serve": "~1.0.2",
+    "connect": "~1.8.5",
+    "socket.io": "~0.8.7"
+  },
+  "devDependencies": {
+    "vows": "~0.6.1"
+  },
+  "scripts": {
+    "test": "node node_modules/vows/bin/vows test/test.js --spec"
+  }
+}
