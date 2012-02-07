@@ -1,8 +1,7 @@
 var vows = require('vows'),
   path = require('path'),
   assert = require('assert'),
-  grunt = require('grunt'),
-  EventEmitter = require('events').EventEmitter;
+  helpers = require('./helpers');
 
 // todo:
 //
@@ -11,27 +10,7 @@ var vows = require('vows'),
 
 vows.describe("Build Script").addBatch({
   "Running the default task": {
-    topic: function() {
-      var em = new EventEmitter;
-      // Unfortunately, there seems to have no way to passin a callback
-      // to be fired on build completion, so we're relying on a setTimeout
-      // to do that, but that's not ideal.
-      //
-      // todo: investigate further
-
-      try {
-        grunt.tasks(['nolint'], {
-          tasks: [path.join(__dirname, '../tasks')],
-          base: path.join(__dirname, 'fixtures')
-        });
-
-        setTimeout(em.emit.bind(em, 'success'), 2000);
-      } catch(e) {
-        em.emit('error', e);
-      }
-
-      return em;
-    },
+    topic: helpers.task('default'),
 
     "should produce the correct file structure": function (e) {
       assert.ifError(e);
@@ -52,3 +31,4 @@ vows.describe("Build Script").addBatch({
     }
   }
 }).export(module);
+
