@@ -18,7 +18,8 @@
     "socket.io": "~0.8.7"
   },
   "devDependencies": {
-    "vows": "~0.6.1"
+    "vows": "~0.6.1",
+    "nopt": "~1.0.10"
   },
   "scripts": {
     "pretest": "node test/helpers/pretest.js",
