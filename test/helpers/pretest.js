@@ -1,6 +1,11 @@
 
+// todo: rewrite this file. Relying on git is ok, until testing out on a system without
+// git.. This pretest script should download the latest targz from master repo and untar
+// at the appropriate location.
+
 var child = require('child_process'),
-  path = require('path');
+  path = require('path'),
+  ncp = require('ncp').ncp;
 
 // npm pretest script
 
@@ -14,16 +19,28 @@ var child = require('child_process'),
 
 var repo = 'https://github.com/h5bp/html5-boilerplate.git',
   basedir = path.resolve('test'),
-  cloned = path.existsSync(path.join(basedir, 'fixtures'));
+  cloned = path.existsSync(path.join(basedir, 'fixtures/h5bp'));
 
 
 // Clone or pull first
-var cmd = cloned ? ['pull'] : ['clone', repo, 'fixtures/'];
+var cmd = cloned ? ['pull'] : ['clone', repo, 'fixtures/h5bp'];
 
 console.log((cloned ? 'Pulling' : 'Cloning') + ' ' + repo);
-
-spawn('git', cmd, { cwd: cloned ? path.join(basedir, 'fixtures') : basedir }, function(code) {
+spawn('git', cmd, { cwd: cloned ? path.join(basedir, 'fixtures/h5bp') : basedir }, function(code) {
   if(code) throw new Error('Got errors with git ' + cmd);
+
+  // Do some editions on h5bp repo's file, mainly to test some advanced optimization like
+  // css improrts inline etc.
+
+  // Grab the base jQuery UI CSS Theme, does have a good test case for the css import
+  // inline, on several levels
+
+  // now done by coping local files in the repo
+  ncp('test/fixtures/themes', 'test/fixtures/h5bp/css', function(e) {
+    if(e) throw e;
+    console.log('All ok');
+  });
+
 });
 
 

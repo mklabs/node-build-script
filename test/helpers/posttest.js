@@ -11,4 +11,4 @@ var rimraf = require('rimraf');
 
 console.log('Cleaning out the intermediate / publish directories created');
 
-['test/fixtures/intermediate', 'test/fixtures/publish'].forEach(rimraf.sync);
+['test/fixtures/h5bp/intermediate', 'test/fixtures/h5bp/publish'].forEach(rimraf.sync);

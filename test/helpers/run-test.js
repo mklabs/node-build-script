@@ -23,7 +23,7 @@ if(!tests.length) return console.log('Nothing to run...');
 spawn('node', ['node_modules/vows/bin/vows'].concat(tests), function(code) {
   if(code) throw new Error('Exiting code different than 0');
   // trigger the postinstall script
-  if(!opts.keep) ['test/fixtures/intermediate', 'test/fixtures/publish'].forEach(rimraf.sync);
+  if(!opts.keep) ['test/fixtures/h5bp/intermediate', 'test/fixtures/h5bp/publish'].forEach(rimraf.sync);
 });
 
 // little spawn helper, piping out the child standard output / error

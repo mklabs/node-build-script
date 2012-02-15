@@ -19,7 +19,8 @@
   },
   "devDependencies": {
     "vows": "~0.6.1",
-    "nopt": "~1.0.10"
+    "nopt": "~1.0.10",
+    "ncp": "~0.2.4"
   },
   "scripts": {
     "pretest": "node test/helpers/pretest.js",
