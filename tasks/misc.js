@@ -28,7 +28,7 @@ task.registerTask('intro', 'Kindly inform the developer about the impending magi
 
 
 task.registerBasicTask('mkdirs', 'Prepares the build dirs', function(data, name) {
-  var dirname = path.resolve(name);
+  var dirname = path.resolve(config(name));
   file.mkdir(dirname);
 
   var files = file.expand(['**']).filter(function(f) {
@@ -55,15 +55,9 @@ task.registerBasicTask('mkdirs', 'Prepares the build dirs', function(data, name)
   log.writeln('Copy done for ' + name);
 });
 
-task.registerBasicTask('clean', 'Wipe the previous build dirs', function(data, name) {
-  var cb = this.async(),
-    dirname = path.resolve(name);
-
-  task.helper('clean', dirname, function(err) {
-    if(err) return fail.warn(err.message, err.errno || 3);
-    cb();
-  });
-
+task.registerTask('clean', 'Wipe the previous build dirs', function() {
+  var dirs = [config('staging'), config('output')];
+  dirs.forEach(task._helpers.clean);
 });
 
 
@@ -73,14 +67,12 @@ task.registerBasicTask('manifest', 'Generates manifest files automatically from 
 });
 
 
-
-
 //
 // ### Helpers
 //
 
 task.registerHelper('clean', function(dir, cb) {
-  if(!cb) return rimraf.sync(dir);
+  if(typeof cb !== 'function') return rimraf.sync(dir);
   rimraf(dir, cb);
 });
 

@@ -1,15 +1,25 @@
 // This is the main html5-boilerplate build configuration file.
 //
+// Builds depends on two specific directory created during the process
+// `intermediate/` and `publish/`, the first is used as a staging area, the
+// second is the final result of the build that was run.
 //
-//    task.registerTask('default', 'intro clean mkdirs usemin concat min css manifest copy');
+// These two values may be changed to something else with the `staging` and
+// `output` config property below, and by changing any task config to match the new value.
+//
 
 config.init({
+  // the staging directory used during the process
+  staging: 'intermediate/',
+  // final build output
+  output: 'publish/',
 
-  clean: '<config:mkdirs>',
+  // mkdirs task - filter any files matching one of the below pattern
+  exclude: 'build/** node_modules/** intermediate/** publish/** grunt.js package.json *.md'.split(' '),
 
   mkdirs: {
-    intermediate: 'build/** node_modules/** intermediate/** publish/** grunt.js package.json *.md'.split(' '),
-    publish: 'build/** node_modules/** intermediate/** publish/** grunt.js package.json *.md'.split(' ')
+    staging: '<config:exclude>',
+    output: '<config:exclude>'
   },
 
   concat: {

@@ -10,7 +10,7 @@ var vows = require('vows'),
 
 vows.describe("Build Script").addBatch({
   "Running the mkdirs task": {
-    topic: helpers.task('mkdirs'),
+    topic: helpers.task('clean mkdirs'),
 
     "should produce the correct file structure": function (e) {
       assert.ifError(e);
