@@ -5,6 +5,7 @@
 
 var child = require('child_process'),
   path = require('path'),
+  rimraf = require('rimraf'),
   ncp = require('ncp').ncp;
 
 // npm pretest script
@@ -17,7 +18,7 @@ var child = require('child_process'),
 // if already there) the main html5-boilerplate repo.
 //
 
-var repo = 'https://github.com/h5bp/html5-boilerplate.git',
+var repo = 'git://github.com/h5bp/html5-boilerplate.git',
   basedir = path.resolve('test'),
   cloned = path.existsSync(path.join(basedir, 'fixtures/h5bp'));
 
@@ -29,6 +30,8 @@ console.log((cloned ? 'Pulling' : 'Cloning') + ' ' + repo);
 spawn('git', cmd, { cwd: cloned ? path.join(basedir, 'fixtures/h5bp') : basedir }, function(code) {
   if(code) throw new Error('Got errors with git ' + cmd);
 
+  console.log('Git clone / pull ok');
+
   // Do some editions on h5bp repo's file, mainly to test some advanced optimization like
   // css improrts inline etc.
 
@@ -36,6 +39,8 @@ spawn('git', cmd, { cwd: cloned ? path.join(basedir, 'fixtures/h5bp') : basedir 
   // inline, on several levels
 
   // now done by coping local files in the repo
+  console.log('Copying over jqueryui base theme into css folder.');
+  rimraf.sync('test/fixtures/h5bp/css/base');
   ncp('test/fixtures/themes', 'test/fixtures/h5bp/css', function(e) {
     if(e) throw e;
     console.log('All ok');
