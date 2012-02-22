@@ -8,23 +8,12 @@ var vows = require('vows'),
   fs = require('fs'),
   helpers = require('./helpers');
 
-var filepath = 'publish/css/style.css',
+var filepath = 'production/css/css/style.css',
   orgfilepath = 'css/style.css';
 
-var conf = {
-  mkdirs: {
-    intermediate: 'build/** node_modules/** intermediate/** publish/** grunt.js package.json *.md'.split(' '),
-    publish: 'build/** node_modules/** intermediate/** publish/** grunt.js package.json *.md'.split(' ')
-  },
-  css: {
-    'publish/css/style.css': [ 'css/style.css' ],
-    'publish/css/jquery.ui.all.css': [ 'css/base/jquery.ui.all.css' ]
-  }
-};
-
-vows.describe("Build Script").addBatch({
+vows.describe("Build Script:css task").addBatch({
   "Running the css task": {
-    topic: helpers.task('mkdirs css', conf),
+    topic: helpers.task('mkdirs css', 'test/fixtures/grunt.css.js'),
 
     "should css generated be at the correct location": function (e) {
       assert.ifError(e);
@@ -34,7 +23,7 @@ vows.describe("Build Script").addBatch({
     "should have css import inlined": function (e) {
       assert.ifError(e);
 
-      var jqueryui = 'publish/css/jquery.ui.all.css',
+      var jqueryui = 'production/css/css/jquery.ui.all.css',
         content = fs.readFileSync(jqueryui, 'utf8');
 
       assert.ok(path.existsSync(filepath), 'Should css/jquery.ui.all.css be there');

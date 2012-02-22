@@ -52,7 +52,7 @@ task.registerBasicTask('mkdirs', 'Prepares the build dirs', function(data, name)
     file.mkdir(path.resolve(dirname, 'img'));
   }
 
-  log.writeln('Copy done for ' + name);
+  log.writeln('Copy done for ' + dirname);
 });
 
 task.registerTask('clean', 'Wipe the previous build dirs', function() {

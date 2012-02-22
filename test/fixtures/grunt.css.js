@@ -14,9 +14,9 @@ var path = require('path');
 
 config.init({
   // the staging directory used during the process
-  staging: 'staging/alternate',
+  staging: 'staging/css',
   // final build output
-  output: 'production/alternate',
+  output: 'production/css',
 
   // filter any files matching one of the below pattern during mkdirs task
   exclude: 'build/** node_modules/** intermediate/** publish/** grunt.js package.json *.md'.split(' '),
@@ -36,7 +36,8 @@ config.init({
   // css task - optimized files is generated into `output/subprop.css`
   // (eg. publish/css/style.css)
   css: {
-    'css/style.css': [ 'css/style.css' ]
+    'css/style.css': [ 'css/style.css' ],
+    'css/jquery.ui.all.css': [ 'css/base/jquery.ui.all.css' ]
   },
 
   // min task - like the css task, minified files are generated into

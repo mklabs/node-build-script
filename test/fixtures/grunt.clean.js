@@ -14,9 +14,9 @@ var path = require('path');
 
 config.init({
   // the staging directory used during the process
-  staging: 'staging/alternate',
+  staging: 'staging/clean',
   // final build output
-  output: 'production/alternate',
+  output: 'production/clean',
 
   // filter any files matching one of the below pattern during mkdirs task
   exclude: 'build/** node_modules/** intermediate/** publish/** grunt.js package.json *.md'.split(' '),

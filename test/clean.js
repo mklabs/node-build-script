@@ -8,9 +8,9 @@ var vows = require('vows'),
 // * complete these tests, should test each task independently
 // * should test generated files against fixtures
 
-vows.describe("Build Script").addBatch({
+vows.describe("Build Script:clean").addBatch({
   "Running the clean task": {
-    topic: helpers.task('mkdirs clean'),
+    topic: helpers.task('mkdirs clean', 'test/fixtures/grunt.clean.js'),
 
     "should remove the staging and output dirs": function (e) {
       assert.ifError(e);

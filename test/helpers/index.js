@@ -12,10 +12,10 @@ helpers.task = function task(t, config) {
       JSON.stringify(config, null , 2),
       ');'
     ].join('\n');
-    fs.writeFileSync(path.join(__dirname, '../fixtures/h5bp/grunt.js'), config);
   }
 
   return function() {
+    if(config) fs.writeFileSync(path.join(__dirname, '../fixtures/h5bp/grunt.js'), config);
     var em = new EventEmitter;
     grunt.tasks([t || 'default'], {
       config: config ? path.join(__dirname, '../fixtures/h5bp/grunt.js') : 'grunt.js',
