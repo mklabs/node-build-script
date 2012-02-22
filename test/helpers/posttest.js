@@ -1,5 +1,6 @@
 
-var rimraf = require('rimraf');
+var path = require('path'),
+  rimraf = require('rimraf');
 
 // npm posttest script
 
@@ -9,6 +10,8 @@ var rimraf = require('rimraf');
 // Even though the clean task handle this, I'd rather clean out the fixtures //
 // directory / upstream html5-boilerplate repo.
 
-console.log('Cleaning out the intermediate / publish directories created');
+console.log('Cleaning out the directories created');
 
-['test/fixtures/h5bp/intermediate', 'test/fixtures/h5bp/publish'].forEach(rimraf.sync);
+['intermediate', 'publish', 'staging', 'production'].map(function(dir) {
+  return path.resolve('test/fixtures/h5bp', dir);
+}).forEach(rimraf.sync);
