@@ -26,13 +26,13 @@ config.init({
   },
 
   rev: {
-    js: ['publish/js/*.js'],
+    js: ['publish/js/**/*.js'],
     css: ['publish/css/*.css'],
     img: ['publish/img/*']
   },
 
   usemin: {
-    files: ['publish/*.html']
+    files: ['publish/**/*.html']
   },
 
   manifest: '<config:usemin>',
@@ -43,7 +43,7 @@ config.init({
   },
 
   watch: {
-    files: ['js/*.js', 'css/**', '*.html'],
+    files: ['js/**/*.js', 'css/**', '*.html'],
     tasks: 'default',
 
     reload: {
@@ -76,4 +76,4 @@ config.init({
 // Run the following tasks...
 task.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
 
-task.registerTask('reload', 'connect watch:reload');
+task.registerTask('reload', 'default connect watch:reload');
