@@ -38,7 +38,7 @@ task.registerBasicTask('usemin', 'Replaces references to non-minified scripts / 
     });
 
     log.writeln('Update the HTML with the new img filename');
-    content = content.replace(/<img.+src=['"](.+)\/([^\/]+)["'][^>]*>/, function(match, prefix, src) {
+    content = content.replace(/<img.+src=['"](.+)\/([^\/"']+)["'][\/>]?>/, function(match, prefix, src) {
       // same here
       var file = fs.readdirSync(path.resolve('publish/img')).filter(function(f) {
         return path.basename(f).split('.').slice(1).join('.') === src;
