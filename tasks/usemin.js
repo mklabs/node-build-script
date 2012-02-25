@@ -34,7 +34,8 @@ task.registerBasicTask('usemin', 'Replaces references to non-minified scripts / 
       //do not touch external files
       if(prefix.match(/\/\//)) return match;
 
-      var filename = (file.expand(path.join(config('output'), '**/*') + src)[0] || '')
+      var filename = path.basename((file.expand(path.join(config('output'), '**/*') + src)[0] || ''));
+      prefix = path.join(prefix, filename);
 
       // replace the output dir prefix
       filename = filename.replace(config('output'), '');
