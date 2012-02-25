@@ -29,21 +29,18 @@ task.registerBasicTask('usemin', 'Replaces references to non-minified scripts / 
     log.subhead(p);
     log.writeln('switch from a regular jquery to minified');
 
-
     log.writeln('Update the HTML to reference our concat/min/revved script files');
     content = content.replace(/<script.+src=['"](.+)\/([^\/"']+)["'][\/>]?><\/script>/mg, function(match, prefix, src) {
+      //do not touch external files
+      if(prefix.match(/\/\//)) return match;
 
-      if(prefix.match(/\/\//)){
-        //do not touch external files
-        return match;
-      }
-      var fileName = file.expand(path.join(jsdir, '**/*') + src)[0];
-      if(fileName){
-        fileName = fileName.replace(config('output'), '');
-      return '<script defer src=":file"></script>'.replace(':file', fileName);
-      }
-      //if file not exists probaly was concatenated into another file so skip it
-      return '';
+      var filename = (file.expand(path.join(config('output'), '**/*') + src)[0] || '')
+
+      // replace the output dir prefix
+      filename = filename.replace(config('output'), '');
+
+      // if file not exists probaly was concatenated into another file so skip it
+      return filename ? '<script defer src=":file"></script>'.replace(':file', filename) : ''
     });
 
     log.writeln('Update the HTML with the new css filename');
