@@ -47,7 +47,7 @@ function runAll() {
     var file = path.join('test', test);
 
 
-    spawn('node', ['node_modules/vows/bin/vows', file], function(code, stdout, stderr) {
+    spawn('node', ['node_modules/vows/bin/vows', file, '--spec', '--isolate'], function(code, stdout, stderr) {
       if(code) failed.push({ code: code, stdout: stdout, stderr: stderr });
       run(tests);
     });

@@ -10,7 +10,7 @@ var vows = require('vows'),
 
 vows.describe("Build Script").addBatch({
   "Running the default task": {
-    topic: helpers.task('default'),
+    topic: helpers.task('default', 'test/fixtures/grunt.js'),
 
     "should produce the correct file structure": function (e) {
       assert.ifError(e);
