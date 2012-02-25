@@ -49,21 +49,21 @@ config.init({
   // rev task - File patterns in suprops values are resolved with `output` value
   // (eg. publish/js/*.js)
   rev: {
-    js: ['js/*.js'],
-    css: ['css/*.css'],
-    img: ['img/*']
+    js: ['js/**/*.js'],
+    css: ['css/**/*.css'],
+    img: ['img/**']
   },
 
   // rev task - File pattern in suprops values are resolved with `output` value
   // (eg. publish/*.html)
   usemin: {
-    files: ['*.html']
+    files: ['**/*.html']
   },
 
   manifest: '<config:usemin>',
 
   watch: {
-    files: ['js/*.js', 'css/**', '*.html'],
+    files: ['js/**/*.js', 'css/**', '*.html'],
     tasks: 'default',
 
     reload: {
@@ -101,7 +101,7 @@ config.init({
 
 // Run the following tasks...
 task.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
-task.registerTask('reload', 'connect watch:reload');
+task.registerTask('reload', 'default connect watch:reload');
 
 // Advanced configuration, doing the necessary logic to map any task needed
 // values to top level staging / output dir
@@ -169,4 +169,3 @@ Object.keys(connect).forEach(function(key) {
   connect[config(key)] = connect[key];
   delete connect[key];
 });
-

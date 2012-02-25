@@ -30,17 +30,20 @@ task.registerBasicTask('usemin', 'Replaces references to non-minified scripts / 
     log.writeln('switch from a regular jquery to minified');
 
 
-    log.writeln('Update the HTML to reference our concat/min/revved script file');
-    content = content.replace(/<!--\s*scripts concatenated[\d\w\s\W\n]*<!--\s*end scripts\s*-->/gm, function(match, prefix) {
-      // hmm not that configurable, think of another way, but that'll be good for now
-      var file = fs.readdirSync(jsdir).filter(function(f) {
-        return path.basename(f).split('.').slice(1).join('.') === 'scripts.js';
-      })[0];
+    log.writeln('Update the HTML to reference our concat/min/revved script files');
+    content = content.replace(/<script.+src=['"](.+)\/([^\/"']+)["'][\/>]?><\/script>/mg, function(match, prefix, src) {
 
-      // guess the relative prefix path from one of the script, needs rework obviously
-      prefix = match.match(/<script.+src=["'](.*)\/script.js["']\s*><\/script>/);
-      prefix = (prefix && prefix[1]) || '';
-      return '<script defer src=":file"></script>'.replace(':file', [prefix, file].join('/'));
+      if(prefix.match(/\/\//)){
+        //do not touch external files
+        return match;
+      }
+      var fileName = file.expand(path.join(jsdir, '**/*') + src)[0];
+      if(fileName){
+        fileName = fileName.replace(config('output'), '');
+      return '<script defer src=":file"></script>'.replace(':file', fileName);
+      }
+      //if file not exists probaly was concatenated into another file so skip it
+      return '';
     });
 
     log.writeln('Update the HTML with the new css filename');
@@ -54,7 +57,7 @@ task.registerBasicTask('usemin', 'Replaces references to non-minified scripts / 
     });
 
     log.writeln('Update the HTML with the new img filename');
-    content = content.replace(/<img.+src=['"](.+)\/([^\/]+)["'][^>]*>/, function(match, prefix, src) {
+    content = content.replace(/<img.+src=['"](.+)\/([^\/"']+)["'][\/>]?>/, function(match, prefix, src) {
       // same here
       var file = fs.readdirSync(imgdir).filter(function(f) {
         return path.basename(f).split('.').slice(1).join('.') === src;
