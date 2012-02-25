@@ -30,38 +30,54 @@ task.registerBasicTask('usemin', 'Replaces references to non-minified scripts / 
     log.writeln('switch from a regular jquery to minified');
 
     log.writeln('Update the HTML to reference our concat/min/revved script files');
-    content = content.replace(/<script.+src=['"](.+)\/([^\/"']+)["'][\/>]?><\/script>/mg, function(match, prefix, src) {
+    content = content.replace(/<script.+src=['"](.+)\/([^\/"']+)["'][\/>]?><\/script>/gm, function(match, prefix, src) {
       //do not touch external files
       if(prefix.match(/\/\//)) return match;
 
       var filename = path.basename((file.expand(path.join(config('output'), '**/*') + src)[0] || ''));
-      prefix = path.join(prefix, filename);
 
       // replace the output dir prefix
       filename = filename.replace(config('output'), '');
 
+      // handle the relative prefix (with always unix like path even on win32)
+      filename = [prefix, filename].join('/');
+
       // if file not exists probaly was concatenated into another file so skip it
-      return filename ? '<script defer src=":file"></script>'.replace(':file', filename) : ''
+      return filename ? '<script defer src=":file"></script>'.replace(':file', filename) : '';
     });
 
     log.writeln('Update the HTML with the new css filename');
-    content = content.replace(/<link rel=["']?stylesheet["']?\shref=["']?(.*)\/style.css["']?\s*>/gm, function(match, prefix) {
-      // same here
-      var file = fs.readdirSync(cssdir).filter(function(f) {
-        return path.basename(f).split('.').slice(1).join('.') === 'style.css';
-      })[0];
+    content = content.replace(/<link rel=["']?stylesheet["']?\shref=['"](.+)\/([^\/"']+)["']\s*>/gm, function(match, prefix, src) {
+      //do not touch external files
+      if(prefix.match(/\/\//)) return match;
 
-      return '<link rel="stylesheet" href=":file">'.replace(':file', [prefix, file].join('/'));
+      var filename = path.basename((file.expand(path.join(config('output'), '**/*') + src)[0] || ''));
+
+      // replace the output dir prefix
+      filename = filename.replace(config('output'), '');
+
+      // handle the relative prefix
+      filename = [prefix, filename].join('/');
+
+      // if file not exists probaly was concatenated into another file so skip it
+      return filename ? '<link rel="stylesheet" href=":file">'.replace(':file', filename) : '';
     });
 
     log.writeln('Update the HTML with the new img filename');
     content = content.replace(/<img.+src=['"](.+)\/([^\/"']+)["'][\/>]?>/, function(match, prefix, src) {
-      // same here
-      var file = fs.readdirSync(imgdir).filter(function(f) {
-        return path.basename(f).split('.').slice(1).join('.') === src;
-      })[0];
+      //do not touch external files
+      if(prefix.match(/\/\//)) return match;
 
-      return '<img src=":src">'.replace(':src', [prefix, file].join('/'));
+      var filename = path.basename((file.expand(path.join(config('output'), '**/*') + src)[0] || ''));
+
+      // replace the output dir prefix
+      filename = filename.replace(config('output'), '');
+
+      // handle the relative prefix
+      filename = [prefix, filename].join('/');
+
+      // if file not exists probaly, just leave off the actual content
+      return filename ? '<img src=":src">'.replace(':src', filename) : match;
     });
 
     // write the new content to disk
