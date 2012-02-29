@@ -30,20 +30,22 @@ task.registerBasicTask('usemin', 'Replaces references to non-minified scripts / 
     log.writeln('switch from a regular jquery to minified');
 
     log.writeln('Update the HTML to reference our concat/min/revved script files');
-    content = content.replace(/<script.+src=['"](.+)\/([^\/"']+)["'][\/>]?><\/script>/gm, function(match, prefix, src) {
+    content = content.replace(/<script.+src=['"](.+)["'][\/>]?><[\\]?\/script>/gm, function(match, src) {
       //do not touch external files
-      if(prefix.match(/\/\//)) return match;
+      if(src.match(/\/\//)) return match;
+      var basename = path.basename(src);
+      var dirname = path.dirname(src);
 
-      var filename = path.basename((file.expand(path.join(config('output'), '**/*') + src)[0] || ''));
+      var filename = path.basename((file.expand(path.join(config('output'), '**/*') + basename)[0] || ''));
 
       // replace the output dir prefix
       filename = filename.replace(config('output'), '');
 
       // handle the relative prefix (with always unix like path even on win32)
-      filename = [prefix, filename].join('/');
+      filename = [dirname, filename].join('/');
 
       // if file not exists probaly was concatenated into another file so skip it
-      return filename ? '<script defer src=":file"></script>'.replace(':file', filename) : '';
+      return filename ? match.replace(src, filename) : '';
     });
 
     log.writeln('Update the HTML with the new css filename');
