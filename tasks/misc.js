@@ -5,6 +5,7 @@ var path = require('path'),
   win32 = process.platform === 'win32',
   crlf = win32 ? '\r\n' : '\n';
 
+
 //
 // ### Tasks
 //
@@ -38,11 +39,12 @@ task.registerBasicTask('mkdirs', 'Prepares the build dirs', function(data, name)
     }, true);
   });
 
-  files.forEach(function(f) {
+  files.forEach(function(src) {
+    var dst = path.resolve(dirname, src);
     // only relevant on windows platform, where glob-whatev seems to also return
     // dirs, with a trailing `/`
-    if(f.charAt(f.length - 1) === '/') return file.mkdir(path.resolve(dirname, f));
-    file.write(path.resolve(dirname, f), file.read(f));
+    if(src.charAt(src.length - 1) === '/') return file.mkdir(dst);
+    fs.writeFileSync(dst, fs.readFileSync(src));
   });
 
 
