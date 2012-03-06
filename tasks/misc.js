@@ -3,6 +3,7 @@ var path = require('path'),
   minimatch = require('minimatch'),
   rimraf = require("rimraf"),
   win32 = process.platform === 'win32',
+  fs = require('fs'),
   crlf = win32 ? '\r\n' : '\n';
 
 
