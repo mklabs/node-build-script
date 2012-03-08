@@ -15,7 +15,8 @@ Does the following things (not necessarily in the same order):
 * Renames JS/CSS to prepend a hash of their contents for easier versioning
 * Does the necessary regex replacements in html files and templates
 * Retriggers the build script on file changes (watch mode &#10084;)
-* Automatically reload the page in your browsers whenever watched files change, through some socket.io magic.
+* Automatically reload the page in your browsers whenever watched files
+  change, through some socket.io magic.
 
 ## Requirements
 
@@ -28,7 +29,7 @@ You should be able to use it on:
 
 * OSX
 * Unix
-* Windows (watched files need further work, but we'll get there)
+* Windows
 
 ## Install instructions
 
@@ -81,6 +82,8 @@ following command:
 
     npm uninstall html5-boilerplate -g
 
+So sad to see you go ☹
+
 ## Usage
 
 Once installed and everything setup, you'll be able to run the following
@@ -102,6 +105,9 @@ It'll create two build folders:
   with revved assets, concat'd / minified scripts and stylesheets, and
   html files and templates with references replaced.
 
+This two directories may be setup using `grunt.js` staging and
+production config values.
+
 If you'd like to trigger the build script in watch mode, you may want to
 run this command instead:
 
@@ -113,8 +119,8 @@ change.
 
 The reload task is a slight variation of the watch task. It'll spawns up
 a local http server, watch for file changes, rerun the default task and
-emit back to any connected clients an event which triggers a full page
-reload.
+emit back to any connected clients an event that will trigger a full
+page reload.
 
     h5bp reload
 
@@ -144,9 +150,7 @@ Build scripts based on grunt are configured through a file usually named
 
 This is used to setup the configuration for each defined tasks (built-in
 or custom). More information may be found in [grunt's
-readme](https://github.com/cowboy/grunt/blob/master/README.md), pretty
-cool stuff can be used in there, namely
-[directives](https://github.com/cowboy/grunt/blob/master/README.md#directives).
+readme](https://github.com/cowboy/grunt#readme).
 
 Here is a small snippet of grunt's readme related to project configuration.
 
@@ -167,7 +171,7 @@ Here is a small snippet of grunt's readme related to project configuration.
     });
 
 Be sure to check out [grunt's
-readme](https://github.com/cowboy/grunt/blob/master/README.md) for more
+documentation](https://github.com/cowboy/grunt/blob/master/docs/toc.md#readme) for more
 informations.
 
 ### Tasks
@@ -196,43 +200,4 @@ there are a few additionnal tasks to help you in the process:
 You may find a slightly more detailed documentation for each tasks in
 the [`tasks/`
 directory](https://github.com/h5bp/node-build-script/tree/master/tasks#readme).
-
-##### Notes
-
-Following are rough notes and may be layout in gh issues as well.
-
-**questions, things to be clarified**
-
-* Wraps grunt into an `h5bp` binary ?
-* Two main ways to get things done
-    * regular build script with grunt configs and `intro clean mkdirs concat css min rev usemin manifest` tasks.
-    * Using jsdom to avoid configuration as much as possible, and guess what to do from dom parsing.
-    * How to layout these? Should be one the default, and recommended over the other one?
-
-**todo**
-
-* manifest task needs to be implemented
-* css imports inline needs to be improved (by picking up necessary code from r.js css optimization for instance, I know that it works pretty well, with nested path support)
-* Overall build script needs to be tested, and those tests need to be automated
-* img optimization needs to be (re)implemented: jpeg/png opt via necessary tool (optipng/jpegtran) + rev img
-
-**todo ++**
-
-Following goes beyond what the current build script does, but can be worth investigating / implementing.
-
-* Inline `<script\>` tags under a specific size
-* Embed images as DataURIs into CSS
-* Optionally create a MTHML file for IE6/7
-    * (cssembed / jamit do this really well). The node code to to that is pretty simple, what it's not is the support for IE6/7 which require MHTML instead (cssembed / jammit can generate both).
-    * maybe a good balance to serve optimized (in term of assets embedding) to all brothers, but serve the unoptimized version to IE6/7.
-* do the revving (hash renames) for Images/SWFs/Fonts too.
-
-* That's certainly not for everyone, but...
-    * Prefixes relative urls with an absolute value for using a CDN
-
-* Cleans up @VERSION@ in assets (or any global script replacement to do)
-* Removes JS Logging
-* ... and maybe something else I forgot?
-
-
 
