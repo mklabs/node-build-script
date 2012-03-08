@@ -45,6 +45,8 @@ task.registerBasicTask('mkdirs', 'Prepares the build dirs', function(data, name)
     // only relevant on windows platform, where glob-whatev seems to also return
     // dirs, with a trailing `/`
     if(src.charAt(src.length - 1) === '/') return file.mkdir(dst);
+
+    file.mkdir(path.dirname(dst));
     fs.writeFileSync(dst, fs.readFileSync(src));
   });
 
