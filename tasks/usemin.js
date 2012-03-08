@@ -26,6 +26,9 @@ task.registerBasicTask('usemin', 'Replaces references to non-minified scripts / 
     log.subhead(p);
     log.writeln('switch from a regular jquery to minified');
 
+    // convert content buffer into raw string before processing
+    content = content.toString();
+
     log.writeln('Update the HTML to reference our concat/min/revved script files');
     content = task.helper('replace', content, /<script.+src=['"](.+)["'][\/>]?><[\\]?\/script>/gm);
 
