@@ -92,6 +92,19 @@ config.init({
     }
   },
 
+  dom: {
+
+    files                   : ['*.html'],
+
+    'script[data-build]'    : require('./plugins/script'),
+
+    'link'                  : require('./plugins/link'),
+
+    'img'                   : require('./plugins/img'),
+
+    'script, link, img'     : require('./plugins/rev')
+  },
+
   lint: {
     files: ['js/*.js'],
     build: ['grunt.js', 'tasks/*.js']
@@ -103,11 +116,14 @@ config.init({
 task.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
 task.registerTask('reload', 'default connect watch:reload');
 
+//
 // Advanced configuration, doing the necessary logic to map any task needed
 // values to top level staging / output dir
 //
 // ---
 //
+// This is temporary workaround for #3 support untill each task is rewritten to
+// take into account the staging / output values from grunt config.
 
 // exclude - add both staging / output dir as excluded folder during file copy (mkdirs)
 config('exclude', config('exclude')

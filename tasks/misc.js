@@ -2,6 +2,7 @@
 var path = require('path'),
   minimatch = require('minimatch'),
   rimraf = require("rimraf"),
+  mkdirp = require('mkdirp'),
   win32 = process.platform === 'win32',
   fs = require('fs'),
   crlf = win32 ? '\r\n' : '\n';
@@ -79,6 +80,11 @@ task.registerBasicTask('manifest', 'Generates manifest files automatically from 
 task.registerHelper('clean', function(dir, cb) {
   if(typeof cb !== 'function') return rimraf.sync(dir);
   rimraf(dir, cb);
+});
+
+task.registerHelper('mkdir', function(dir, cb) {
+  if(typeof cb !== 'function') return mkdirp.sync(dir);
+  mkdirp(dir, cb);
 });
 
 
