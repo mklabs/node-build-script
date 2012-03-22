@@ -96,13 +96,15 @@ config.init({
 
     files                   : ['*.html'],
 
+    options: {},
+
     'script[data-build]'    : require('./plugins/script'),
 
     'link'                  : require('./plugins/link'),
 
     'img'                   : require('./plugins/img'),
 
-    'script, link, img'     : require('./plugins/rev')
+    'script, link, img'     : require('./plugins/rev'),
   },
 
   lint: {

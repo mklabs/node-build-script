@@ -80,9 +80,9 @@ task.registerHelper('dom:plugin', function(f, plugins, cb) {
         name = plugin.name;
 
       log.writeln(' » handle ' + el);
-      if(!$.fn[name]) return next();;
+      if(!$.fn[name]) return next();
 
-      var options = $.extend({}, plugin.defaults);
+      var options = $.extend({}, plugin.defaults, config('dom.options'));
       $(el)[name]($, options, function(err) {
         if(err) return cb(err);
         next();
