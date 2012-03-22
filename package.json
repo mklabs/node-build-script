@@ -8,6 +8,7 @@
     "html5-boilerplate": "./bin/h5bp",
     "h5bp": "./bin/h5bp"
   },
+  "main": "lib/h5bp",
   "dependencies": {
     "clean-css": "~0.3.1",
     "minimatch": "~0.1.3",
