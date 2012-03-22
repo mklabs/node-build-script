@@ -25,12 +25,16 @@ task.registerTask('dom', 'Fancy dom-based build system', function() {
   var selectors = Object.keys(conf).filter(function(key) { return key !== 'files'; });
   log.writeln('with the following set of selectors\n » ' + log.wordlist(selectors, '\n » '));
 
-  var plugins = selectors.map(function(key) {
-    return {
-      el: key,
-      plugin: conf[key]
-    }
-  });
+  var plugins = selectors
+    .filter(function(key) {
+      return key !== 'options';
+    })
+    .map(function(key) {
+      return {
+        el: key,
+        plugin: conf[key]
+      }
+    });
 
   (function run(files) {
     var f = files.shift();

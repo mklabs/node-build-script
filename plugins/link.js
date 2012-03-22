@@ -21,6 +21,9 @@ plugin.handler = function link($, options, cb) {
   // used to emit `success` on last iteration.
   var ln = this.length;
 
+  // reg cache
+  var rAbs = /\/\//;
+
   // don't act on zero-element
   if(!ln) {
     cb();
@@ -35,11 +38,18 @@ plugin.handler = function link($, options, cb) {
   var files = [];
 
   return this.each(function(i, target) {
-    var el = $(this); // === $(target)
 
-    var src = el.attr('href'),
+    var el = $(this),
       last = ln === (i + 1),
-      file = path.resolve(options.dir, src);
+      src = el.attr('href'),
+      file = path.resolve(options.dir, src),
+      abs = rAbs.test(src);
+
+    // don't handle external files
+    if(abs) {
+      if(last) cb();
+      return;
+    }
 
     if(!path.existsSync(file)) return cb(new Error('no ' + src));
     files = files.concat(fs.readFileSync(file, 'utf8'));
