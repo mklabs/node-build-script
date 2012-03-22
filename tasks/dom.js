@@ -14,6 +14,8 @@ var jquery = fs.readFileSync(path.join(__dirname, '../support/jquery.min.js'), '
 // **note**: should probably not write to original files, but do a full copy of
 // current directory and operates on top of that staging dir.
 task.registerTask('dom', 'Fancy dom-based build system', function() {
+  config.requires('dom');
+
   var conf = config('dom'),
     files = file.expand(conf.files),
     cb = this.async();
