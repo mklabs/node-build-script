@@ -1,7 +1,7 @@
 {
   "author": "Paul Irish, Divya Manian",
-  "name": "html5-boilerplate",
-  "description": "Professional front-end template. So much goodness baked in by default",
+  "name": "node-build-script",
+  "description": "HTML5 Boilerplate node build script - Professional front-end template. So much goodness baked in by default",
   "version": "0.0.1",
   "homepage": "http://h5bp.com",
   "bin": {
@@ -27,7 +27,6 @@
   "scripts": {
     "pretest": "node test/helpers/pretest.js",
     "test": "node test/helpers/run-test --all",
-    "posttest": "node test/helpers/posttest.js",
-    "postinstall": "mkdir support && curl -o support/jquery.min.js https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"
+    "posttest": "node test/helpers/posttest.js"
   }
 }
