@@ -1,6 +1,7 @@
 
 var fs = require('fs'),
-  path = require('path');
+  path = require('path'),
+  rjs = require('requirejs');
 
 var plugin = module.exports;
 
@@ -52,19 +53,24 @@ plugin.handler = function link($, options, cb) {
     }
 
     if(!path.existsSync(file)) return cb(new Error('no ' + src));
-    files = files.concat(fs.readFileSync(file, 'utf8'));
-
-    // remove dom element from dom tree, when not on last loop
-    if(!last) return el.remove();
 
     var output = el.data('build') || options.output;
-    // update dom tree accordingly
-    el.attr('href', output);
 
-    // finally, write to destination output
+    // have rjs deal with import inlines, plus file writes
+    var config = {
+      out: output,
+      cssIn: file,
+      optimizeCss: 'standard.keepLines'
+    };
+
     log.writeln((' › writing to output ' + output).bold);
-    task.helper('mkdir', path.dirname(path.resolve(output)));
-    fs.writeFile(output, task.helper('mincss', files), cb);
+    rjs.optimize(config, function(res) {
+      if(!last) return el.remove();
+
+      // update dom tree accordingly
+      el.attr('href', output);
+      cb(null, res);
+    });
   });
 };
 
