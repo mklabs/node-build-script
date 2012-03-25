@@ -98,13 +98,13 @@ config.init({
 
     options: {},
 
-    'script[data-build]'    : require('../plugins/script'),
+    'script[data-build]'    : require('../libs/plugins/script'),
 
-    'link'                  : require('../plugins/link'),
+    'link'                  : require('../libs/plugins/link'),
 
-    'img'                   : require('../plugins/img'),
+    'img'                   : require('../libs/plugins/img'),
 
-    'script, link, img'     : require('../plugins/rev'),
+    'script, link, img'     : require('../libs/plugins/rev'),
   },
 
   lint: {
