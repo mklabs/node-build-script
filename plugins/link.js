@@ -57,12 +57,11 @@ plugin.handler = function link($, options, cb) {
     var output = el.data('build') || options.output;
 
     // have rjs deal with import inlines, plus file writes
-    var config = {
-      out: output,
-      cssIn: file,
+    var config = options.rjs || options.requirejs || {
       optimizeCss: 'standard.keepLines'
     };
-
+    config.out = output;
+    config.cssIn = file;
     log.writeln((' › writing to output ' + output).bold);
     rjs.optimize(config, function(res) {
       if(!last) return el.remove();
