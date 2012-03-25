@@ -22,13 +22,10 @@
     "requirejs": "~1.0.7"
   },
   "devDependencies": {
-    "vows": "~0.6.1",
-    "nopt": "~1.0.10",
-    "ncp": "~0.2.4"
+    "cucumber": "~0.2.12",
+    "zombie": "~0.12.15"
   },
   "scripts": {
-    "pretest": "node test/helpers/pretest.js",
-    "test": "node test/helpers/run-test --all",
-    "posttest": "node test/helpers/posttest.js"
+    "test": "node dom-test --log && node node_modules/cucumber/bin/cucumber.js"
   }
 }
