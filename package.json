@@ -27,6 +27,7 @@
     "mime": "~1.2.5"
   },
   "scripts": {
+    "pretest": "rp -rf .test && cp -r h5bp/* .test/",
     "test": "node dom-test --log && node node_modules/cucumber/bin/cucumber.js"
   }
 }
