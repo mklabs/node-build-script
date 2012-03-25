@@ -25,16 +25,26 @@ function wrapper() {
 
   this.Given(/^I am on the "([^"]*)" page$/, function(page, callback) {
     console.log('    » Visiting ', url(page));
-    this.visit(url(page), function(e, o, status, args) {
+    var browser = this.browser;
+    this.page = page;
+    this.visit(url(page), function(e, res, status) {
       if(e) callback.fail(e);
       assert.equal(status, 200);
+      assert.ok(browser.query('link'));
       callback();
     });
   });
 
-  this.Then(/^I should have a "([^"]*)" css file$/, function(arg1, callback) {
-    // express the regexp above with the code you wish you had
-    callback.pending();
+
+  this.Then(/^I should see "([^"]*)"$/, function(fragment, callback) {
+    var r = new RegExp(fragment),
+      browser = this.browser;
+
+    this.visit(url(this.page), function(e, res, status) {
+      var body = browser.html();
+      assert.ok(r.test(body));
+      callback();
+    });
   });
 }
 
