@@ -1,5 +1,6 @@
 
-var path = require('path');
+var path = require('path'),
+  h5bp = require('../');
 
 
 // This is the main html5-boilerplate build configuration file.
@@ -93,18 +94,14 @@ config.init({
   },
 
   dom: {
-
     files                   : ['*.html'],
-
-    options: {},
-
-    'script[data-build]'    : require('../libs/plugins/script'),
-
-    'link'                  : require('../libs/plugins/link'),
-
-    'img'                   : require('../libs/plugins/img'),
-
-    'script, link, img'     : require('../libs/plugins/rev'),
+    options: {
+      dir: ''
+    },
+    'script[data-build]'    : h5bp.plugins.script,
+    'link'                  : h5bp.plugins.link,
+    'img'                   : h5bp.plugins.img,
+    'script, link, img'     : h5bp.plugins.rev
   },
 
   lint: {

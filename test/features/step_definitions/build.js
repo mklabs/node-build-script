@@ -14,7 +14,7 @@ module.exports = wrapper;
 var url = function(path) { return 'http://localhost:3000/' + path; };
 
 // base test dir
-var dir = join(__dirname, '../output');
+var dir = join(__dirname, '../../../.test');
 
 function wrapper() {
   this.World = require("../support/build.js").World;
@@ -42,20 +42,21 @@ function wrapper() {
 function run(task, file, cb) {
   // copy grunt fixture file to `.test`, chdir to `.test`,
   // run the build, check the output
-  var out = join('.test/grunt.js'),
-    base = join(__dirname, '../../.test'),
-    change = process.cwd() !== base;
+  var base = join(__dirname, '../../../.test'),
+    out = join(base, 'grunt.js');
 
+  file = join(__dirname, '../../', file);
   mkdirp(path.dirname(out), function() {
     console.log('copy ', file, 'to', out);
     var rs = fs.createReadStream(file),
       ws = fs.createWriteStream(out);
+
     rs.on('error', cb.fail.bind(cb));
     rs.on('end', function(e) {
+      console.log('end?');
       if(e) return cb.fail(e);
-      change && process.chdir(base);
       // launch grunt task
-      var grunt = gruntify([task, '-t', '../tasks', '-b', base], function(e) {
+      var grunt = gruntify([task, '-t', '../tasks', '-c', out], function(e) {
         if(e) return cb.fail(e);
         cb();
       });
