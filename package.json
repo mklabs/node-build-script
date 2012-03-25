@@ -23,7 +23,8 @@
   },
   "devDependencies": {
     "cucumber": "~0.2.12",
-    "zombie": "~0.12.15"
+    "zombie": "~0.12.15",
+    "mime": "~1.2.5"
   },
   "scripts": {
     "test": "node dom-test --log && node node_modules/cucumber/bin/cucumber.js"
