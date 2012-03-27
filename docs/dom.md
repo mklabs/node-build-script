@@ -11,7 +11,7 @@ The following plugins are implemented
 * **css** Relies on @import statement mainly which are inlined (with
   nested path rewrite) to serve a single optimized stylesheet.
 
-* **js** Concats, minify through uglify and serve a single concat'd /
+* **js** (todo) Concats, minify through uglify and serve a single concat'd /
   minified script.
 
 Each plugin is able to modify the DOM tree to replace references to
@@ -38,15 +38,17 @@ Minimal, most of the configuration is derived from html markup, by using
 special semantics on `data-*` attributes, probably always namespaced to
 `data-build-*`.
 
-    config.init({
+    var h5bp = require('node-build-script');
+
+    grun.initConfig({
         ...,
 
         dom: {
             files: ['*.html', 'views/**/*.html'],
-            'script[data-build]'    : require('node-build-script/plugins/script'),
-            'link'                  : require('node-build-script/plugins/link'),
-            'img'                   : require('node-build-script/plugins/img'),
-            'script, link, img'     : require('node-build-script/plugins/rev')
+            'script[data-build]'    : h5bp.plugins.script,
+            'link'                  : h5bp.plugins.link,
+            'img'                   : h5bp.plugins.img,
+            'script, link, img'     : h5bp.plugins.rev
         },
 
         ...
@@ -59,7 +61,7 @@ special semantics on `data-*` attributes, probably always namespaced to
   plugins that will be executed with the set of matching DOM elements.
 
 selectors / plugins are run sequentially, and the DOM tree is modified
-all allong the way through the last selector / plugin couple. Read that
+all allong the way to the last selector / plugin couple. Read that
 the selectors result depends on the modified DOM tree from previous
 processors.
 

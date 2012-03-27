@@ -4,7 +4,7 @@ var fs = require('fs'),
   jsdom = require('jsdom');
 
 // the jQuery file content passed in jsdom
-var jquery = fs.readFileSync(path.join(__dirname, '../support/jquery.min.js'), 'utf8');
+var jquery = fs.readFileSync(path.join(__dirname, './support/jquery.min.js'), 'utf8');
 
 module.exports = dom;
 //dom.processFile = processFile;
@@ -20,14 +20,11 @@ module.exports = dom;
 // copy of current directory and operates on top of that staging dir.
 //
 function dom(grunt) {
-  console.log('wtf');
-
   // Grunt utilities.
   var task = grunt.task,
     file = grunt.file,
     log = grunt.log,
     config = grunt.config;
-
 
   grunt.registerTask('dom', 'Fancy dom-based build system', function() {
     config.requires('dom');
@@ -57,7 +54,7 @@ function dom(grunt) {
       if(!f) return cb();
 
       task.helper('dom:plugin', f, plugins, function(err, body) {
-        if(err) return fail.warn(err);
+        if(err) return grunt.fail.warn(err);
         // Write the new content, and keep the doctype safe (innerHTML returns
         // the whole document without doctype).
 
@@ -99,10 +96,14 @@ function dom(grunt) {
           plugin = it.plugin,
           name = plugin.name;
 
-        log.writeln(' » handle ' + el);
+        log.writeln(' » Handle ' + el);
         if(!$.fn[name]) return next();
-
         var options = $.extend({}, plugin.defaults, config('dom.options'));
+        // attach some usefull info / api to the options object
+        options.log = options.log || log;
+        // same for grunt helpers
+
+        options.helpers = options.helpers || task._helpers;
         $(el)[name]($, options, function(err) {
           if(err) return cb(err);
           next();

@@ -2,3 +2,4 @@ node_modules
 test/fixtures/h5bp
 .test
 npm-debug.log
+test/custom

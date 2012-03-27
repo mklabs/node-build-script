@@ -4,11 +4,11 @@ plugins - link
 This plugin is run, in the default setup, with the following
 configuration:
 
-  dom: {
-    files                   : ['*.html'],
-    options: {},
-    'link'                  : require('./plugins/link'),
-  },
+    dom: {
+      files                   : ['*.html'],
+      options: {},
+      'link'                  : require('./plugins/link'),
+    },
 
 It uses [r.js](https://github.com/jrburke/r.js) to optimize a single css
 file, and properly handle the `@import` statements you might have.

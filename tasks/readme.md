@@ -1,5 +1,49 @@
 ## Tasks
 
+Initiated the update to grunt 0.3.x api.
+
+* Reworked the tasks dir have different "load targets"
+
+* **dom/** contains tasks related to the dom based build system.
+
+* **support/** contains tasks related to normal build system, eg.
+  relying on informations found in the gruntfile.
+
+To include any of these tasks in your grunt setup, you might want to do
+something like this.
+
+1. First, install the project locally.
+2. Use `h5bp.load` with either `dom` or `support` to load appropriate
+tasks in your gruntfile.
+
+Like so:
+
+```js
+var h5bp = require('node-build-script');
+
+module.exports = function(grunt) {
+
+  grunt.initConfig({ ... });
+
+  // load the tasks, give it your grunt
+
+  // will include every tasks
+  h5bp.load(grunt);
+
+  // will include just the subset you need
+  h5bp.load(grunt, 'dom');
+
+  // interrested in loading one single particular task?
+  h5bp.load(grunt, 'support/css');
+
+};
+
+````
+
+---
+
+> not up to date
+
 You'll find below a basic description and documentation for each task
 that the build script use, built-in or custom one. For each of these,
 we'll detail the task configuration and how to tweak this.
