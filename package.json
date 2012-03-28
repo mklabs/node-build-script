@@ -30,6 +30,6 @@
   },
   "scripts": {
     "pretest": "git submodule update --init && rm -rf .test && mkdir .test && cp -r test/h5bp/* test/h5bp/.htaccess .test/",
-    "test": "node test --log && cd test && node ../node_modules/cucumber/bin/cucumber.js"
+    "test": "node test --log"
   }
 }
