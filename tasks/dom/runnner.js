@@ -59,8 +59,8 @@ function dom(grunt) {
         // the whole document without doctype).
 
         // temporary writing to filename.html.test to not alter original file
-        log.subhead(' › writing to output ' + f + '.test');
-        fs.writeFileSync(f + '.test', '<!doctype html>' + body);
+        log.subhead(' › writing to output ' + f);
+        fs.writeFileSync(f, '<!doctype html>' + body);
 
         log.subhead(' ✔ ' + f);
         run(files);
