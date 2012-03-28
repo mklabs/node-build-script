@@ -1,6 +1,8 @@
 
-var path = require('path'),
-  h5bp = require('../');
+var path = require('path');
+
+var h5bp = require('../'),
+  extend = require('grunt-flavored');
 
 
 // This is the main html5-boilerplate build configuration file.
@@ -12,108 +14,140 @@ var path = require('path'),
 // These two values may be changed to something else with the `staging` and
 // `output` config property below, and by changing any task config to match the new value.
 //
+module.exports = function(grunt) {
+  grunt = extend(grunt);
 
-config.init({
-  // the staging directory used during the process
-  staging: 'intermediate/',
+    // the staging directory used during the process
+  var staging ='intermediate/';
+
   // final build output
-  output: 'publish/',
+  var output = 'publish/';
 
-  // filter any files matching one of the below pattern during mkdirs task
-  exclude: 'build/** node_modules/** grunt.js package.json *.md'.split(' '),
+  grunt.config.init({
+    // the staging directory used during the process
+    staging: staging,
 
-  mkdirs: {
-    staging: '<config:exclude>',
-    output: '<config:exclude>'
-  },
+    // final build output
+    output: output,
 
-  // concat task - files are concat'd into `staging/subprop.js`
+    // filter any files matching one of the below pattern during mkdirs task
+    exclude: 'build/** node_modules/** grunt.js package.json *.md'.split(' '),
+
+    mkdirs: {
+      staging: '<config:exclude>',
+      output: '<config:exclude>'
+    },
+
+    // rev task - File pattern in suprops values are resolved with `output` value
+    // (eg. publish/*.html)
+    usemin: {
+      files: ['**/*.html']
+    },
+
+    manifest: '<config:usemin>',
+
+    watch: {
+      files: ['js/**/*.js', 'css/**', '*.html'],
+      tasks: 'default',
+
+      reload: {
+        files: '<config:watch.files>',
+        tasks: 'default emit'
+      }
+    },
+
+    serve: {
+      staging: { port: 3000 },
+      output: { port: 3001 }
+    },
+
+    connect: {
+      staging: {
+        hostname: 'localhost',
+        port: 3000,
+        logs: 'dev',
+        dirs: true
+      },
+      output: {
+        hostname: 'localhost',
+        port: 3001,
+        logs: 'default',
+        dirs: true
+      }
+    },
+
+    dom: {
+
+      files                   : ['*.html'],
+
+      options: {
+        //
+        // cwd - base directory to work from.
+        // out - optimized assets get resolved to this path.
+        //
+      },
+
+      'script[data-build]'    : h5bp.plugins.script,
+      'link'                  : h5bp.plugins.link,
+      'img'                   : h5bp.plugins.img,
+      'script, link, img'     : h5bp.plugins.rev,
+    },
+
+    lint: {
+      files: ['js/*.js'],
+      build: ['grunt.js', 'tasks/*.js']
+    }
+
+  });
+
+
+  //
+  // Concat configuration - prepending output / staging values to task's target
+  //
+  // files are concat'd into `staging/subprop.js`
   // (eg. intermediate/js/scripts.js)
-  concat: {
-    'js/scripts.js': [ 'js/plugins.js', 'js/script.js' ],
-    'css/style.css': [ 'css/*.css' ]
-  },
+  //
+  var concat = grunt.config('concat') || {};
+  concat[staging + 'js/scripts.js'] = ['js/plugins.js', 'js/script.js'];
+  concat[staging + 'css/style.css'] = ['css/*.css'];
+  grunt.config('concat', concat);
 
-  // css task - optimized files is generated into `output/subprop.css`
-  // (eg. publish/css/style.css)
-  css: {
-    'css/style.css': [ 'css/style.css' ]
-  },
+  //
+  // Min configuration - same goes the minify task
+  // (eg. publish/js/scripts.js)
+  //
+  var min = grunt.config('min') || {};
+  min[output + 'js/scripts.js'] = [staging + 'js/plugins.js', staging + 'js/script.js'];
+  grunt.config('min', min);
 
-  // min task - like the css task, minified files are generated into
-  // `output/subprop.js` (eg. publish/js/scripts.js). Files in subprop value
-  // are resolved with `staging` dir value (eg. intermediate/js/scripts.js)
-  min: {
-    'js/scripts.js': [ 'js/scripts.js' ]
-  },
+  //
+  // Css - same here
+  //
+  var css = grunt.config('css') || {};
+  css[output + 'css/style.css'] = [staging + 'css/style.css'];
+  grunt.config('css', css);
 
-  // rev task - File patterns in suprops values are resolved with `output` value
-  // (eg. publish/js/*.js)
-  rev: {
-    js: ['js/**/*.js'],
-    css: ['css/**/*.css'],
-    img: ['img/**']
-  },
+  //
+  // Rev - targets needs to be be in output
+  //
+  grunt.config('rev', {
+    js: [output + 'js/**/*.js'],
+    css: [output + 'css/**/*.css'],
+    img: [output + 'img/**'],
+  });
 
-  // rev task - File pattern in suprops values are resolved with `output` value
-  // (eg. publish/*.html)
-  usemin: {
-    files: ['**/*.html']
-  },
+  // Run the following tasks...
+  grunt.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
+  grunt.registerTask('reload', 'default connect watch:reload');
 
-  manifest: '<config:usemin>',
+  // dom based tasks
+  grunt.loadTasks('../tasks/dom');
 
-  watch: {
-    files: ['js/**/*.js', 'css/**', '*.html'],
-    tasks: 'default',
+  // regular tasks
+  grunt.load('../tasks/support');
 
-    reload: {
-      files: '<config:watch.files>',
-      tasks: 'default emit'
-    }
-  },
+};
 
-  serve: {
-    staging: { port: 3000 },
-    output: { port: 3001 }
-  },
-
-  connect: {
-    staging: {
-      hostname: 'localhost',
-      port: 3000,
-      logs: 'dev',
-      dirs: true
-    },
-    output: {
-      hostname: 'localhost',
-      port: 3001,
-      logs: 'default',
-      dirs: true
-    }
-  },
-
-  dom: {
-    files                   : ['*.html'],
-    options: {
-      dir: ''
-    },
-    'script[data-build]'    : h5bp.plugins.script,
-    'link'                  : h5bp.plugins.link,
-    'img'                   : h5bp.plugins.img,
-    'script, link, img'     : h5bp.plugins.rev
-  },
-
-  lint: {
-    files: ['js/*.js'],
-    build: ['grunt.js', 'tasks/*.js']
-  }
-
-});
-
-// Run the following tasks...
-task.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
-task.registerTask('reload', 'default connect watch:reload');
 
 //
 // Advanced configuration, doing the necessary logic to map any task needed
@@ -125,6 +159,7 @@ task.registerTask('reload', 'default connect watch:reload');
 // take into account the staging / output values from grunt config.
 
 // exclude - add both staging / output dir as excluded folder during file copy (mkdirs)
+/* * /
 config('exclude', config('exclude')
   .concat(path.join(config('staging'), '**'))
   .concat(path.join(config('output'), '**'))
@@ -184,3 +219,4 @@ Object.keys(connect).forEach(function(key) {
   connect[config(key)] = connect[key];
   delete connect[key];
 });
+/* */

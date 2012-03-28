@@ -10,10 +10,10 @@ var path = require('path'),
 // ### Tasks
 //
 
-task.registerBasicTask('css', 'Concats, replaces @imports and minifies the CSS files', function(data, name) {
-  var files = task.helper('cssimport', file.expand(data));
-  file.write(name, task.helper('mincss', files));
-  log.writeln("File :file created".replace(':file', name));
+task.registerMultiTask('css', 'Concats, replaces @imports and minifies the CSS files', function(data, name) {
+  var files = task.helper('cssimport', file.expand(this.data));
+  file.write(this.target, task.helper('mincss', files));
+  log.writeln("File :file created".replace(':file', this.target));
 });
 
 //

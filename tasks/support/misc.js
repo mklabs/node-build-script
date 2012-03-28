@@ -12,7 +12,7 @@ var path = require('path'),
 // ### Tasks
 //
 
-task.registerTask('intro', 'Kindly inform the developer about the impending magic', function(data, name) {
+task.registerTask('intro', 'Kindly inform the developer about the impending magic', function() {
 
   var output = [
     "=====================================================================",
@@ -27,14 +27,24 @@ task.registerTask('intro', 'Kindly inform the developer about the impending magi
     "====================================================================="
   ].join(crlf);
 
+  log.writeln(output);
+
 });
 
 
-task.registerBasicTask('mkdirs', 'Prepares the build dirs', function(data, name) {
-  var dirname = path.resolve(config(name));
+task.registerMultiTask('mkdirs', 'Prepares the build dirs', function() {
+
+  var data = this.data,
+    name = this.target,
+    dirname = path.resolve(config(name));
+
+  // support for #3. Append the staging / output directories to the list of .ignore files
+  data = data.concat([config('staging') + '/**', config('output') + '/**']);
+
   file.mkdir(dirname);
 
   var files = file.expand(['**']).filter(function(f) {
+    console.log('data', data);
     // filter out files to exclude from `<config:mkdirs:target>`
     return data.reduce(function(a, b) {
       return a && !minimatch(f, b);
@@ -67,7 +77,7 @@ task.registerTask('clean', 'Wipe the previous build dirs', function() {
 });
 
 
-task.registerBasicTask('manifest', 'Generates manifest files automatically from static assets reference.', function(data, name) {
+task.registerMultiTask('manifest', 'Generates manifest files automatically from static assets reference.', function() {
   // Otherwise, print a success message.
   log.writeln('not yet implemented');
 });

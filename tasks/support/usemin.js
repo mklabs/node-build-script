@@ -17,8 +17,11 @@ var fs = require('fs'),
 // store each optimized assets and their associated sha1.
 //
 
-task.registerBasicTask('usemin', 'Replaces references to non-minified scripts / stylesheets', function(data, name) {
-  var files = file.expand(data),
+task.registerMultiTask('usemin', 'Replaces references to non-minified scripts / stylesheets', function() {
+
+  var name = this.target,
+    data = this.data,
+    files = file.expand(data),
     output = path.resolve(config('output'));
 
   files.map(file.read).forEach(function(content, i) {

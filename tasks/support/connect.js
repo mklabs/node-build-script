@@ -6,7 +6,7 @@ var fs = require('fs'),
   connect = require('connect'),
   mime = connect.static.mime,
   // one time-hit, get the file content of the socket.io client side script
-  ioScript = underscore.template(fs.readFileSync(path.join(__dirname, 'util/socket-enable.js'), 'utf8'));
+  ioScript = require('underscore').template(fs.readFileSync(path.join(__dirname, '../util/socket-enable.js'), 'utf8'));
 
 //
 // ### Tasks
@@ -45,7 +45,13 @@ task.registerTask('emit', 'A basic task that emits events over socket.io', funct
 //
 // todo: that tasks begins to get pretty long, might be worth moving the custom middleware, into
 // a grunt helper or a simple function defined elsewhere (probably in its own module)
-task.registerBasicTask('connect', 'Spawns up a local http server with socket.io enabled', function(data, name) {
+task.registerMultiTask('connect', 'Spawns up a local http server with socket.io enabled', function() {
+
+  // task config
+  var data = this.data;
+
+  // task target
+  var name = this.target;
 
   // path
   var dirname = path.resolve(name);

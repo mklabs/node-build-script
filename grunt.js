@@ -1,7 +1,8 @@
 
 var path = require('path');
 
-var h5bp = require('./');
+var h5bp = require('./'),
+  extend = require('grunt-flavored');
 
 
 // This is the main html5-boilerplate build configuration file.
@@ -14,12 +15,20 @@ var h5bp = require('./');
 // `output` config property below, and by changing any task config to match the new value.
 //
 module.exports = function(grunt) {
+  grunt = extend(grunt);
+
+    // the staging directory used during the process
+  var staging ='intermediate/';
+
+  // final build output
+  var output = 'publish/';
 
   grunt.config.init({
     // the staging directory used during the process
-    staging: 'intermediate/',
+    staging: staging,
+
     // final build output
-    output: 'publish/',
+    output: output,
 
     // filter any files matching one of the below pattern during mkdirs task
     exclude: 'build/** node_modules/** grunt.js package.json *.md'.split(' '),
@@ -27,34 +36,6 @@ module.exports = function(grunt) {
     mkdirs: {
       staging: '<config:exclude>',
       output: '<config:exclude>'
-    },
-
-    // concat task - files are concat'd into `staging/subprop.js`
-    // (eg. intermediate/js/scripts.js)
-    concat: {
-      'js/scripts.js': [ 'js/plugins.js', 'js/script.js' ],
-      'css/style.css': [ 'css/*.css' ]
-    },
-
-    // css task - optimized files is generated into `output/subprop.css`
-    // (eg. publish/css/style.css)
-    css: {
-      'css/style.css': [ 'css/style.css' ]
-    },
-
-    // min task - like the css task, minified files are generated into
-    // `output/subprop.js` (eg. publish/js/scripts.js). Files in subprop value
-    // are resolved with `staging` dir value (eg. intermediate/js/scripts.js)
-    min: {
-      'js/scripts.js': [ 'js/scripts.js' ]
-    },
-
-    // rev task - File patterns in suprops values are resolved with `output` value
-    // (eg. publish/js/*.js)
-    rev: {
-      js: ['js/**/*.js'],
-      css: ['css/**/*.css'],
-      img: ['img/**']
     },
 
     // rev task - File pattern in suprops values are resolved with `output` value
@@ -119,12 +100,51 @@ module.exports = function(grunt) {
 
   });
 
+
+  //
+  // Concat configuration - prepending output / staging values to task's target
+  //
+  // files are concat'd into `staging/subprop.js`
+  // (eg. intermediate/js/scripts.js)
+  //
+  var concat = grunt.config('concat') || {};
+  concat[staging + 'js/scripts.js'] = ['js/plugins.js', 'js/script.js'];
+  concat[staging + 'css/style.css'] = ['css/*.css'];
+  grunt.config('concat', concat);
+
+  //
+  // Min configuration - same goes the minify task
+  // (eg. publish/js/scripts.js)
+  //
+  var min = grunt.config('min') || {};
+  min[output + 'js/scripts.js'] = [staging + 'js/plugins.js', staging + 'js/script.js'];
+  grunt.config('min', min);
+
+  //
+  // Css - same here
+  //
+  var css = grunt.config('css') || {};
+  css[output + 'css/style.css'] = [staging + 'css/style.css'];
+  grunt.config('css', css);
+
+  //
+  // Rev - targets needs to be be in output
+  //
+  grunt.config('rev', {
+    js: [output + 'js/**/*.js'],
+    css: [output + 'css/**/*.css'],
+    img: [output + 'img/**'],
+  });
+
   // Run the following tasks...
   grunt.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
   grunt.registerTask('reload', 'default connect watch:reload');
 
   // dom based tasks
-  grunt.loadTasks('tasks/dom');
+  grunt.loadTasks('../tasks/dom');
+
+  // regular tasks
+  grunt.load('../tasks/support');
 
 };
 

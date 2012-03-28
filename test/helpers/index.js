@@ -8,10 +8,10 @@ var assert = require('assert'),
 //
 // Depending on grunt's exit code, the test fails or pass.
 //
-module.exports = function grunt(base) {
+module.exports = function grunt(base, fn) {
   base = base || 'test/h5bp';
 
-  return function(cmd) {
+  return function(cmd, index) {
     var stack = grunt.stack || (grunt.stack = []);
     stack.push(cmd);
 

@@ -7,7 +7,7 @@ var fs = require('fs'),
 var jquery = fs.readFileSync(path.join(__dirname, './support/jquery.min.js'), 'utf8');
 
 module.exports = dom;
-//dom.processFile = processFile;
+dom.processFile = processFile;
 
 // attach helpers if any
 

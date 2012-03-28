@@ -8,7 +8,11 @@ var fs = require('fs'),
 // ### Tasks
 //
 
-task.registerBasicTask('rev', 'Automate the revving of assets filename', function(data, name) {
+task.registerMultiTask('rev', 'Automate the revving of assets filename', function() {
+
+  var name = this.target,
+    data = this.data;
+
   log.writeln('Processing revving of ' + name + ' files');
   var files = file.expand(data);
 
