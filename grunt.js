@@ -1,6 +1,8 @@
 
 var path = require('path');
 
+var h5bp = require('./');
+
 
 // This is the main html5-boilerplate build configuration file.
 //
@@ -11,112 +13,121 @@ var path = require('path');
 // These two values may be changed to something else with the `staging` and
 // `output` config property below, and by changing any task config to match the new value.
 //
+module.exports = function(grunt) {
 
-config.init({
-  // the staging directory used during the process
-  staging: 'intermediate/',
-  // final build output
-  output: 'publish/',
+  grunt.config.init({
+    // the staging directory used during the process
+    staging: 'intermediate/',
+    // final build output
+    output: 'publish/',
 
-  // filter any files matching one of the below pattern during mkdirs task
-  exclude: 'build/** node_modules/** grunt.js package.json *.md'.split(' '),
+    // filter any files matching one of the below pattern during mkdirs task
+    exclude: 'build/** node_modules/** grunt.js package.json *.md'.split(' '),
 
-  mkdirs: {
-    staging: '<config:exclude>',
-    output: '<config:exclude>'
-  },
-
-  // concat task - files are concat'd into `staging/subprop.js`
-  // (eg. intermediate/js/scripts.js)
-  concat: {
-    'js/scripts.js': [ 'js/plugins.js', 'js/script.js' ],
-    'css/style.css': [ 'css/*.css' ]
-  },
-
-  // css task - optimized files is generated into `output/subprop.css`
-  // (eg. publish/css/style.css)
-  css: {
-    'css/style.css': [ 'css/style.css' ]
-  },
-
-  // min task - like the css task, minified files are generated into
-  // `output/subprop.js` (eg. publish/js/scripts.js). Files in subprop value
-  // are resolved with `staging` dir value (eg. intermediate/js/scripts.js)
-  min: {
-    'js/scripts.js': [ 'js/scripts.js' ]
-  },
-
-  // rev task - File patterns in suprops values are resolved with `output` value
-  // (eg. publish/js/*.js)
-  rev: {
-    js: ['js/**/*.js'],
-    css: ['css/**/*.css'],
-    img: ['img/**']
-  },
-
-  // rev task - File pattern in suprops values are resolved with `output` value
-  // (eg. publish/*.html)
-  usemin: {
-    files: ['**/*.html']
-  },
-
-  manifest: '<config:usemin>',
-
-  watch: {
-    files: ['js/**/*.js', 'css/**', '*.html'],
-    tasks: 'default',
-
-    reload: {
-      files: '<config:watch.files>',
-      tasks: 'default emit'
-    }
-  },
-
-  serve: {
-    staging: { port: 3000 },
-    output: { port: 3001 }
-  },
-
-  connect: {
-    staging: {
-      hostname: 'localhost',
-      port: 3000,
-      logs: 'dev',
-      dirs: true
+    mkdirs: {
+      staging: '<config:exclude>',
+      output: '<config:exclude>'
     },
-    output: {
-      hostname: 'localhost',
-      port: 3001,
-      logs: 'default',
-      dirs: true
+
+    // concat task - files are concat'd into `staging/subprop.js`
+    // (eg. intermediate/js/scripts.js)
+    concat: {
+      'js/scripts.js': [ 'js/plugins.js', 'js/script.js' ],
+      'css/style.css': [ 'css/*.css' ]
+    },
+
+    // css task - optimized files is generated into `output/subprop.css`
+    // (eg. publish/css/style.css)
+    css: {
+      'css/style.css': [ 'css/style.css' ]
+    },
+
+    // min task - like the css task, minified files are generated into
+    // `output/subprop.js` (eg. publish/js/scripts.js). Files in subprop value
+    // are resolved with `staging` dir value (eg. intermediate/js/scripts.js)
+    min: {
+      'js/scripts.js': [ 'js/scripts.js' ]
+    },
+
+    // rev task - File patterns in suprops values are resolved with `output` value
+    // (eg. publish/js/*.js)
+    rev: {
+      js: ['js/**/*.js'],
+      css: ['css/**/*.css'],
+      img: ['img/**']
+    },
+
+    // rev task - File pattern in suprops values are resolved with `output` value
+    // (eg. publish/*.html)
+    usemin: {
+      files: ['**/*.html']
+    },
+
+    manifest: '<config:usemin>',
+
+    watch: {
+      files: ['js/**/*.js', 'css/**', '*.html'],
+      tasks: 'default',
+
+      reload: {
+        files: '<config:watch.files>',
+        tasks: 'default emit'
+      }
+    },
+
+    serve: {
+      staging: { port: 3000 },
+      output: { port: 3001 }
+    },
+
+    connect: {
+      staging: {
+        hostname: 'localhost',
+        port: 3000,
+        logs: 'dev',
+        dirs: true
+      },
+      output: {
+        hostname: 'localhost',
+        port: 3001,
+        logs: 'default',
+        dirs: true
+      }
+    },
+
+    dom: {
+
+      files                   : ['*.html'],
+
+      options: {
+        //
+        // cwd - base directory to work from.
+        // out - optimized assets get resolved to this path.
+        //
+      },
+
+      'script[data-build]'    : h5bp.plugins.script,
+      'link'                  : h5bp.plugins.link,
+      'img'                   : h5bp.plugins.img,
+      'script, link, img'     : h5bp.plugins.rev,
+    },
+
+    lint: {
+      files: ['js/*.js'],
+      build: ['grunt.js', 'tasks/*.js']
     }
-  },
 
-  dom: {
+  });
 
-    files                   : ['*.html'],
+  // Run the following tasks...
+  grunt.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
+  grunt.registerTask('reload', 'default connect watch:reload');
 
-    options: {},
+  // dom based tasks
+  grunt.loadTasks('tasks/dom');
 
-    'script[data-build]'    : require('./libs/plugins/script'),
+};
 
-    'link'                  : require('./libs/plugins/link'),
-
-    'img'                   : require('./libs/plugins/img'),
-
-    'script, link, img'     : require('./libs/plugins/rev'),
-  },
-
-  lint: {
-    files: ['js/*.js'],
-    build: ['grunt.js', 'tasks/*.js']
-  }
-
-});
-
-// Run the following tasks...
-task.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
-task.registerTask('reload', 'default connect watch:reload');
 
 //
 // Advanced configuration, doing the necessary logic to map any task needed
@@ -128,6 +139,7 @@ task.registerTask('reload', 'default connect watch:reload');
 // take into account the staging / output values from grunt config.
 
 // exclude - add both staging / output dir as excluded folder during file copy (mkdirs)
+/* * /
 config('exclude', config('exclude')
   .concat(path.join(config('staging'), '**'))
   .concat(path.join(config('output'), '**'))
@@ -187,3 +199,4 @@ Object.keys(connect).forEach(function(key) {
   connect[config(key)] = connect[key];
   delete connect[key];
 });
+/* */
