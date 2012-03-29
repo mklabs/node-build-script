@@ -51,6 +51,10 @@ module.exports = function(grunt) {
       }
     },
 
+    css: {
+      'css/style.css': ['css/style.css']
+    },
+
     // are resolved below the output directory
     rev: {
       js: 'js/**/*.js',
@@ -122,12 +126,6 @@ module.exports = function(grunt) {
   min[output + 'js/scripts.js'] = [staging + 'js/plugins.js', staging + 'js/script.js'];
   grunt.config('min', min);
 
-  //
-  // Css - same here
-  //
-  var css = grunt.config('css') || {};
-  css[output + 'css/style.css'] = [staging + 'css/style.css'];
-  grunt.config('css', css);
 
   // Run the following tasks...
   grunt.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
