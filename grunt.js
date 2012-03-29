@@ -1,6 +1,4 @@
 
-var path = require('path');
-
 var h5bp = require('./');
 
 

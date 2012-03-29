@@ -3,8 +3,6 @@ var assert = require('assert'),
   run = require('./helpers'),
   h5bp = require('../');
 
-assert.ok(typeof h5bp.load === 'function');
-
 // plugins
 assert.ok(h5bp.plugins);
 
