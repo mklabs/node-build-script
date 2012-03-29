@@ -2,6 +2,7 @@
 var h5bp = require('./');
 
 
+
 // This is the main html5-boilerplate build configuration file.
 //
 // Builds depends on two specific directory created during the process
@@ -19,6 +20,19 @@ module.exports = function(grunt) {
   var output = 'publish/';
 
   grunt.config.init({
+    intro: [
+      "=====================================================================",
+      "",
+      "We're going to get your site all ship-shape and ready for prime time.",
+      "",
+      "This should take somewhere between 15 seconds and a few minutes,",
+      "mostly depending on how many images we're going to compress.",
+      "",
+      "Feel free to come back or stay here and follow along.",
+      "",
+      "====================================================================="
+    ],
+
     // the staging directory used during the process
     staging: staging,
 

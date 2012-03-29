@@ -14,21 +14,9 @@ module.exports = function(grunt) {
     log = grunt.log;
 
   task.registerTask('intro', 'Kindly inform the developer about the impending magic', function() {
-
-    var output = [
-      "=====================================================================",
-      "",
-      "We're going to get your site all ship-shape and ready for prime time.",
-      "",
-      "This should take somewhere between 15 seconds and a few minutes,",
-      "mostly depending on how many images we're going to compress.",
-      "",
-      "Feel free to come back or stay here and follow along.",
-      "",
-      "====================================================================="
-    ].join('\n');
-
-    log.writeln(output);
+    var intro = config('intro') || '';
+    intro = Array.isArray(intro) ? intro : [intro];
+    log.writeln(intro.join('\n'));
   });
 
   task.registerMultiTask('mkdirs', 'Prepares the build dirs', function() {
