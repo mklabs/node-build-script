@@ -1,41 +1,53 @@
 
 var fs = require('fs'),
-  path = require('path'),
-  url = require('url'),
-  child = require('child_process'),
-  win32 = process.platform === 'win32';
+  path = require('path');
 
-task.registerMultiTask('serve', 'Spawns up a local http server', function() {
+module.exports = function(grunt) {
+  var task = grunt.task,
+    config = grunt.config,
+    file = grunt.file,
+    log = grunt.log,
+    fail = grunt.fail,
+    spawn = grunt.utils.spawn,
+    noop = function() {};
 
-  var data = this.data,
-    name = this.target;
+  task.registerTask('serve', 'Spawns up a local http server on both staging / output directory', function() {
+    var serve = config('serve'),
+      targets = Object.keys(serve); 
 
-  var cmd = win32 ? '"..\\node_modules\\.bin\\serve.cmd"' : '../node_modules/.bin/serve';
+    targets.forEach(function(target) {
+      task.helper('serve', serve[target], target);
+    });
 
-  // todo: fork instead of spawn?
-  spawn(cmd, ['--port', data.port], { cwd: path.resolve(name) }, function(code, stdout, stderr) {
-    if(code) fail.warn('Error spawning server' + name, code);
+    this.async();
   });
 
-});
+  // somewhat redundant with grunt's built-in serve cmd.
+  // might be removed.
+  task.registerHelper('serve', function(data, target) {
+    var name = config(target);
 
+    var cmd = path.join(__dirname, '../../node_modules/serve/bin/serve'),
+      base = path.resolve(name);
 
-function spawn(cmd, args, o, cb) {
-  var stderr = [],
-    stdout = [];
+    if(!path.existsSync(base)) {
+      fail.warn(base  + ' does not exists', 3);
+      return false;
+    }
 
-  var ch = child.spawn(cmd, args, o);
+    var cp = spawn({
+      cmd: cmd,
+      args: ['--port', data.port],
+      opts: {
+        cwd: path.resolve(name) 
+      }
+    }, noop);
 
-  ch.stdout.pipe(process.stdout, {end: false});
-  ch.stderr.pipe(process.stderr);
-  ch.stdout.on('data', function (data) { stdout[stdout.length] = data; });
-  ch.stdout.on('data', function (data) { stderr[stderr.length] = data; });
+    cp.stdout.pipe(process.stdout);
+    cp.stderr.pipe(process.stderr);
 
-  ch.on('exit', function(code) {
-    stdout = stdout.join('\n');
-    stderr = stderr.join('\n');
-    if(cb) cb(code, stdout, stderr);
+    return cp;
   });
 
-  return ch;
-}
+};
+
