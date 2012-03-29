@@ -17,38 +17,45 @@ var fs = require('fs'),
 // store each optimized assets and their associated sha1.
 //
 
-task.registerMultiTask('usemin', 'Replaces references to non-minified scripts / stylesheets', function() {
+module.exports = function(grunt) {
 
-  var name = this.target,
-    data = this.data,
-    files = file.expand(data),
-    output = path.resolve(config('output'));
+  var task = grunt.task,
+    config = grunt.config,
+    file = grunt.file,
+    log = grunt.log;
 
-  files.map(file.read).forEach(function(content, i) {
-    var p = files[i];
-    log.subhead(p);
-    log.writeln('switch from a regular jquery to minified');
+  task.registerMultiTask('usemin', 'Replaces references to non-minified scripts / stylesheets', function() {
 
-    // convert content buffer into raw string before processing
-    content = content.toString();
+    var name = this.target,
+      data = this.data,
+      files = file.expand(data),
+      output = path.resolve(config('output'));
 
-    log.writeln('Update the HTML to reference our concat/min/revved script files');
-    content = task.helper('replace', content, /<script.+src=['"](.+)["'][\/>]?><[\\]?\/script>/gm);
+    files.map(file.read).forEach(function(content, i) {
+      var p = files[i];
+      log.subhead(p);
+      log.writeln('switch from a regular jquery to minified');
 
-    log.writeln('Update the HTML with the new css filename');
-    content = task.helper('replace', content, /<link rel=["']?stylesheet["']?\shref=['"](.+)["']\s*>/gm);
+      // convert content buffer into raw string before processing
+      content = content.toString();
 
-    log.writeln('Update the HTML with the new img filename');
-    content = task.helper('replace', content, /<img.+src=['"](.+)["'][\/>]?>/);
+      log.writeln('Update the HTML to reference our concat/min/revved script files');
+      content = task.helper('replace', content, /<script.+src=['"](.+)["'][\/>]?><[\\]?\/script>/gm);
 
-    // write the new content to disk
-    file.write(p, content);
+      log.writeln('Update the HTML with the new css filename');
+      content = task.helper('replace', content, /<link rel=["']?stylesheet["']?\shref=['"](.+)["']\s*>/gm);
+
+      log.writeln('Update the HTML with the new img filename');
+      content = task.helper('replace', content, /<img.+src=['"](.+)["'][\/>]?>/);
+
+      // write the new content to disk
+      file.write(p, content);
+    });
+
   });
 
-});
-
-task.registerHelper('replace', function(content, regexp) {
-  return content.replace(regexp, function(match, src) {
+  task.registerHelper('replace', function(content, regexp) {
+    return content.replace(regexp, function(match, src) {
       //do not touch external files
       if(src.match(/\/\//)) return match;
       var basename = path.basename(src);
@@ -65,4 +72,5 @@ task.registerHelper('replace', function(content, regexp) {
       // if file not exists probaly was concatenated into another file so skip it
       return filename ? match.replace(src, filename) : '';
     });
-});
+  });
+};

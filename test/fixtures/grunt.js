@@ -1,8 +1,7 @@
 
 var path = require('path');
 
-var h5bp = require('../'),
-  extend = require('grunt-flavored');
+var h5bp = require('../');
 
 
 // This is the main html5-boilerplate build configuration file.
@@ -15,9 +14,7 @@ var h5bp = require('../'),
 // `output` config property below, and by changing any task config to match the new value.
 //
 module.exports = function(grunt) {
-  grunt = extend(grunt);
-
-    // the staging directory used during the process
+  // the staging directory used during the process
   var staging ='intermediate/';
 
   // final build output
@@ -38,8 +35,6 @@ module.exports = function(grunt) {
       output: '<config:exclude>'
     },
 
-    // rev task - File pattern in suprops values are resolved with `output` value
-    // (eg. publish/*.html)
     usemin: {
       files: ['**/*.html']
     },
@@ -54,6 +49,17 @@ module.exports = function(grunt) {
         files: '<config:watch.files>',
         tasks: 'default emit'
       }
+    },
+
+    css: {
+      'css/style.css': ['css/style.css']
+    },
+
+    // are resolved below the output directory
+    rev: {
+      js: 'js/**/*.js',
+      css: 'css/**/*.css',
+      img: 'img/**'
     },
 
     serve: {
@@ -90,7 +96,7 @@ module.exports = function(grunt) {
       'script[data-build]'    : h5bp.plugins.script,
       'link'                  : h5bp.plugins.link,
       'img'                   : h5bp.plugins.img,
-      'script, link, img'     : h5bp.plugins.rev,
+      'script, link, img'     : h5bp.plugins.rev
     },
 
     lint: {
@@ -120,21 +126,6 @@ module.exports = function(grunt) {
   min[output + 'js/scripts.js'] = [staging + 'js/plugins.js', staging + 'js/script.js'];
   grunt.config('min', min);
 
-  //
-  // Css - same here
-  //
-  var css = grunt.config('css') || {};
-  css[output + 'css/style.css'] = [staging + 'css/style.css'];
-  grunt.config('css', css);
-
-  //
-  // Rev - targets needs to be be in output
-  //
-  grunt.config('rev', {
-    js: [output + 'js/**/*.js'],
-    css: [output + 'css/**/*.css'],
-    img: [output + 'img/**'],
-  });
 
   // Run the following tasks...
   grunt.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
@@ -144,79 +135,6 @@ module.exports = function(grunt) {
   grunt.loadTasks('../tasks/dom');
 
   // regular tasks
-  grunt.load('../tasks/support');
+  grunt.loadTasks('../tasks/support');
 
 };
-
-
-//
-// Advanced configuration, doing the necessary logic to map any task needed
-// values to top level staging / output dir
-//
-// ---
-//
-// This is temporary workaround for #3 support untill each task is rewritten to
-// take into account the staging / output values from grunt config.
-
-// exclude - add both staging / output dir as excluded folder during file copy (mkdirs)
-/* * /
-config('exclude', config('exclude')
-  .concat(path.join(config('staging'), '**'))
-  .concat(path.join(config('output'), '**'))
-);
-
-// concat - same here prepend the necessary `staging` value into subprop name
-var concat = config('concat');
-Object.keys(concat).forEach(function(key) {
-  var dir = path.join(config('staging'), key);
-  concat[dir] = concat[key];
-  delete concat[key];
-});
-
-// min - same here prepend the necessary `output` and `staging` value into
-// subprop name and values
-var min = config('min');
-Object.keys(min).forEach(function(key) {
-  var dir = path.join(config('output'), key);
-  min[dir] = min[key].map(function(files) {
-    return path.join(config('staging'), files);
-  });
-  delete min[key];
-});
-
-// css - prepend the necessary `output` value into subprop name
-var css = config('css');
-Object.keys(css).forEach(function(key) {
-  var dir = path.join(config('output'), key);
-  css[dir] = css[key];
-  delete css[key];
-});
-
-// css - prepend the necessary `output` dir value into files pattern to handle
-var rev = config('rev');
-Object.keys(rev).forEach(function(key) {
-  rev[key] = rev[key].map(function(files) {
-    return path.join(config('output'), files);
-  });
-});
-
-// usemin - same here, prepend the necessary `output` dir value into files
-// pattern to handle
-var usemin = config('usemin');
-usemin.files = usemin.files.map(function(files) {
-  return path.join(config('output'), files);
-});
-
-// serve / connect - simply replace staging / output suprop name by their relevant value
-var serve = config('serve');
-Object.keys(serve).forEach(function(key) {
-  serve[config(key)] = serve[key];
-  delete serve[key];
-});
-
-var connect = config('connect');
-Object.keys(connect).forEach(function(key) {
-  connect[config(key)] = connect[key];
-  delete connect[key];
-});
-/* */
