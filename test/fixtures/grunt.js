@@ -14,18 +14,36 @@ var h5bp = require('../');
 // `output` config property below, and by changing any task config to match the new value.
 //
 module.exports = function(grunt) {
+  // Grunt utilities
+  var config = grunt.config,
+    utils = grunt.utils;
+
   // the staging directory used during the process
   var staging ='intermediate/';
 
   // final build output
   var output = 'publish/';
 
-  grunt.config.init({
+  // extend the grunt.utils object with h5bp's utilities, wrapping  require
+  // calls to utility libs (rimraf, ncp, mkdirp) as lazy-loaded getters.
+  h5bp.utils.extend(utils);
+
+  //
+  // Grunt configuration
+  //
+  config.init({
     // the staging directory used during the process
     staging: staging,
 
     // final build output
     output: output,
+
+    // environement and common configuration values
+    // for futher usage in tasks that needs them.
+    env: {
+      platform: process.platform,
+      win32: process.platform === 'win32'
+    },
 
     // filter any files matching one of the below pattern during mkdirs task
     exclude: 'build/** node_modules/** grunt.js package.json *.md'.split(' '),
@@ -103,9 +121,7 @@ module.exports = function(grunt) {
       files: ['js/*.js'],
       build: ['grunt.js', 'tasks/*.js']
     }
-
   });
-
 
   //
   // Concat configuration - prepending output / staging values to task's target
@@ -113,26 +129,32 @@ module.exports = function(grunt) {
   // files are concat'd into `staging/subprop.js`
   // (eg. intermediate/js/scripts.js)
   //
-  var concat = grunt.config('concat') || {};
+  // This is necessary config for the built-in min / concat task to operate
+  // on staging or output directory, without the need to prepend their values
+  // directly in the task target or data (as they may be tweaked to some other values)
+  //
+  // Will probably flesh out a custom concat / min task, using grunt's helper to
+  // handle these values prepends.
+  //
+  var concat = config('concat') || {};
   concat[staging + 'js/scripts.js'] = ['js/plugins.js', 'js/script.js'];
   concat[staging + 'css/style.css'] = ['css/*.css'];
-  grunt.config('concat', concat);
+  config('concat', concat);
 
   //
   // Min configuration - same goes the minify task
   // (eg. publish/js/scripts.js)
   //
-  var min = grunt.config('min') || {};
+  var min = config('min') || {};
   min[output + 'js/scripts.js'] = [staging + 'js/plugins.js', staging + 'js/script.js'];
-  grunt.config('min', min);
-
+  config('min', min);
 
   // Run the following tasks...
   grunt.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
   grunt.registerTask('reload', 'default connect watch:reload');
 
-  // dom based tasks
-  grunt.loadTasks('../tasks/dom');
+  // dom based tasks - not loaded for windows platform
+  config('env.win32') || grunt.loadTasks('../tasks/dom');
 
   // regular tasks
   grunt.loadTasks('../tasks/support');

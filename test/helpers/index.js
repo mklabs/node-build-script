@@ -35,7 +35,6 @@ module.exports = function grunt(base, fn) {
         gpr.stdout.pipe(process.stdout);
         gpr.stderr.pipe(process.stderr);
         gpr.on('exit', function(code, stdout, stderr) {
-          console.log(arguments);
           assert.equal(code, 0, ' ✗ Grunt exited with errors. Code: ' + code);
           run(stack.shift());
         });

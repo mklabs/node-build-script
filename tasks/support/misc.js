@@ -1,17 +1,15 @@
 
 var path = require('path'),
-  minimatch = require('minimatch'),
-  rimraf = require("rimraf"),
-  mkdirp = require('mkdirp'),
-  ncp = require('ncp').ncp,
-  join = path.join;
+  minimatch = require('minimatch');
 
 module.exports = function(grunt) {
 
   var task = grunt.task,
     config = grunt.config,
+    utils = grunt.utils,
     file = grunt.file,
-    log = grunt.log;
+    log = grunt.log,
+    join = utils.join;
 
   task.registerTask('intro', 'Kindly inform the developer about the impending magic', function() {
     var intro = config('intro') || '';
@@ -39,19 +37,15 @@ module.exports = function(grunt) {
     });
   });
 
-
-
   task.registerTask('clean', 'Wipe the previous build dirs', function() {
     var dirs = [config('staging'), config('output')];
     dirs.forEach(task._helpers.rimraf);
   });
 
-
   task.registerMultiTask('manifest', 'Generates manifest files automatically from static assets reference.', function() {
     // Otherwise, print a success message.
     log.writeln('not yet implemented');
   });
-
 
   //
   // **rimraf** is the helper wrapper for
@@ -60,8 +54,8 @@ module.exports = function(grunt) {
   // otherwise `rimraf.sync` is used.
   //
   task.registerHelper('rimraf', function(dir, cb) {
-    if(typeof cb !== 'function') return rimraf.sync(dir);
-    rimraf(dir, cb);
+    if(typeof cb !== 'function') return utils.rimraf.sync(dir);
+    utils.rimraf(dir, cb);
   });
 
   //
@@ -71,8 +65,8 @@ module.exports = function(grunt) {
   // callback function is passed in.
   //
   task.registerHelper('mkdir', function(dir, cb) {
-    if(typeof cb !== 'function') return mkdirp.sync(dir);
-    mkdirp(dir, cb);
+    if(typeof cb !== 'function') return utils.mkdirp.sync(dir);
+    utils.mkdirp(dir, cb);
   });
 
   //
@@ -115,7 +109,7 @@ module.exports = function(grunt) {
       return !res;
     };
 
-    ncp(src, dest, { filter: filter }, cb);
+    utils.ncp(src, dest, { filter: filter }, cb);
   });
 
 };
