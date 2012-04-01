@@ -1,3 +1,4 @@
+# Dom
 
 The `dom` task is a special task using `jsdom` to do some nasty thing to
 a bunch of html files. The idea is to rely on a set of selectors and
@@ -23,36 +24,29 @@ Using the `h5bp` executable:
 
     h5bp dom
 
-Programmatically:
-
-    npm install node-build-script
-
-And then, in a file loaded by grunt (usually `grunt.js` file)
-
-    require('node-build-script').load('dom');
-
-
 ## Configuration
 
 Minimal, most of the configuration is derived from html markup, by using
 special semantics on `data-*` attributes, probably always namespaced to
 `data-build-*`.
 
-    var h5bp = require('node-build-script');
+```js
+var h5bp = require('node-build-script');
 
-    grun.initConfig({
-        ...,
+grun.initConfig({
+    ...,
 
-        dom: {
-            files: ['*.html', 'views/**/*.html'],
-            'script[data-build]'    : h5bp.plugins.script,
-            'link'                  : h5bp.plugins.link,
-            'img'                   : h5bp.plugins.img,
-            'script, link, img'     : h5bp.plugins.rev
-        },
+    dom: {
+        files: ['*.html', 'views/**/*.html'],
+        'script[data-build]'    : h5bp.plugins.script,
+        'link'                  : h5bp.plugins.link,
+        'img'                   : h5bp.plugins.img,
+        'script, link, img'     : h5bp.plugins.rev
+    },
 
-        ...
-    });
+    ...
+});
+```
 
 * **files**: list of glob pattern to expand. The files in the resulted
   array are then passed through each of the processors.
@@ -147,10 +141,7 @@ plugin.handler = function link($, options, cb) {
 };
 ```
 
-
 One could think do to some crazy stuff on their html files, and use a
 jQuery like api mixed here and there with the node api to handle all
 sort of things with a bunch of custom plugins, on an arbitrary set of
 selectors.
-
-

@@ -84,7 +84,7 @@ module.exports = function(grunt) {
   // - source     - Path to the source directory
   // - dest       - where the files will be copied to
   // - opts       - (optional) An Hash object with an `ignore` property
-  // - cb         - callback to called on completion
+  // - cb         - callback to call on completion
   //
   task.registerHelper('copy', function(src, dest, opts, cb) {
     if(!cb) cb = opts, opts = {};

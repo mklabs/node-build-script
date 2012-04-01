@@ -1,5 +1,5 @@
 
-Testsing out JavaScript task has never been easier thanks to great,
+Testing out JavaScript task has never been easier thanks to great,
 great project like [Travis](http://travis-ci.org/) or [cucumberjs](https://github.com/cucumber/cucumber-js)
 
 Here we'll go through cucumberjs usage in a basic getting started guide.

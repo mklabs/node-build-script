@@ -1,14 +1,15 @@
-plugins - link
-==============
+# Plugin - link
 
 This plugin is run, in the default setup, with the following
 configuration:
 
-    dom: {
-      files                   : ['*.html'],
-      options: {},
-      'link'                  : require('./plugins/link'),
-    },
+```js
+dom: {
+  files                   : ['*.html'],
+  options: {},
+  'link'                  : require('./plugins/link'),
+},
+```
 
 It uses [r.js](https://github.com/jrburke/r.js) to optimize a single css
 file, and properly handle the `@import` statements you might have.
@@ -22,8 +23,7 @@ Default optimization options for rjs are as follows:
 The output is based on `data-build` from the `<link>` tag, or defaults
 to `css/style.min.css`.
 
-Options
--------
+## Options
 
 * **dir** base directory to work from
 
