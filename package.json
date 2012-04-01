@@ -16,7 +16,7 @@
     "socket.io": "~0.9.2",
     "requirejs": "~1.0.7",
     "rimraf": "~1.0.9",
-    "mkdirp": "~0.3.0",
+    "mkdirp": "~0.3.1",
     "ncp": "~0.2.6",
     "serve": "~1.0.2",
     "connect": "~2.0.2"

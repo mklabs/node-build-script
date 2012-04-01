@@ -3,3 +3,4 @@ test/fixtures/h5bp
 .test
 npm-debug.log
 test/custom
+docs/_site
