@@ -19,12 +19,14 @@ the gruntfile), the second tries to minimize the need and the amount of
 necessary configuration to rely on html markup instead.
 
 * **grunt usage**
-Be sure to check out the extensive grunt documantation, specifically the [Getting
+Be sure to check out the [extensive grunt
+documentation](https://github.com/cowboy/grunt/blob/master/docs/toc.md),
+specifically the [Getting
 Started](https://github.com/cowboy/grunt/blob/master/docs/getting_started.md#readme)
 section.
 
-* **tasks and configuration** Learn more about the [[build
-  script|overview]], the [[available tasks|tasks]] and [[configuration]].
+* **tasks and configuration** Learn more about the [[build script|overview]],
+  the [[available tasks|tasks]] and [[configuration]].
 
 * **[[dom-based|dom]]** [[using JSDOM|dom]]. Build scripts may drastically reduce the need of
   configuration, by using pure html markup and the dom to build and

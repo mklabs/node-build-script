@@ -30,7 +30,7 @@ given `files` pattern(s), with passed in `options`.
 - files      - String or Array of glob pattern
 - options    - (optional) An Hash object where:
   - cwd     - Base directory to work from, glob patterns are
-              prepended to this path.
+  prepended to this path.
 
 ```js
 task.helper('hash', files, options);

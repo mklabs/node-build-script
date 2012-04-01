@@ -17,7 +17,7 @@ mkdirs: {
   staging: '<config:exclude>',
   output: '<config:exclude>'
 },
-``
+```
 
 Just as the clean task, config subprop are used to create the
 directories. A basic mapping is done in configuration to get back the

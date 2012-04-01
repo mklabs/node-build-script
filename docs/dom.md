@@ -9,10 +9,10 @@ their task.
 
 The following plugins are implemented
 
-* **css** Relies on @import statement mainly which are inlined (with
+* **[[css|link-plugin]]** Relies on @import statement mainly which are inlined (with
   nested path rewrite) to serve a single optimized stylesheet.
 
-* **js** (todo) Concats, minify through uglify and serve a single concat'd /
+* **[[js|script-plugin]]** Concats, minify through uglify and serve a single concat'd /
   minified script.
 
 Each plugin is able to modify the DOM tree to replace references to
