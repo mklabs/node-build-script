@@ -1,10 +1,3 @@
 #!/usr/bin/env node
-
-var grunt = require('grunt'),
-  path = require('path');
-
-grunt.cli({
-  tasks: [path.join(__dirname, '../tasks')],
-  config: path.existsSync('./grunt.js') ? './grunt.js' : path.join(__dirname, '../grunt.js'),
-  base: process.cwd()
-});
+var join = require('path').join;
+require('grunt').npmTasks(join(__dirname, '../')).cli();
