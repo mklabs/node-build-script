@@ -9,14 +9,12 @@ var fs = require('fs'),
 assert.ok(h5bp.plugins);
 
 var test = new EventEmitter;
-test.on('end', function(err) {
-  if(err) throw err;
-});
+
+//
+// Running tasks serially, tests pass or fail depending on grunt's exit code.
+//
 
 runner.setup(function(err) {
-  //
-  // Running tasks serially, tests pass or fail depending on grunt's exit code.
-  //
   var commands = [
     'intro --verbose'
   ];
@@ -25,11 +23,16 @@ runner.setup(function(err) {
     runner('.test', test)(cmd);
   });
 
-  // running the default task, which runs all
-  // ideally a test should be done for each test individually
-  runner('.test', test)('default');
+
+  runner.copy('test/fixtures/default/usemin.html', '.test/usemin.html', function(err) {
+    if(err) throw err;
+
+    // run the default task
+    runner('.test', test)('default');
+  });
 });
 
+// global check on index.html
 test.on('end', function(err) {
   if(err) throw err;
   var result = fs.readFileSync('.test/index.html', 'utf8'),
@@ -38,3 +41,17 @@ test.on('end', function(err) {
   assert.equal(expected.trim(), result.trim());
 });
 
+//
+// check the usemin version, eg. one using
+//
+//    <!-- build:js path/to/script.js -->
+//
+// kind of surrouding html comment.
+//
+test.on('end', function(err) {
+  if(err) throw err;
+  var result = fs.readFileSync('.test/usemin.html', 'utf8'),
+    expected = fs.readFileSync('test/fixtures/default/usemin.expected.html', 'utf8');
+
+  assert.equal(expected.trim(), result.trim());
+});

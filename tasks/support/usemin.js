@@ -75,6 +75,11 @@ module.exports = function(grunt) {
         content = task.helper('usemin', content, block, target, type);
       });
 
+      // handle revving, each script / link tags are searching for a
+      // matching file in output dir, replacing the href/src with their
+      // hash-prepended version.
+      content = task.helper('usemin:replace', content);
+
       // write the new content to disk
       file.write(p, content);
     });
@@ -105,6 +110,7 @@ module.exports = function(grunt) {
 
     log.writeln('Update the HTML with the new img filename');
     content = task.helper('replace', content, /<img.+src=['"](.+)["'][\/>]?>/);
+    return content;
   });
 
   task.registerHelper('replace', function(content, regexp) {
@@ -114,14 +120,16 @@ module.exports = function(grunt) {
       var basename = path.basename(src);
       var dirname = path.dirname(src);
 
-      var filename = path.basename((file.expand(path.join(config('output'), '**/*') + basename)[0] || ''));
+      var filepath = file.expand(path.join(config('output'), '**/*') + basename)[0];
 
+      // not a file in output, skip it
+      if(!filepath) return match;
+
+      var filename = path.basename(filepath);
       // replace the output dir prefix
       filename = filename.replace(config('output'), '');
-
       // handle the relative prefix (with always unix like path even on win32)
       filename = [dirname, filename].join('/');
-
       // if file not exists probaly was concatenated into another file so skip it
       return filename ? match.replace(src, filename) : '';
     });
@@ -167,7 +175,5 @@ function getBlocks(body) {
     }
   });
 
-  return Object.keys(sections).length ? sections : {
-    'replace': lines
-  };
+  return sections;
 }

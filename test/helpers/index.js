@@ -106,6 +106,13 @@ helpers.copy = function(sources, destination, cb) {
   var ln = sources.length;
   if(!ln) return cb(new Error('Sources array is empty'));
 
+  // if we get a single file to copy and destination is not a dir
+  // direct file copy
+  if(ln === 1 && path.extname(destination)) {
+    return fs.createReadStream(sources[0])
+      .pipe(fs.createWriteStream(destination).on('close', cb));
+  }
+
   sources.forEach(function(src) {
     var to = path.join(destination, path.basename(src)),
       rs = fs.createReadStream(src),
