@@ -1,6 +1,8 @@
 
-var platform = process.platform,
-  exec = require('child_process').exec;
+var fs = require('fs'),
+  exec = require('child_process').exec,
+  path = require('path'),
+  platform = process.platform;
 
 //
 // postinstall npm script - used mainly to avoid installing
@@ -22,10 +24,19 @@ if(platform === 'win32') return console.log([
 // but it could certainly be done with npm programmatically if installed
 // locally.
 //
+// only if node_module/jsdom is not there yet. To update, drop the
+// folder and rerun npm install
+//
 
-var npm = exec('npm install jsdom');
-npm.stdout.pipe(process.stdout);
-npm.stderr.pipe(process.stderr);
-npm.on('exit', function(code) {
-  process.exit(code);
+fs.stat(path.join(__dirname, '../node_modules/jsdom'), function(e) {
+  if(!e) return;
+
+  var npm = exec('npm install jsdom');
+  npm.stdout.pipe(process.stdout);
+  npm.stderr.pipe(process.stderr);
+  npm.on('exit', function(code) {
+    process.exit(code);
+  });
+
 });
+

@@ -24,11 +24,14 @@
   "devDependencies": {
     "cucumber": "~0.2.12",
     "zombie": "~0.12.15",
-    "mime": "~1.2.5"
+    "mime": "~1.2.5",
+    "h5bp-docs": "http://nodeload.github.com/mklabs/h5bp-docs/tarball/next"
   },
   "scripts": {
     "install": "node scripts/install.js",
     "pretest": "git submodule update --init",
-    "test": "node test"
+    "test": "node test",
+    "docs": "node node_modules/h5bp-docs/bin/generate --src docs/ --dest docs/_site --template template.html",
+    "docs:serve": "cd docs/_site && serve"
   }
 }
