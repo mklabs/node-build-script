@@ -68,7 +68,7 @@ helpers.setup = function setup(o, cb) {
   var source = o.source || path.join(__dirname, '../h5bp');
 
   // test gruntfile
-  var gruntfile = o.gruntfile || o.grunt || path.join(__dirname, '../fixtures/grunt.js');
+  var gruntfile = o.gruntfile || o.grunt || path.join(__dirname, '../fixtures/default/grunt.js');
 
   // ignore handler
   var ignore = o.ignore || function ignore(name) {

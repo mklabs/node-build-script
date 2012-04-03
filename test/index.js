@@ -1,5 +1,6 @@
 
-var h5bp = require('../'),
+var fs = require('fs'),
+  h5bp = require('../'),
   assert = require('assert'),
   runner = require('./helpers'),
   EventEmitter = require('events').EventEmitter;
@@ -9,9 +10,7 @@ assert.ok(h5bp.plugins);
 
 var test = new EventEmitter;
 test.on('end', function(err) {
-  console.log('test end', arguments);
   if(err) throw err;
-  console.log('done', arguments);
 });
 
 runner.setup(function(err) {
@@ -29,8 +28,13 @@ runner.setup(function(err) {
   // running the default task, which runs all
   // ideally a test should be done for each test individually
   runner('.test', test)('default');
-
 });
 
+test.on('end', function(err) {
+  if(err) throw err;
+  var result = fs.readFileSync('.test/index.html', 'utf8'),
+    expected = fs.readFileSync('test/fixtures/default/expected.html', 'utf8');
 
+  assert.equal(expected.trim(), result.trim());
+});
 
