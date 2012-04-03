@@ -1,21 +1,36 @@
 
-var assert = require('assert'),
-  run = require('./helpers'),
-  h5bp = require('../');
+var h5bp = require('../'),
+  assert = require('assert'),
+  runner = require('./helpers'),
+  EventEmitter = require('events').EventEmitter;
 
 // plugins
 assert.ok(h5bp.plugins);
 
-//
-// Running tasks serially, tests pass or fail depending on grunt's exit code.
-//
-var commands = [
-  '--version',
-  'intro --verbose'
-];
+var test = new EventEmitter;
+test.on('end', function(err) {
+  console.log('test end', arguments);
+  if(err) throw err;
+  console.log('done', arguments);
+});
 
-commands.forEach(run('.test'));
+runner.setup(function(err) {
+  //
+  // Running tasks serially, tests pass or fail depending on grunt's exit code.
+  //
+  var commands = [
+    'intro --verbose'
+  ];
 
-// running the default task, which runs all
-// ideally a test should be done for each test individually
-run('.test')('default');
+  commands.forEach(function(cmd) {
+    runner('.test', test)(cmd);
+  });
+
+  // running the default task, which runs all
+  // ideally a test should be done for each test individually
+  runner('.test', test)('default');
+
+});
+
+
+

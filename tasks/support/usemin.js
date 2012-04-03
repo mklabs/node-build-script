@@ -22,7 +22,8 @@ module.exports = function(grunt) {
   var task = grunt.task,
     config = grunt.config,
     file = grunt.file,
-    log = grunt.log;
+    log = grunt.log,
+    linefeed = grunt.utils.linefeed;
 
   task.registerMultiTask('usemin', 'Replaces references to non-minified scripts / stylesheets', function() {
 
@@ -33,25 +34,77 @@ module.exports = function(grunt) {
 
     files.map(file.read).forEach(function(content, i) {
       var p = files[i];
-      log.subhead(p);
-      log.writeln('switch from a regular jquery to minified');
+      log.subhead('usemin - ' + p);
 
-      // convert content buffer into raw string before processing
+      // make sure to convert back into utf8, `file.read` when used as a
+      // forEach handler will take additional arguments, and thus trigger the
+      // raw buffer read
       content = content.toString();
 
-      log.writeln('Update the HTML to reference our concat/min/revved script files');
-      content = task.helper('replace', content, /<script.+src=['"](.+)["'][\/>]?><[\\]?\/script>/gm);
+      // todo fallback to the usemin replace we have if no sections were found.
+      var blocks = getBlocks(content);
 
-      log.writeln('Update the HTML with the new css filename');
-      content = task.helper('replace', content, /<link rel=["']?stylesheet["']?\shref=['"](.+)["']\s*>/gm);
+      //
+      // {
+      //    'css/site.css ':[
+      //      '  <!-- build:css css/site.css -->',
+      //      '  <link rel="stylesheet" href="css/style.css">',
+      //      '  <!-- endbuild -->'
+      //    ],
+      //    'js/head.js ': [
+      //      '  <!-- build:js js/head.js -->',
+      //      '  <script src="js/libs/modernizr-2.5.3.min.js"></script>',
+      //      '  <!-- endbuild -->'
+      //    ],
+      //    'js/site.js ': [
+      //      '  <!-- build:js js/site.js -->',
+      //      '  <script src="js/plugins.js"></script>',
+      //      '  <script src="js/script.js"></script>',
+      //      '  <!-- endbuild -->'
+      //    ]
+      // }
+      //
 
-      log.writeln('Update the HTML with the new img filename');
-      content = task.helper('replace', content, /<img.+src=['"](.+)["'][\/>]?>/);
+      // handle blocks
+      Object.keys(blocks).forEach(function(key) {
+        var block = blocks[key].join(linefeed),
+          parts = key.split(':'),
+          type = parts[0];
+          target = parts[1];
+
+        content = task.helper('usemin', content, block, target, type);
+      });
 
       // write the new content to disk
       file.write(p, content);
     });
 
+  });
+
+  task.registerHelper('usemin', function(content, block, target, type) {
+    target = target || 'replace';
+    return task.helper('usemin:' + type, content, block, target);
+  });
+
+  task.registerHelper('usemin:css', function(content, block, target) {
+    var indent = (block.split(linefeed)[0].match(/^\s*/) || [])[0];
+    return content.replace(block, indent + '<link rel="stylesheet" href="' + target + '">');
+  });
+
+  task.registerHelper('usemin:js', function(content, block, target) {
+    var indent = (block.split(linefeed)[0].match(/^\s*/) || [])[0];
+    return content.replace(block, indent + '<script src="' + target + '"></script>');
+  });
+
+  task.registerHelper('usemin:replace', function(content) {
+    log.writeln('Update the HTML to reference our concat/min/revved script files');
+    content = task.helper('replace', content, /<script.+src=['"](.+)["'][\/>]?><[\\]?\/script>/gm);
+
+    log.writeln('Update the HTML with the new css filename');
+    content = task.helper('replace', content, /<link rel=["']?stylesheet["']?\shref=['"](.+)["']\s*>/gm);
+
+    log.writeln('Update the HTML with the new img filename');
+    content = task.helper('replace', content, /<img.+src=['"](.+)["'][\/>]?>/);
   });
 
   task.registerHelper('replace', function(content, regexp) {
@@ -74,3 +127,47 @@ module.exports = function(grunt) {
     });
   });
 };
+
+
+//
+// Helpers: todo, register as grunt helper
+//
+
+// start build pattern --> <!-- build:[target] output -->
+// var regbuild = /^\s*<!--\s*build\:\s(\w+)\s([\w\d\.\-_]+)\s*\]\]\s*-->/;
+var regbuild = /<!--\s*build:(\w+)\s*(.+)\s*-->/;
+
+// end build pattern -- <!-- endbuild -->
+// var regend = /\s*<!--\s*\[\[\s*endbuild\s*\]\]\s*-->/;
+var regend = /<!--\s*endbuild\s*-->/;
+
+function getBlocks(body) {
+  var lines = body.replace(/\r\n/g, '\n').split(/\n/),
+    block = false,
+    sections = {},
+    last;
+
+  lines.forEach(function(l) {
+    var build = l.match(regbuild),
+      endbuild = regend.test(l);
+
+    if(build) {
+      block = true;
+      sections[[build[1], build[2].trim()].join(':')] = last = [];
+    }
+
+    // switch back block flag when endbuild
+    if(block && endbuild) {
+      last.push(l);
+      block = false;
+    }
+
+    if(block && last) {
+      last.push(l);
+    }
+  });
+
+  return Object.keys(sections).length ? sections : {
+    'replace': lines
+  };
+}

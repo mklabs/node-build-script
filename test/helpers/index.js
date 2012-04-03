@@ -1,6 +1,11 @@
-var assert = require('assert'),
-  resolve = require('path').resolve,
-  exec = require('child_process').exec;
+var fs = require('fs'),
+  path = require('path'),
+  fork = require('child_process').fork,
+  assert = require('assert'),
+  rimraf = require('rimraf'),
+  mkdirp = require('mkdirp'),
+  ncp = require('ncp').ncp,
+  EventEmitter = require('events').EventEmitter;
 
 //
 // Grunt runner helper. A stack of command is built when called, to finally run
@@ -8,10 +13,12 @@ var assert = require('assert'),
 //
 // Depending on grunt's exit code, the test fails or pass.
 //
-module.exports = function grunt(base, fn) {
+var helpers = module.exports = function grunt(base, em) {
+  if(!em) em = base, base = '';
   base = base || 'test/h5bp';
+  em = em || (new EventEmitter);
 
-  return function(cmd, index) {
+  return function(cmd) {
     var stack = grunt.stack || (grunt.stack = []);
     stack.push(cmd);
 
@@ -21,21 +28,20 @@ module.exports = function grunt(base, fn) {
 
       // path to the grunt executable, going to node dependency but could be done
       // with the global grunt instead
-      var gruntpath = resolve('node_modules/grunt/bin/grunt');
+      var gruntpath = path.resolve('node_modules/grunt/bin/grunt');
 
       // now that the stack is setup, run each command serially
       (function run(cmd) {
-        if(!cmd) return;
+        if(!cmd) return em.emit('end');
         // grunt process - maybe fork would avoid the exec use for this to work on windows, I dunno
-        console.log('running in ', resolve(base));
+        console.log('running in ', path.resolve(base));
         console.log(' » grunt ' + cmd);
         console.log();
 
-        var gpr = exec('node ' + gruntpath + ' ' + cmd, { cwd: resolve(base) });
-        gpr.stdout.pipe(process.stdout);
-        gpr.stderr.pipe(process.stderr);
+        var gpr = fork(gruntpath, cmd.split(' '), { cwd: path.resolve(base) });
         gpr.on('exit', function(code, stdout, stderr) {
           assert.equal(code, 0, ' ✗ Grunt exited with errors. Code: ' + code);
+          em.emit(cmd, code, stdout, stdout);
           run(stack.shift());
         });
       })(stack.shift());
@@ -43,3 +49,71 @@ module.exports = function grunt(base, fn) {
   }
 };
 
+//
+// **setup** tests. Meant to be called before running individual tests.
+// Not automated, must be called explicitely. Equivalent of npm's pretest script.
+//
+//    rm -rf .test
+//    mkdir .test
+//    cp -r test/h5bp/* test/h5bp/.htaccess test/fixtures/grunt.js .test/
+//
+// ncp doesn't have a sync api -> async process.
+helpers.setup = function setup(o, cb) {
+  if(!cb) cb = o, o = {};
+
+  // test dir, $pkgroot/.test
+  var dest = o.base || o.dest || path.join(__dirname, '../../.test');
+
+  // source dir, test/h5bp submodule
+  var source = o.source || path.join(__dirname, '../h5bp');
+
+  // test gruntfile
+  var gruntfile = o.gruntfile || o.grunt || path.join(__dirname, '../fixtures/grunt.js');
+
+  // ignore handler
+  var ignore = o.ignore || function ignore(name) {
+    return path.basename(name) !== '.git';
+  };
+
+  // rm -rf .test
+  rimraf(dest, function(err) {
+    if(err) return cb(err);
+
+    // && mkdirp ./test
+    mkdirp(dest, function(err) {
+      if(err) return cb(err);
+
+      // cp -r test/h5bp/* test/fixtures/grunt.js .test/
+      ncp(source, dest, { filter: ignore }, function(err) {
+        if(err) return cb(err);
+
+        // specific copy of test/fixtures/grunt.js
+        var ws = fs.createWriteStream(path.join(dest, 'grunt.js')).on('close', cb);
+        fs.createReadStream(gruntfile).pipe(ws);
+      });
+    });
+  });
+};
+
+
+//
+// **copy** helper, creates a new ReadStream, connects to WriteStream destination,
+// call the callback on completion. sources can be a single or an Array of source files,
+// destination is the destination directory.
+//
+helpers.copy = function(sources, destination, cb) {
+  sources = Array.isArray(sources) ? sources : sources.split(' ');
+  var ln = sources.length;
+  if(!ln) return cb(new Error('Sources array is empty'));
+
+  sources.forEach(function(src) {
+    var to = path.join(destination, path.basename(src)),
+      rs = fs.createReadStream(src),
+      ws = fs.createWriteStream(to).on('close', function() {
+        if(--ln) return;
+        cb();
+      });
+
+    rs.pipe(ws);
+  });
+};
