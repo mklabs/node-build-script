@@ -1,4 +1,4 @@
-
+# Tests
 
 A significant amount of efforts have been put into setting up a basic test suite
 to ensure everything is working properly.

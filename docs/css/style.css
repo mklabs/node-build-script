@@ -118,7 +118,7 @@ h1:hover { color: #e16734; }
 #header h2 { margin-bottom: 0; margin-top: 0; }
 
 
-body { background: #222; color: #e3d7bf; padding-bottom: 3em; font: 300 16px/1.5 "Helvetica Neue", sans-serif; }
+body { color: #E3D7BF; background: #1c1c1c; padding-bottom: 3em; font: 300 16px/1.5 "Helvetica Neue", sans-serif; }
 
 a, a:hover, a:focus, a:visited  { text-decoration: none; }
 a, a:visited, .disqus-wrapper a, #builder a.selected, #footer a.announcements { color: #e16734; }
@@ -138,10 +138,8 @@ a:hover, a:focus, #footer a:hover, #footer a:focus { color: #82A6B0; }
 #container[dir="rtl"] #header p { text-align: right; }
 
 
-
 .notenglish #header p.lang { font-size: 1.2em; display:block; }
 
-h2 + p,
 #builder { font-size: 0.9em; }
 
 p.lang, #body p:first-child { font-size: 0.8em; }
@@ -283,8 +281,9 @@ html[lang="en-us"] .recos ul { display:none;}
 .wikiconvertor h1 { font-size: 3em; }
 .wikiconvertor #header .dwn { position: absolute; top: 0; left: 0; right: 0; z-index: 3; padding-top: 0.5em; text-align: right; margin: 0; }
 .wikiconvertor .dwn a { line-height: 1.5em; border-width: 0.25em; }
-.wikiconvertor .dwn .home { position: absolute; left: 0; background: none; box-shadow: none; }
-
+.wikiconvertor .dwn .home { position: absolute; left: 0; background: none; text-shadow: none; box-shadow: none; color: #E16734; }
+.wikiconvertor .dwn { background: transparent; }
+.wikiconvertor .dwn a:before { display: none; }
 
 .wikiconvertor-content h1 { font-size: 2em; }
 .wikiconvertor-content > ul > li { text-align: left; line-height: 1.5; border: 0; font-size: 1em; padding: 0; text-transform: none; width: 100%; }
