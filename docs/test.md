@@ -1,126 +1,164 @@
 
-Testing out JavaScript task has never been easier thanks to great,
-great project like [Travis](http://travis-ci.org/) or [cucumberjs](https://github.com/cucumber/cucumber-js)
+
+A significant amount of efforts have been put into setting up a basic test suite
+to ensure everything is working properly.
+
+As of now, the `default` and `usemin` task are tested.
+
+`default` is the global task that runs the following tasks:
+
+    grunt.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
+
+Assertions on `default` task output are a good sanity check. Each tasks is then
+tested individually (now the case of `usemin`)
 
 Here we'll go through cucumberjs usage in a basic getting started guide.
 
-**add the depedency to the project**
+This page will give a walkthrough on how to setup basic tests, how to run them
+and how to write new ones.
 
-unless you'd like on a globally installed version of cucumber.
+## npm pretest
 
-    npm i cucumber -S
+Tests are done on top of
+[h5bp/html5-boilerplate](https://github.com/h5bp/html5-boilerplate/) repository.
+The original repository is setup as a submodule at the `test/h5bp` location.
 
-**Add a new feature**
+Running `npm test` will trigger the `pretest` npm script, and then execute the
+`test/index.js` file:
 
-Features are written with the [Gherkin syntax](https://github.com/cucumber/cucumber/wiki/Gherkin)
+```js
+"pretest": "git submodule update --init"
+```
 
-    # features/build.feature
-    Feature: Build feature
-      As a user of h5bp's node build script
-      I want to write my tests as cucumber features
-      So that I can concentrate on building awesome applications
+## How the tests work
 
-      Scenario: Launching build
-        When I launch a local http server
-        Given I am on the "index.html" page
-        Then I should have a "css/style.css" css file
+Testing a build script is somewhat tricky. Tests here aren't really unit tests,
+they simply run a given grunt command, and run few basic assertions on the script output.
 
-Features in cucumber go along some support files. Support files let you
-setup the the environment in which steps will be run, and define step
-definitions.
+No test framework are used during the process, they require nothing but node.js.
+It'll hopefully make them easier to understand for anyone that is familiar with
+node and not a given chosen test framework.
 
+Each assertion file is using a grunt helper to spawn a new process, executing a grunt command,
+to finally run a few assertions on top of the output directory.
 
-    // features/support/world.js
-    var zombie = require('zombie');
-    var World = function World(callback) {
-      this.browser = new zombie.Browser(); // this.browser will be available in step definitions
-
-      this.visit = function(url, callback) {
-        this.browser.visit(url, callback);
-      };
-
-      callback(); // tell Cucumber we're finished and to use 'this' as the world instance
-    };
-    exports.World = World;
+## Test structure
 
 
+    * test/
+      * fixtures
+        * default/
+          * expected.html
+          * grunt.js
+          * usemin.expected.html
+          * usemin.html
+        * ...
+        * usemin/
+          * expected.html
+          * grunt.js
+          * index.html
 
-If you'd like further documentation on cucumberjs, you should definitely
-checkout [the project's
-readme](https://github.com/cucumber/cucumber-js#readme)
+      * h5bp/
+        * css/
+        * js/
+        * index.html
+        * 404.html
+        * ...
 
-## Writing a new feature
+      * helpers/
+        * index.js
 
-*Replace `<featurename>` by the actual feature beeing tested*
+      * tasks/
+        * usemin/
+          * index.js
 
-#### 1. feature
+* **test/fixtures**
+Holds the fixtures file. If necessary test scripts will copy
+files from fixtures to the test directory (`.test`) and have grunt operate on
+top of that. This may include custom gruntfile and specific html files, testing
+out the whole script or a specific feature. This directory usually include
+subdirectories named after the task they meant to be used with.
 
-Create a new file in `features/` named `<featurename>.feature`.
+* **test/h5bp**
+this is the h5bp submodule. Running `git submodule update
+--init` will make sure everything is here. Relatedly, this command is run
+automatically before `npm test`.
 
-Add the following:
+* **test/helpers**
+Contains few test helper, see below for further details.
 
-  # features/<featurename>.feature
-  Feature: <featurename> feature
-    As a user of h5bp's node build script
-    I want to write my tests as cucumber features
-    So that I can concentrate on building awesome applications
+* **test/tasks** Like `test/fixtures`, this directory usually include
+subdirectories named after the task that is tested. Test files in this directory
+are meant to test specific task / feature of the build script. They may be run directly using
+`node test/tasks/usemin` (or any other implemented test).
 
-    Scenario: Launching task "dom"
-      When I run "dom" with following configuration "fixtures/grunt.js"
-      And I launch a local http server
-      Given I am on the "index.html" page
-      Then I should have a "css/style.css" css file
+## Writing a new test
 
-Then, try running `npm test`.
+Checkout the tests that have been setup, they usually are a good place to look at.
 
-Unless there is previous test errors, you should something like:
+Tests are usually done like so:
 
-    U---
+```js
+var fs = require('fs'),
+  h5bp = require('../'),
+  assert = require('assert'),
+  runner = require('./helpers'),
+  EventEmitter = require('events').EventEmitter;
 
-    1 scenario (1 undefined)
-    4 steps (1 undefined, 3 skipped)
+//
+// Setup the event emitter, an end event will be emitted on grunt completion.
+//
+// Depending on grunt's exit code, test fail or pass. Then, further assertions
+// may perform few additional checks.
+//
+var test = new EventEmitter;
 
-    You can implement step definitions for undefined steps with these snippets:
+//
+// Running tasks serially, tests pass or fail depending on grunt's exit code.
+//
 
-    this.Then(/^I should see a "([^"]*)" css file$/, function(arg1, callback) {
-      // express the regexp above with the code you wish you had
-      callback.pending();
-    });
+//
+// `runner.setup` is mandatory, and deal with directory copy from `test/h5bp` to `.test`.
+//
+//  The tests and build process happens in this `.test` directory.
+//
+runner.setup(function(err) {
 
-### 2. Step definition
+  //
+  // optional fixtures copy test. Copy may copy a single or a set of files.
+  //
+  // Second argument is the destination, which may be a file (when copying a single file)
+  // or a directory (`.test`).
+  //
+  runner.copy('test/fixtures/default/usemin.html', '.test/usemin.html', function(err) {
+    if(err) throw err;
 
-Creates a new step definition file in `features/step_definitions` named
-`<featurename>.js`
+    // run the default task
+    runner('.test', test)('default');
+  });
+});
 
-And append the following content to this new file:
+// global check on index.html
+test.on('end', function(err) {
+  if(err) throw err;
+  var result = fs.readFileSync('.test/index.html', 'utf8'),
+    expected = fs.readFileSync('test/fixtures/default/expected.html', 'utf8');
 
-    var fs = require('fs'),
-      assert = require('assert'),
-      http = require('http'),
-      mime = require('mime'),
-      join = require('path').join;
+  assert.equal(expected.trim(), result.trim());
+});
 
-    module.exports = wrapper;
+//
+// check the usemin version, eg. one using
+//
+//    <!-- build:js path/to/script.js -->
+//
+// kind of surrouding html comment.
+//
+test.on('end', function(err) {
+  if(err) throw err;
+  var result = fs.readFileSync('.test/usemin.html', 'utf8'),
+    expected = fs.readFileSync('test/fixtures/default/usemin.expected.html', 'utf8');
 
-    function wrapper() {
-      this.World = require("../support/build.js").World;
-
-      // from previous console output, copy-paste missing steps to this
-      // step definition file
-
-      this.Then(/^I should see a "([^"]*)" css file$/, function(arg1, callback) {
-        // express the regexp above with the code you wish you had
-        callback.pending();
-      });
-    }
-
-## Built-in step definition
-
-> todo
-
-* serve: When/And I launch a local http server$
-Starts a basic http server serving static files under `.test/output/
-
-* run: When/And I run ":task" with following configuration ":gruntfile"$
-Spawn grunt with the specified `:gruntfile`, to run the given `:task`.
-
+  assert.equal(expected.trim(), result.trim());
+});
+```

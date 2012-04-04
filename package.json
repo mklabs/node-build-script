@@ -22,9 +22,6 @@
     "grunt": "~0.3.7"
   },
   "devDependencies": {
-    "cucumber": "~0.2.12",
-    "zombie": "~0.12.15",
-    "mime": "~1.2.5",
     "h5bp-docs": "http://nodeload.github.com/mklabs/h5bp-docs/tarball/next"
   },
   "scripts": {
