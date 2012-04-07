@@ -14,7 +14,7 @@ module.exports = function(grunt) {
   task.registerTask('intro', 'Kindly inform the developer about the impending magic', function() {
     var intro = config('intro') || '';
     intro = Array.isArray(intro) ? intro : [intro];
-    log.writeln(intro.join('\n'));
+    log.writeln(intro.join(utils.linefeed));
   });
 
   task.registerMultiTask('mkdirs', 'Prepares the build dirs', function() {
@@ -85,6 +85,8 @@ module.exports = function(grunt) {
   // - dest       - where the files will be copied to
   // - opts       - (optional) An Hash object with an `ignore` property
   // - cb         - callback to call on completion
+  //
+  // todo: consider fstream for that.
   //
   task.registerHelper('copy', function(src, dest, opts, cb) {
     if(!cb) cb = opts, opts = {};

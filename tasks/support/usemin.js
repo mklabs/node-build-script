@@ -142,11 +142,9 @@ module.exports = function(grunt) {
 //
 
 // start build pattern --> <!-- build:[target] output -->
-// var regbuild = /^\s*<!--\s*build\:\s(\w+)\s([\w\d\.\-_]+)\s*\]\]\s*-->/;
 var regbuild = /<!--\s*build:(\w+)\s*(.+)\s*-->/;
 
 // end build pattern -- <!-- endbuild -->
-// var regend = /\s*<!--\s*\[\[\s*endbuild\s*\]\]\s*-->/;
 var regend = /<!--\s*endbuild\s*-->/;
 
 function getBlocks(body) {
