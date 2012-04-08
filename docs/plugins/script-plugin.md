@@ -1,4 +1,0 @@
-# Plugin - script
-
-## Options
-
