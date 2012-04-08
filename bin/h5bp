@@ -3,10 +3,16 @@ var fs = require('fs'),
   join = require('path').join,
   help = join(__dirname, 'help.txt');
 
-var cmd = process.argv.slice(2)[0];
+var cmd = process.argv.slice(2)[0],
+  opts = {};
 
 // custom help, on `h5bp help`
 if(cmd === 'help') return fs.createReadStream(help).pipe(process.stdout);
 
+if(cmd === '--version') {
+  console.log('h5bp  v%s', require('../package.json').version);
+  opts.version = true;
+}
+
 // the grunt cli
-require('grunt').npmTasks(join(__dirname, '../')).cli();
+require('grunt').npmTasks(join(__dirname, '../')).cli(opts);
