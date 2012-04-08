@@ -93,6 +93,14 @@ module.exports = function(grunt) {
 
     var ignores = opts.ignore = opts.ignore || opts.ignores || '';
 
+    // baseurl
+    var base = grunt.option('base') || grunt.config('base') || process.cwd();
+
+    // gitignore
+    var gitignore = path.join(base, '.gitignore');
+    gitignore = !path.existsSync(gitignore) ? '' :
+        grunt.file.read(gitignore).trim().split(grunt.utils.linefeed);
+
     var fn = typeof ignores === 'function';
     if(!fn) ignores = Array.isArray(ignores) ? ignores : ignores.split(' ');
     var filter = function(name) {
@@ -101,7 +109,7 @@ module.exports = function(grunt) {
       if(name === dest) return false;
 
       name = name.replace(src, '').replace(/^[\/\\]/, '');
-      var res = ignores.map(function(ignore) {
+      var res = ignores.concat(gitignore).map(function(ignore) {
         return minimatch(name, ignore, { matchBase: true });
       }).filter(function(result) {
         return result;
