@@ -3,6 +3,13 @@ var path = require('path');
 
 module.exports = function(grunt) {
 
+  // load the external plugins
+  // todo: maybe an issue with global-plugin (eg. running `h5bp`
+  // instead of `grunt`) and when done from outside the project dir.
+  // the tasks from an inner plugin does not seem to load in that
+  // context.
+  grunt.task.loadNpmTasks('grunt-help');
+
   // Help configuration fot the grunt-help plugin
   // >> https://github.com/mklabs/grunt-help
   grunt.config('help', {

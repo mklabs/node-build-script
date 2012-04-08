@@ -28,9 +28,6 @@ module.exports = function(grunt) {
   // calls to utility libs (rimraf, ncp, mkdirp) as lazy-loaded getters.
   h5bp.utils.extend(utils);
 
-  // load the external plugins
-  grunt.task.loadNpmTasks('grunt-help');
-
   //
   // Grunt configuration
   //
