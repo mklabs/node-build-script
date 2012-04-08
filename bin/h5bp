@@ -3,13 +3,16 @@ var fs = require('fs'),
   join = require('path').join,
   help = join(__dirname, 'help.txt');
 
-var cmd = process.argv.slice(2)[0],
+var cmds = process.argv.slice(2),
   opts = {};
 
 // custom help, on `h5bp help`
-if(cmd === 'help') return fs.createReadStream(help).pipe(process.stdout);
+if(cmds[0] === 'help') {
+  if(cmds.length === 1) return fs.createReadStream(help).pipe(process.stdout);
+  process.argv = process.argv.slice(0, 2).concat([cmds.join(':')]);
+}
 
-if(cmd === '--version') {
+if(cmds[0] === '--version') {
   console.log('h5bp  v%s', require('../package.json').version);
   opts.version = true;
 }

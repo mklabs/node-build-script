@@ -28,6 +28,9 @@ module.exports = function(grunt) {
   // calls to utility libs (rimraf, ncp, mkdirp) as lazy-loaded getters.
   h5bp.utils.extend(utils);
 
+  // load the external plugins
+  grunt.task.loadNpmTasks('grunt-help');
+
   //
   // Grunt configuration
   //
@@ -46,7 +49,7 @@ module.exports = function(grunt) {
     },
 
     // filter any files matching one of the below pattern during mkdirs task
-    exclude: 'build/** node_modules/** grunt.js package.json *.md'.split(' '),
+    exclude: '.git* build/** node_modules/** grunt.js package.json *.md'.split(' '),
 
     mkdirs: {
       staging: '<config:exclude>',
@@ -122,6 +125,9 @@ module.exports = function(grunt) {
       build: ['grunt.js', 'tasks/*.js']
     }
   });
+
+  // configuration for the grunt-help plugin
+  require('./tasks/help')(grunt);
 
   //
   // Concat configuration - prepending output / staging values to task's target

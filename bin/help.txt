@@ -6,22 +6,43 @@ Usage:
     h5bp --help     Display grunt help text
     h5bp --version  Print the h5bp version
 
+A built-in help "task" may be used to get further information on a given topic:
+
+    h5bp help configuration
+    h5bp help dom
+    h5bp help home
+    h5bp help install
+    h5bp help overview
+    h5bp help plugins link-plugin
+    h5bp help plugins rev-plugin
+    h5bp help plugins script-plugin
+    h5bp help tasks clean
+    h5bp help tasks concat
+    h5bp help tasks connect
+    h5bp help tasks css
+    h5bp help tasks min
+    h5bp help tasks mkdirs
+    h5bp help tasks rev
+    h5bp help tasks serve
+    h5bp help tasks tasks
+    h5bp help tasks usemin
+    h5bp help test
 
 Available tasks the h5bp plugin provides (for a full list, type h5bp --help)
 
-           dom      Dom-based build script
-          emit      A basic task that emits events over socket.io
-       connect      Starts a local http server with socket.io enabled
-           css      Concats, replaces @imports and minifies the CSS files
-        mkdirs      Prepares the build dirs
-         clean      Wipe the previous build dirs
-           rev      Automate the hash renames of assets filename
-         serve      Spawns up a local http server on both staging / output
-                    directories
-        usemin      Replaces references to non-minified scripts / stylesheets
-       default      Alias for "intro clean mkdirs concat css min rev usemin
-                    manifest" tasks
-        reload      Alias for "default connect watch:reload" tasks
+    dom       Dom-based build script
+    emit      A basic task that emits events over socket.io
+    connect   Starts a local http server with socket.io enabled
+    css       Concats, replaces @imports and minifies the CSS files
+    mkdirs    Prepares the build dirs
+    clean     Wipe the previous build dirs
+    rev       Automate the hash renames of assets filename
+    serve     Spawns up a local http server on both staging / output
+              directories
+    usemin    Replaces references to non-minified scripts / stylesheets
+    default   Alias for "intro clean mkdirs concat css min rev usemin
+              manifest" tasks
+    reload    Alias for "default connect watch:reload" tasks
 
 For more information on the h5bp plugin, see https://github.com/h5bp/node-build-script/wiki
 
