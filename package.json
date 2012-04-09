@@ -20,7 +20,9 @@
     "serve": "~1.0.3",
     "grunt": "~0.3.8",
     "socket.io": "~0.9.5",
-    "grunt-help": "~0.1.1"
+    "grunt-help": "~0.1.1",
+    "request": "~2.9.200",
+    "tar": "~0.1.13"
   },
   "scripts": {
     "install": "node scripts/install.js",

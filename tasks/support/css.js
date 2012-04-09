@@ -37,10 +37,11 @@ module.exports = function(grunt) {
   //
   task.registerHelper('mincss', function(files, o) {
     o = o || {};
-    return files ? files.map(function(filepath) {
+    files = grunt.file.expandFiles(files);
+    return files.map(function(filepath) {
       var content = file.read(filepath);
       return o.nocompress ? content : cleanCSS.process(content);
-    }).join("") : "";
+    }).join('');
   });
 
   // **rjs:optimize:css** is an helper using rjs to optimize a single file,

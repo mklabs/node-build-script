@@ -1,21 +1,28 @@
 #!/usr/bin/env node
 var fs = require('fs'),
   join = require('path').join,
-  help = join(__dirname, 'help.txt');
+  help = join(__dirname, 'help.txt'),
+  cli = require('grunt/lib/grunt/cli');
 
-var cmds = process.argv.slice(2),
-  opts = {};
+// register this plugin to grunt npm tasks
+var grunt = require('grunt').npmTasks(join(__dirname, '../')),
+  opts = cli.options,
+  cmds = cli.tasks,
+  route = cmds.join(' ').trim('');
 
 // custom help, on `h5bp help`
-if(cmds[0] === 'help') {
-  if(cmds.length === 1) return fs.createReadStream(help).pipe(process.stdout);
-  process.argv = process.argv.slice(0, 2).concat([cmds.join(':')]);
+if(/^help/.test(route)) {
+  if(/^help$/.test(route)) return fs.createReadStream(help).pipe(process.stdout);
+  cli.tasks = cmds.join(':');
 }
 
-if(cmds[0] === '--version') {
+if(opts.version) {
   console.log('h5bp  v%s', require('../package.json').version);
-  opts.version = true;
+}
+
+if(/^init$/.test(route)) {
+  cli.tasks = 'init:h5bp';
 }
 
 // the grunt cli
-require('grunt').npmTasks(join(__dirname, '../')).cli(opts);
+cli(opts);

@@ -4,3 +4,4 @@ test/fixtures/h5bp
 npm-debug.log
 test/custom
 docs/_site
+tasks/init/h5bp/root

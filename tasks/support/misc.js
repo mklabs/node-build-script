@@ -24,7 +24,7 @@ module.exports = function(grunt) {
       cb = this.async();
 
     // support for #3. Append the staging / output directories to the list of .ignore files
-    ignores = ignores.concat([join(config('staging') + '/**'), join(config('output') + '/**')]);
+    ignores = ignores.concat([path.join(config('staging') + '/**'), path.join(config('output') + '/**')]);
 
     log
       .writeln('Copying into ' + dirname)
