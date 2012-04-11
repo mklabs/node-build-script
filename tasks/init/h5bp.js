@@ -223,6 +223,12 @@ h5bp.customPrompt = function() {
     lf = grunt.utils.linefeed;
 
   var lines = custom.split(grunt.utils.linefeed);
+
+  // if only one line, then most likely someting wrong happend,
+  // probably caused by lf issue, fallback to simple `\n` split and
+  // see how it goes
+  if(lines.length === 1) lines = custom.split(/\n/);
+
   this.prompts = lines.map(function(line, i) {
     // trim blank line and non [?] prompt like line
     if(!line || !/^\[\?\]/.test(line)) return;

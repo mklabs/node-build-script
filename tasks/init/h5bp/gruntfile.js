@@ -1,10 +1,5 @@
-var h5bp = require('node-build-script');
-
+/*global module:false*/
 module.exports = function(grunt) {
-
-  // extend the grunt.utils object with h5bp's utilities, wrapping  require
-  // calls to utility libs (rimraf, ncp, mkdirp) as lazy-loaded getters.
-  h5bp.utils.extend(grunt.utils);
 
   // Project configuration.
   grunt.initConfig({{% if (min_concat) { if (package_json) { %}
