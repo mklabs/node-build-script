@@ -24,10 +24,6 @@ module.exports = function(grunt) {
   // final build output
   var output = 'publish/';
 
-  // extend the grunt.utils object with h5bp's utilities, wrapping  require
-  // calls to utility libs (rimraf, ncp, mkdirp) as lazy-loaded getters.
-  h5bp.utils.extend(utils);
-
   //
   // Grunt configuration
   //
