@@ -9,24 +9,9 @@ Usage:
 A built-in help "task" may be used to get further information on a given topic:
 
     h5bp help configuration
-    h5bp help dom
-    h5bp help home
-    h5bp help install
     h5bp help overview
-    h5bp help plugins link-plugin
-    h5bp help plugins rev-plugin
-    h5bp help plugins script-plugin
-    h5bp help tasks clean
-    h5bp help tasks concat
-    h5bp help tasks connect
     h5bp help tasks css
-    h5bp help tasks min
-    h5bp help tasks mkdirs
-    h5bp help tasks rev
-    h5bp help tasks serve
-    h5bp help tasks tasks
-    h5bp help tasks usemin
-    h5bp help test
+    ...
 
 Available tasks the h5bp plugin provides (for a full list, type h5bp --help)
 
