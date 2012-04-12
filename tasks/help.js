@@ -1,19 +1,14 @@
 
-var path = require('path');
+var path = require('path'),
+  help = require('grunt-help');
 
 module.exports = function(grunt) {
 
-  // load the external plugins
-  // todo: maybe an issue with global-plugin (eg. running `h5bp`
-  // instead of `grunt`) and when done from outside the project dir.
-  // the tasks from an inner plugin does not seem to load in that
-  // context.
-  grunt.task.loadNpmTasks('grunt-help');
-
   // Help configuration fot the grunt-help plugin
   // >> https://github.com/mklabs/grunt-help
-  grunt.config('help', {
-    base: path.join(__dirname, '../../docs'),
+
+  var config = {
+    base: path.join(__dirname, '../docs'),
     // additional docs page to lookup for the help task
     files: '**/*.md',
 
@@ -44,6 +39,24 @@ module.exports = function(grunt) {
 
       return browser ? file : path.join(base, file);
     }
-  });
+  };
+
+  // load the external plugins
+  //
+  // todo: had quite a bit of difficulties passing a set of defaults conguration
+  // to the plugin. Sure it can be done with grunt.config after being inited,
+  // but as soon as grunt will parse a gruntfile with grunt.initConfig, we'll
+  // lose the `help` config property.
+  //
+  // So, we're loading with raw require statements instead of loadNpmtTasks, not ideal
+  // but the use case is kinda special. Maybe it can be done in a different and nicer way?
+  //
+
+  var dirpath = require.resolve('grunt-help');
+
+  // load the task, pass in grunt reference
+  help.task(grunt, config);
+
+  // grunt.task.loadNpmTasks('grunt-help');
 
 };

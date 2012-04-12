@@ -5,6 +5,7 @@ var fs = require('fs'),
   runner = require('./helpers'),
   EventEmitter = require('events').EventEmitter;
 
+
 // plugins
 assert.ok(h5bp.plugins);
 
@@ -35,7 +36,7 @@ runner.setup(function(err) {
 // global check on index.html
 test.on('end', function(err) {
   if(err) throw err;
-  var result = fs.readFileSync('.test/index.html', 'utf8'),
+  var result = fs.readFileSync('.test/intermediate/index.html', 'utf8'),
     expected = fs.readFileSync('test/fixtures/default/expected.html', 'utf8');
 
   assert.equal(expected.trim(), result.trim());
@@ -55,3 +56,10 @@ test.on('end', function(err) {
 
   assert.equal(expected.trim(), result.trim());
 });
+
+//
+// Remains to be tested:
+//
+//  - Check that original files are not touched.
+//  -
+//

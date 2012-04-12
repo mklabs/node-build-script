@@ -1,19 +1,12 @@
 
-var h5bp = require('../');
+var path = require('path');
 
 module.exports = function(grunt) {
-  // Grunt utilities
-  var config = grunt.config,
-    utils = grunt.utils;
-
-  // extend the grunt.utils object with h5bp's utilities, wrapping  require
-  // calls to utility libs (rimraf, ncp, mkdirp) as lazy-loaded getters.
-  h5bp.utils.extend(utils);
 
   //
   // Grunt configuration
   //
-  config.init({
+  grunt.config.init({
 
     usemin: {
       files: ['index.html', 'without.html']
@@ -21,7 +14,6 @@ module.exports = function(grunt) {
 
   });
 
-  // regular tasks
-  grunt.loadTasks('../tasks/support');
+  grunt.loadNpmTasks(path.join(__dirname, '..'));
 
 };

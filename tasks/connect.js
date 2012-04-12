@@ -6,6 +6,9 @@ var fs = require('fs'),
   connect = require('connect'),
   mime = connect.static.mime;
 
+
+var clientScript = path.join(__dirname, '../../lib/support/socket-enable.js');
+
 module.exports = function(grunt) {
 
   var task = grunt.task,
@@ -26,6 +29,8 @@ module.exports = function(grunt) {
   });
 
   task.registerTask('connect', 'Spawns up a local http server with socket.io enabled', function() {
+    this.requiresConfig('connect');
+
     var data = config('connect'),
       targets = Object.keys(data);
 
@@ -69,7 +74,7 @@ module.exports = function(grunt) {
     var server = connect();
 
     // client-side template
-    var ioScript = _.template(file.read(path.join(__dirname, '../util/socket-enable.js')));
+    var ioScript = _.template(file.read(clientScript));
 
     // setup socketio
     var io = socketio.listen(server);

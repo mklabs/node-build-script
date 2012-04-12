@@ -1,10 +1,9 @@
 
 var fs = require('fs'),
-  path = require('path'),
-  jsdom = require('jsdom');
+  path = require('path');
 
 // the jQuery file content passed in jsdom
-var jquery = fs.readFileSync(path.join(__dirname, './support/jquery.min.js'), 'utf8');
+var jquery = fs.readFileSync(path.join(__dirname, '../lib/support/jquery.min.js'), 'utf8');
 
 module.exports = dom;
 dom.processFile = processFile;
@@ -17,16 +16,32 @@ dom.processFile = processFile;
 // > https://github.com/h5bp/node-build-script/wiki/jsdom-implementation
 //
 // **note**: should probably not write to original files, but do a full
-// copy of current directory and operates on top of that staging dir.
+// copy of current directory. So this kinda works with other tasks like
+// clean/mkdirs/copy.
+//
+// **note**: only supported on posix for now.
+//
+// **note**: have the feeling that it should be a separate plugin, too much headache
+// trying to handle windows + jsdom as the package won't install properly, thus the
+// entire node-build-script package (but ok on posix)
 //
 function dom(grunt) {
+
   // Grunt utilities.
   var task = grunt.task,
     file = grunt.file,
     log = grunt.log,
     config = grunt.config;
 
+  // dom based task only supported on posix for now
+  if(process.platform === 'win32') return;
+
   grunt.registerTask('dom', 'Fancy dom-based build system', function() {
+
+    var jsdom = dom.jsdom || (dom.jsdom = ensure('jsdom'));
+
+    if(!jsdom) return console.log('help install dom');
+
     config.requires('dom');
 
     var conf = config('dom'),
@@ -140,5 +155,12 @@ function processFile(file, cb) {
       done: cb
     });
   });
+}
+
+
+// ensures is a wrapper to `require`. Failsafe require catching loading error if
+// not installed, displaying a meaningfull help.
+function ensures(name) {
+  return require(name)
 }
 

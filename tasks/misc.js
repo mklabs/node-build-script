@@ -18,6 +18,8 @@ module.exports = function(grunt) {
   });
 
   task.registerMultiTask('mkdirs', 'Prepares the build dirs', function() {
+    this.requires('clean');
+
     var name = this.target,
       ignores = this.data,
       dirname = path.resolve(config(name)),
@@ -40,11 +42,6 @@ module.exports = function(grunt) {
   task.registerTask('clean', 'Wipe the previous build dirs', function() {
     var dirs = [config('staging'), config('output')];
     dirs.forEach(task._helpers.rimraf);
-  });
-
-  task.registerMultiTask('manifest', 'Generates manifest files automatically from static assets reference.', function() {
-    // Otherwise, print a success message.
-    log.writeln('not yet implemented');
   });
 
   //

@@ -1,22 +1,11 @@
 
 var path = require('path');
 
+// get the h5bp package, mainly to be able to pass some of it's
+// jsdom plugins.
 var h5bp = require('../');
 
-
-// This is the main html5-boilerplate build configuration file.
-//
-// Builds depends on two specific directory created during the process
-// `intermediate/` and `publish/`, the first is used as a staging area, the
-// second is the final result of the build that was run.
-//
-// These two values may be changed to something else with the `staging` and
-// `output` config property below, and by changing any task config to match the new value.
-//
 module.exports = function(grunt) {
-  // Grunt utilities
-  var config = grunt.config,
-    utils = grunt.utils;
 
   // the staging directory used during the process
   var staging ='intermediate/';
@@ -24,26 +13,15 @@ module.exports = function(grunt) {
   // final build output
   var output = 'publish/';
 
-  // extend the grunt.utils object with h5bp's utilities, wrapping  require
-  // calls to utility libs (rimraf, ncp, mkdirp) as lazy-loaded getters.
-  h5bp.utils.extend(utils);
-
   //
   // Grunt configuration
   //
-  config.init({
+  grunt.config.init({
     // the staging directory used during the process
     staging: staging,
 
     // final build output
     output: output,
-
-    // environement and common configuration values
-    // for futher usage in tasks that needs them.
-    env: {
-      platform: process.platform,
-      win32: process.platform === 'win32'
-    },
 
     // filter any files matching one of the below pattern during mkdirs task
     exclude: 'build/** node_modules/** grunt.js package.json *.md'.split(' '),
@@ -51,22 +29,6 @@ module.exports = function(grunt) {
     mkdirs: {
       staging: '<config:exclude>',
       output: '<config:exclude>'
-    },
-
-    usemin: {
-      files: ['**/*.html']
-    },
-
-    manifest: '<config:usemin>',
-
-    watch: {
-      files: ['js/**/*.js', 'css/**', '*.html'],
-      tasks: 'default',
-
-      reload: {
-        files: '<config:watch.files>',
-        tasks: 'default emit'
-      }
     },
 
     css: {
@@ -80,25 +42,11 @@ module.exports = function(grunt) {
       img: 'img/**'
     },
 
-    serve: {
-      staging: { port: 3000 },
-      output: { port: 3001 }
+    usemin: {
+      files: ['**/*.html']
     },
 
-    connect: {
-      staging: {
-        hostname: 'localhost',
-        port: 3000,
-        logs: 'dev',
-        dirs: true
-      },
-      output: {
-        hostname: 'localhost',
-        port: 3001,
-        logs: 'default',
-        dirs: true
-      }
-    },
+    htmlclean: '<config:usemin>',
 
     dom: {
 
@@ -115,11 +63,6 @@ module.exports = function(grunt) {
       'link'                  : h5bp.plugins.link,
       'img'                   : h5bp.plugins.img,
       'script, link, img'     : h5bp.plugins.rev
-    },
-
-    lint: {
-      files: ['js/*.js'],
-      build: ['grunt.js', 'tasks/*.js']
     }
   });
 
@@ -136,27 +79,19 @@ module.exports = function(grunt) {
   // Will probably flesh out a custom concat / min task, using grunt's helper to
   // handle these values prepends.
   //
-  var concat = config('concat') || {};
+  var concat = grunt.config('concat') || {};
   concat[staging + 'js/scripts.js'] = ['js/plugins.js', 'js/script.js'];
   concat[staging + 'css/style.css'] = ['css/*.css'];
-  config('concat', concat);
+  grunt.config('concat', concat);
 
   //
   // Min configuration - same goes the minify task
   // (eg. publish/js/scripts.js)
   //
-  var min = config('min') || {};
+  var min = grunt.config('min') || {};
   min[output + 'js/scripts.js'] = [staging + 'js/plugins.js', staging + 'js/script.js'];
-  config('min', min);
+  grunt.config('min', min);
 
-  // Run the following tasks...
-  grunt.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
-  grunt.registerTask('reload', 'default connect watch:reload');
-
-  // dom based tasks - not loaded for windows platform
-  config('env.win32') || grunt.loadTasks('../tasks/dom');
-
-  // regular tasks
-  grunt.loadTasks('../tasks/support');
+  grunt.loadNpmTasks(path.join(__dirname, '..'));
 
 };
