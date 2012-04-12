@@ -39,7 +39,7 @@ test.on('end', function(err) {
   var result = fs.readFileSync('.test/intermediate/index.html', 'utf8'),
     expected = fs.readFileSync('test/fixtures/default/expected.html', 'utf8');
 
-  assert.equal(expected.trim(), result.trim());
+  assert.equal(expected, result);
 });
 
 //
@@ -51,7 +51,7 @@ test.on('end', function(err) {
 //
 test.on('end', function(err) {
   if(err) throw err;
-  var result = fs.readFileSync('.test/usemin.html', 'utf8'),
+  var result = fs.readFileSync('.test/intermediate/usemin.html', 'utf8'),
     expected = fs.readFileSync('test/fixtures/default/usemin.expected.html', 'utf8');
 
   assert.equal(expected.trim(), result.trim());

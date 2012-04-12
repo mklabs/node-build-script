@@ -69,3 +69,9 @@ $ h5bp init
 [JSDOM]: https://github.com/tmpvar/jsdom
 [ant-build-script]: https://github.com/h5bp/ant-build-script
 
+
+## Run the tests
+
+```sh
+$ npm test
+```
