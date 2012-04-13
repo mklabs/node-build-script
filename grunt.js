@@ -1,3 +1,5 @@
+var util = require('util');
+
 /*global module:false*/
 module.exports = function(grunt) {
 
