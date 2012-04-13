@@ -30,4 +30,26 @@ module.exports = function(grunt) {
   // Default task.
   grunt.registerTask('default', 'lint');
 
+  // some debugging helpers
+  grunt.registerTask('list-helpers', 'List all grunt registered helpers', function(helper) {
+    var ls = grunt.log.wordlist(Object.keys(grunt.task._helpers), grunt.utils.linefeed);
+    if(!helper) return grunt.log.ok(ls);
+    grunt.log.subhead(helper + ' source:').ok(grunt.task._helpers[helper]);
+  });
+
+  grunt.registerTask('list-task', 'List all grunt registered tasks', function(t) {
+    var ls = grunt.log.wordlist(Object.keys(grunt.task._tasks), grunt.utils.linefeed);
+    if(!t) return grunt.log.ok(ls);
+    grunt.log.subhead(t + ' source:');
+    grunt.helper('inspect', grunt.task._tasks[t]);
+  });
+
+  grunt.registerHelper('inspect', function(o) {
+    var lf = grunt.utils.linefeed;
+    var output = (lf + util.inspect(o, false, 4, true) + lf).split(lf).map(function(line) {
+      return line;
+    });
+    output.forEach(grunt.log.ok, grunt.log);
+  });
+
 };
