@@ -10,7 +10,7 @@ var fs = require('fs'),
 //
 // Right now the replacement is based on the filename parsed from
 // content and the files present in accoding dir (eg. looking up
-// matching revved filename into `output/` dir to know the sha
+// matching revved filename into `intermediate/` dir to know the sha
 // generated).
 //
 // Todo: Use a file dictionary during build process and rev task to
@@ -29,8 +29,7 @@ module.exports = function(grunt) {
 
     var name = this.target,
       data = this.data,
-      files = file.expand(data),
-      output = path.resolve(config('output'));
+      files = file.expand(data);
 
     files.map(file.read).forEach(function(content, i) {
       var p = files[i];
@@ -76,7 +75,7 @@ module.exports = function(grunt) {
       });
 
       // handle revving, each script / link tags are searching for a
-      // matching file in output dir, replacing the href/src with their
+      // matching file in intermediate dir, replacing the href/src with their
       // hash-prepended version.
       content = task.helper('usemin:replace', content);
 
@@ -102,13 +101,13 @@ module.exports = function(grunt) {
   });
 
   task.registerHelper('usemin:replace', function(content) {
-    log.writeln('Update the HTML to reference our concat/min/revved script files');
+    log.verbose.writeln('Update the HTML to reference our concat/min/revved script files');
     content = task.helper('replace', content, /<script.+src=['"](.+)["'][\/>]?><[\\]?\/script>/gm);
 
-    log.writeln('Update the HTML with the new css filename');
+    log.verbose.writeln('Update the HTML with the new css filename');
     content = task.helper('replace', content, /<link rel=["']?stylesheet["']?\shref=['"](.+)["']\s*>/gm);
 
-    log.writeln('Update the HTML with the new img filename');
+    log.verbose.writeln('Update the HTML with the new img filename');
     content = task.helper('replace', content, /<img.+src=['"](.+)["'][\/>]?>/);
     return content;
   });
@@ -120,18 +119,27 @@ module.exports = function(grunt) {
       var basename = path.basename(src);
       var dirname = path.dirname(src);
 
-      var filepath = file.expand(path.join(config('output'), '**/*') + basename)[0];
+      // todo: don't lookup for every files on each replace. suboptimal.
+      // files won't change, the filepath should filter the original list of files.
+      var filepath = file.expand(path.join('**/*') + basename)[0];
 
-      // not a file in output, skip it
+      // not a file in intermediate, skip it
       if(!filepath) return match;
-
       var filename = path.basename(filepath);
-      // replace the output dir prefix
-      filename = filename.replace(config('output'), '');
       // handle the relative prefix (with always unix like path even on win32)
       filename = [dirname, filename].join('/');
+
       // if file not exists probaly was concatenated into another file so skip it
-      return filename ? match.replace(src, filename) : '';
+      if(!filename) return '';
+
+      var res = match.replace(src, filename);
+      // output some verbose info on what get replaced
+      grunt.log
+        .ok(src)
+        .writeln('was ' + match)
+        .writeln('now ' + res);
+
+      return res;
     });
   });
 };

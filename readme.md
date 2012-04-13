@@ -3,14 +3,14 @@ The h5bp build script now has three versions, the main one being
 the [ant-build-script][]. This
 project is the node version, and it uses [Grunt][grunt] as a build tool.
 
-It is packaged as a [grunt plugin]() and provides you a bunch of tasks and
+It is packaged as a [grunt plugin][] and provides you a bunch of tasks and
 helpers to help improve the performance of your site/app in a production
 environment.
 
 ## Description
 
 This node/grunt-based build script tries to be as close as possible to
-the [ant-build-script](), a really great project you should check out.
+the [ant-build-script][], a really great project you should check out.
 
 It is still in early stage of development, but it'll get
 better and better, based on [your feedbacks](https://github.com/h5bp/node-build-script/issues).
@@ -61,17 +61,18 @@ $ h5bp init
 
 * Source: http://github.com/h5bp/node-build-script
 * Docs: http://github.com/h5bp/node-build-script/wiki
-* Issues: http://github.com/h5bp/node-build-script/wiki
-
-[grunt]: https://github.com/cowboy/grunt
-[grunt documentation]: https://github.com/cowboy/grunt/blob/master/docs/toc.md
-[Getting Started]: https://github.com/cowboy/grunt/blob/master/docs/getting_started.md#readme)
-[JSDOM]: https://github.com/tmpvar/jsdom
-[ant-build-script]: https://github.com/h5bp/ant-build-script
-
+* Issues: http://github.com/h5bp/node-build-script/issues
 
 ## Run the tests
 
 ```sh
 $ npm test
 ```
+
+[grunt]: https://github.com/cowboy/grunt
+[grunt documentation]: https://github.com/cowboy/grunt/blob/master/docs/toc.md
+[Getting Started]: https://github.com/cowboy/grunt/blob/master/docs/getting_started.md#readme)
+[JSDOM]: https://github.com/tmpvar/jsdom
+[ant-build-script]: https://github.com/h5bp/ant-build-script
+[socket.io]: http://socket.io
+

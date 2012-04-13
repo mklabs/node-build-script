@@ -1,19 +1,29 @@
 
-var h5bp = require('../'),
-  join = require('path').join;
+var fs = require('fs'),
+  join = require('path').join,
+  h5bp = require('../');
+
+//
+// ant build script has a nice notion of environment, this defaults to
+// production. And we only support env=prod for now.
+//
+// not implemented tasks (add noop waithing for their impl): manifest images
+//
 
 // environment and common configuration values
 // for futher usage in tasks that needs them.
-//
-// note: we cannot affort to use grunt's config to handle these environment
-// values, and use config.init here. It might work but will most likely be
-// overriden by project's gruntfile.
 var env = {
   platform: process.platform,
   win32: process.platform === 'win32'
 };
 
 module.exports = function(grunt) {
+
+  // store the current working directory, a subset of tasks needs to update
+  // the grunt.file.setBase accordinly on intermediate/ dir. And we might want
+  // chdir back to the original one
+  var base = grunt.config('base') || grunt.option('base') || process.cwd();
+  grunt.config('base', base);
 
   //
   // might change
@@ -29,24 +39,9 @@ module.exports = function(grunt) {
   // configuration for the grunt-help plugin
   require('./help')(grunt);
 
-  // Setup some sane default alias...
+  // Setup some default alias...
   grunt.registerTask('default', 'build');
   grunt.registerTask('reload', 'default connect watch:reload');
-
-  // add similar build targets than the ant build script one
-  //
-  // ant build script has a nice notion of environment, this defaults to
-  // production. And we only support env=prod for now.
-  //
-  // todo: should change the way intermediate / publish dir to work this way:
-  //
-  // intermediate created before running the optims. Tasks operate on top of
-  // intermediate (will probably change grunt's base or direcly change
-  // process.cwd for conveniency) and then, use the copy tasks to copy
-  // intermediate dir to the publish one.
-  //
-
-  // not implemented tasks (add noop waithing for their impl): manifest htmlclean images copy
 
   // build - minor html optimizations (extra quotes removed). inline script/style minified (default)
   grunt.registerTask('build', 'intro clean mkdirs concat css min rev usemin manifest htmlclean images copy');
@@ -71,20 +66,6 @@ module.exports = function(grunt) {
   grunt.registerTask('images', 'TBD - Optimizes .jpg/.png images using jpegtan/optipng', function() {
     // *.png            --> optipng
     // *.jpg / *.jpeg   --> jpegtran
-    grunt.log.error('not yet implemented');
-  });
-
-  grunt.registerTask('copy', 'TBD - Copy files from staging directory to the output one', function() {
-    // * beginning of the build script: clean mkdirs
-    //    * this creates the intermediate/ dir and copy all project files (minus the ignored one)
-    //
-    // * build script works exclusively on intermediate/
-    //
-    // * at the end of the build script: copy
-    //    * a simple cp -r intermadiate/ publish/
-    //
-    // To avoid a lot of path join together file paths in config, and the
-    // "staging' config value, set the base dir (in grunt, grunt.file.setBase)
     grunt.log.error('not yet implemented');
   });
 

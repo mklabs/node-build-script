@@ -36,7 +36,7 @@ function dom(grunt) {
   // dom based task only supported on posix for now
   if(process.platform === 'win32') return;
 
-  grunt.registerTask('dom', 'Fancy dom-based build system', function() {
+  grunt.registerTask('dom', 'Dom-based build system', function() {
 
     var jsdom = dom.jsdom || (dom.jsdom = ensure('jsdom'));
 

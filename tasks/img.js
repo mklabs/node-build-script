@@ -1,6 +1,5 @@
 
-var path = require('path'),
-  minifier = require('html-minifier');
+var path = require('path');
 
 //
 // This task takes care of html minification through @kangax' html-minifier

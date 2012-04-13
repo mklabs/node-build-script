@@ -1,5 +1,6 @@
 
-var path = require('path'),
+var fs = require('fs'),
+  path = require('path'),
   cleanCSS = require("clean-css"),
   rjs = require('requirejs');
 
@@ -15,19 +16,17 @@ module.exports = function(grunt) {
   // files are concataned and run through requirejs optimizer to handle
   // @import inlines in CSS files.
   task.registerMultiTask('css', 'Concats, replaces @imports and minifies the CSS files', function() {
-    var output = config('output');
+    this.requiresConfig('staging');
 
     // if defined, files get prepended by the output config value
     var files = this.data;
-    if(output) files = files.map(function(file) {
-      return path.join(output, file);
-    });
 
     // concat css files matching the glob patterns and write to destination
     file.write(this.target, task.helper('mincss', files, { nocompress: true }));
 
     // replace @import statements
     task.helper('rjs:optimize:css', this.target, this.async());
+
   });
 
   //
@@ -56,7 +55,11 @@ module.exports = function(grunt) {
     options.cssIn = file;
     options.out = options.out || file;
     options.optimizeCss = 'standard.keepLines';
-    rjs.optimize(options, cb);
+    var before = grunt.file.read(file);
+    rjs.optimize(options, function() {
+      grunt.helper('min_max_info', grunt.file.read(file), before);
+      cb();
+    });
   });
 
 };

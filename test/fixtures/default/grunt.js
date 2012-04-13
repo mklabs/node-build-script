@@ -18,17 +18,35 @@ module.exports = function(grunt) {
   //
   grunt.config.init({
     // the staging directory used during the process
-    staging: staging,
-
+    staging: 'intermediate/',
     // final build output
-    output: output,
+    output: 'publish/',
+
+    // aliases these staging dirs with their default value, may be simply renamed
+    // to intermediate and publish
+    intermediate: '<config:staging>',
+    publish: '<config:output>',
 
     // filter any files matching one of the below pattern during mkdirs task
+    // the pattern in the .gitignore file should work too.
     exclude: 'build/** node_modules/** grunt.js package.json *.md'.split(' '),
 
     mkdirs: {
-      staging: '<config:exclude>',
-      output: '<config:exclude>'
+      staging: '<config:exclude>'
+    },
+
+    concat: {
+      dist: {
+        src: ['js/plugins.js', 'js/script.js'],
+        dest: 'js/scripts.js'
+      }
+    },
+
+    min: {
+      dist: {
+        src: ['js/scripts.js'],
+        dest: 'js/scripts.min.js'
+      }
     },
 
     css: {
@@ -66,31 +84,6 @@ module.exports = function(grunt) {
     }
   });
 
-  //
-  // Concat configuration - prepending output / staging values to task's target
-  //
-  // files are concat'd into `staging/subprop.js`
-  // (eg. intermediate/js/scripts.js)
-  //
-  // This is necessary config for the built-in min / concat task to operate
-  // on staging or output directory, without the need to prepend their values
-  // directly in the task target or data (as they may be tweaked to some other values)
-  //
-  // Will probably flesh out a custom concat / min task, using grunt's helper to
-  // handle these values prepends.
-  //
-  var concat = grunt.config('concat') || {};
-  concat[staging + 'js/scripts.js'] = ['js/plugins.js', 'js/script.js'];
-  concat[staging + 'css/style.css'] = ['css/*.css'];
-  grunt.config('concat', concat);
-
-  //
-  // Min configuration - same goes the minify task
-  // (eg. publish/js/scripts.js)
-  //
-  var min = grunt.config('min') || {};
-  min[output + 'js/scripts.js'] = [staging + 'js/plugins.js', staging + 'js/script.js'];
-  grunt.config('min', min);
 
   grunt.loadNpmTasks(path.join(__dirname, '..'));
 

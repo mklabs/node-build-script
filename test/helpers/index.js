@@ -38,7 +38,8 @@ var helpers = module.exports = function grunt(base, em) {
         console.log(' » grunt ' + cmd);
         console.log();
 
-        var gpr = fork(gruntpath, cmd.split(' '), { cwd: path.resolve(base) });
+        cmd = Array.isArray(cmd) ? cmd : cmd.split(' ');
+        var gpr = fork(gruntpath, cmd, { cwd: path.resolve(base) });
         gpr.on('exit', function(code, stdout, stderr) {
           assert.equal(code, 0, ' ✗ Grunt exited with errors. Code: ' + code);
           em.emit(cmd, code, stdout, stdout);

@@ -13,10 +13,7 @@ module.exports = function(grunt) {
 
   // rev task - reving is done in the `output/` directory
   task.registerMultiTask('rev', 'Automate the hash renames of assets filename', function() {
-    log.writeln('Processing »' + this.target + ' files');
-    task.helper('hash', this.data, {
-      cwd: config('output')
-    });
+    task.helper('hash', this.data);
   });
 
   // **hash** helper takes care of files revving, by renaming any files
@@ -31,21 +28,14 @@ module.exports = function(grunt) {
     opts = opts || {};
 
     files = Array.isArray(files) ? files : [files];
-    if(opts.cwd) files = files.map(function(pattern) {
-      return path.join(opts.cwd, pattern);
-    });
-
     file.expand(files).forEach(function(f) {
-      var p = path.resolve(f),
-        md5 = task.helper('md5', p),
+      var md5 = task.helper('md5', f),
         renamed = [md5.slice(0, 8), path.basename(f)].join('.');
 
-      log.writeln('md5 for ' + f + ' is ' + md5);
-
+      grunt.verbose.ok().ok(md5);
       // create the new file
-      fs.renameSync(p, path.resolve(path.dirname(f), renamed));
-
-      log.writeln('New filename is ' + renamed);
+      fs.renameSync(f, path.resolve(path.dirname(f), renamed));
+      log.write(f + ' ').ok(renamed);
     });
   });
 
@@ -56,9 +46,9 @@ module.exports = function(grunt) {
   task.registerHelper('md5', function(filepath, algorithm, encoding) {
     algorithm = algorithm || 'md5';
     encoding = encoding || 'hex';
-
     var hash = crypto.createHash(algorithm);
     hash.update(file.read(filepath));
+    log.verbose.write('Hashing ' + filepath + '...');
     return hash.digest(encoding);
   });
 };

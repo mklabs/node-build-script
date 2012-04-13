@@ -15,19 +15,37 @@ A built-in help "task" may be used to get further information on a given topic:
 
 Available tasks the h5bp plugin provides (for a full list, type h5bp --help)
 
-    dom       Dom-based build script
-    emit      A basic task that emits events over socket.io
-    connect   Starts a local http server with socket.io enabled
-    css       Concats, replaces @imports and minifies the CSS files
-    mkdirs    Prepares the build dirs
-    clean     Wipe the previous build dirs
-    rev       Automate the hash renames of assets filename
-    serve     Spawns up a local http server on both staging / output
-              directories
-    usemin    Replaces references to non-minified scripts / stylesheets
-    default   Alias for "intro clean mkdirs concat css min rev usemin
-              manifest" tasks
-    reload    Alias for "default connect watch:reload" tasks
+     clean  Wipe the previous build dirs
+      copy  Copies the whole staging(intermediate/) folder to output
+            (publish/) one
+       css  Concats, replaces @imports and minifies the CSS files *
+       dom  dom-based build system
+ htmlclean  Basic to aggresive html minification
+    mkdirs  Prepares the build dirs *
+       rev  Automate the hash renames of assets filename *
+    usemin  Replaces references to non-minified scripts / stylesheets *
+
+Support
+
+   connect  Spawns up a local http server with socket.io enabled
+    reload  Alias for "default connect watch:reload" tasks.
+     serve  Spawns up a local http server on both staging / output
+            directory
+
+Alias
+
+   default  Alias for "help" task.
+     build  Alias for "intro clean mkdirs concat css min rev usemin
+            manifest htmlclean images copy" tasks.
+      text  Alias for "intro clean mkdirs concat css min rev usemin
+            manifest htmlclean copy" tasks.
+  buildkit  Alias for "intro clean mkdirs concat css min rev usemin
+            manifest htmlclean:minor copy" tasks.
+    basics  Alias for "intro clean mkdirs concat css min rev usemin
+            manifest copy" tasks.
+    minify  Alias for "intro clean mkdirs concat css min rev usemin
+            manifest htmlclean:compress images copy" tasks.
+
 
 For more information on the h5bp plugin, see https://github.com/h5bp/node-build-script/wiki
 
