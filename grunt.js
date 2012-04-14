@@ -1,4 +1,5 @@
-var util = require('util');
+var util = require('util'),
+  path = require('path');
 
 /*global module:false*/
 module.exports = function(grunt) {
@@ -46,6 +47,22 @@ module.exports = function(grunt) {
     if(!t) return grunt.log.ok(ls);
     grunt.log.subhead(t + ' source:');
     grunt.helper('inspect', grunt.task._tasks[t]);
+  });
+
+  // and the doc generation for the docs task
+  grunt.registerTask('gendocs', 'Generates docs/index.html from wiki pages', function() {
+    var cb = this.async();
+
+    var gendoc = grunt.utils.spawn({
+      cmd: 'grunt', opts: { cwd: path.join(__dirname, 'scripts/docs') }
+    }, function() {});
+
+    gendoc.stdout.pipe(process.stdout);
+    gendoc.stderr.pipe(process.stderr);
+    gendoc.on('exit', function(code) {
+      if(code) grunt.warn('Something bad happend', code);
+      cb();
+    });
   });
 
 };

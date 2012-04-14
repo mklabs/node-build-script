@@ -43,10 +43,13 @@ module.exports = function(grunt) {
       port = config.port || 8000,
       app = connect();
 
-    return app.listen(port, function(err) {
+    app.listen(port, function(err) {
       if(err) grunt.log.error(err).warn(err.message, err.code);
       grunt.log.ok('Started static web server in ' + base.underline.bold + ' on port ' + (port + '').green + '...');
+      app.emit('start');
     });
+
+    return app;
   });
 
   // **serve.io** creates and returns a webserver and setup a socket.io instance and 
