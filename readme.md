@@ -40,7 +40,8 @@ $ h5bp init
 * Basic to aggressive html minification (via [html-minfier][])
 * Optimizes JPGs and PNGs (with jpegtran & optipng)
 * Renames JS/CSS to prepend a hash of their contents for easier versioning
-* Does the necessary regex replacements in html files and templates
+* Revises the file names of your assets so that you can use heavy caching
+* Updates your HTML to reference these new hyper-optimized CSS + JS files
 * Experimental dom-based (with [JSDOM]()) build system.
 * May rerun the build script on file changes (grunt's watch task &#10084;)
 * May automatically reload the page in your browsers whenever watched files

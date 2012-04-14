@@ -7,11 +7,8 @@ var h5bp = require('../');
 
 module.exports = function(grunt) {
 
-  // the staging directory used during the process
-  var staging ='intermediate/';
-
-  // final build output
-  var output = 'publish/';
+  var output = 'publish/',
+    staging = 'intermediate/';
 
   //
   // Grunt configuration
@@ -21,11 +18,6 @@ module.exports = function(grunt) {
     staging: 'intermediate/',
     // final build output
     output: 'publish/',
-
-    // aliases these staging dirs with their default value, may be simply renamed
-    // to intermediate and publish
-    intermediate: '<config:staging>',
-    publish: '<config:output>',
 
     // filter any files matching one of the below pattern during mkdirs task
     // the pattern in the .gitignore file should work too.

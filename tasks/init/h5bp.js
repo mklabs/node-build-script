@@ -11,7 +11,6 @@ h5bp.description = 'Init a new html5-boilerplate project.';
 // Template-specific notes to be displayed before question prompts.
 h5bp.notes = fs.readFileSync(path.join(__dirname, 'h5bp/notes.txt'), 'utf8');
 
-
 // Any existing file or directory matching this wildcard will cause a warning.
 h5bp.warnOn = '*';
 
@@ -254,16 +253,6 @@ h5bp.customPrompt = function() {
         return l.replace(/^»(\s)(\w)/, '$1$2');
       });
     }
-
-    // if the default has [S]ome, [K]ind of defauls like this, build a
-    // sanitize handler
-    if(opt.test(line)) prompt.validator = function(value, next) {
-      var flags = m[2].match(/\[[A-Z]\]/g).map(function(m) {
-        return m.replace(/\[|\]/g, '');
-      }).join('');
-
-      next(new RegExp('^[' + flags + ']$', 'i').test(value));
-    };
 
     return prompt;
   });

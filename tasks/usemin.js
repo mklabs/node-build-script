@@ -19,21 +19,17 @@ var fs = require('fs'),
 
 module.exports = function(grunt) {
 
-  var task = grunt.task,
-    config = grunt.config,
-    file = grunt.file,
-    log = grunt.log,
-    linefeed = grunt.utils.linefeed;
+  var linefeed = grunt.utils.linefeed;
 
-  task.registerMultiTask('usemin', 'Replaces references to non-minified scripts / stylesheets', function() {
+  grunt.registerMultiTask('usemin', 'Replaces references to non-minified scripts / stylesheets', function() {
 
     var name = this.target,
       data = this.data,
-      files = file.expand(data);
+      files = grunt.file.expand(data);
 
-    files.map(file.read).forEach(function(content, i) {
+    files.map(grunt.file.read).forEach(function(content, i) {
       var p = files[i];
-      log.subhead('usemin - ' + p);
+      grunt.log.subhead('usemin - ' + p);
 
       // make sure to convert back into utf8, `file.read` when used as a
       // forEach handler will take additional arguments, and thus trigger the
@@ -71,48 +67,48 @@ module.exports = function(grunt) {
           type = parts[0],
           target = parts[1];
 
-        content = task.helper('usemin', content, block, target, type);
+        content = grunt.helper('usemin', content, block, target, type);
       });
 
       // handle revving, each script / link tags are searching for a
       // matching file in intermediate dir, replacing the href/src with their
       // hash-prepended version.
-      content = task.helper('usemin:replace', content);
+      content = grunt.helper('usemin:replace', content);
 
       // write the new content to disk
-      file.write(p, content);
+      grunt.file.write(p, content);
     });
 
   });
 
-  task.registerHelper('usemin', function(content, block, target, type) {
+  grunt.registerHelper('usemin', function(content, block, target, type) {
     target = target || 'replace';
-    return task.helper('usemin:' + type, content, block, target);
+    return grunt.helper('usemin:' + type, content, block, target);
   });
 
-  task.registerHelper('usemin:css', function(content, block, target) {
+  grunt.registerHelper('usemin:css', function(content, block, target) {
     var indent = (block.split(linefeed)[0].match(/^\s*/) || [])[0];
     return content.replace(block, indent + '<link rel="stylesheet" href="' + target + '">');
   });
 
-  task.registerHelper('usemin:js', function(content, block, target) {
+  grunt.registerHelper('usemin:js', function(content, block, target) {
     var indent = (block.split(linefeed)[0].match(/^\s*/) || [])[0];
     return content.replace(block, indent + '<script src="' + target + '"></script>');
   });
 
-  task.registerHelper('usemin:replace', function(content) {
-    log.verbose.writeln('Update the HTML to reference our concat/min/revved script files');
-    content = task.helper('replace', content, /<script.+src=['"](.+)["'][\/>]?><[\\]?\/script>/gm);
+  grunt.registerHelper('usemin:replace', function(content) {
+    grunt.log.verbose.writeln('Update the HTML to reference our concat/min/revved script files');
+    content = grunt.helper('replace', content, /<script.+src=['"](.+)["'][\/>]?><[\\]?\/script>/gm);
 
-    log.verbose.writeln('Update the HTML with the new css filename');
-    content = task.helper('replace', content, /<link rel=["']?stylesheet["']?\shref=['"](.+)["']\s*>/gm);
+    grunt.log.verbose.writeln('Update the HTML with the new css filename');
+    content = grunt.helper('replace', content, /<link rel=["']?stylesheet["']?\shref=['"](.+)["']\s*>/gm);
 
-    log.verbose.writeln('Update the HTML with the new img filename');
-    content = task.helper('replace', content, /<img[^\>]+src=['"]([^"']+)["']/gm);
+    grunt.log.verbose.writeln('Update the HTML with the new img filename');
+    content = grunt.helper('replace', content, /<img[^\>]+src=['"]([^"']+)["']/gm);
     return content;
   });
 
-  task.registerHelper('replace', function(content, regexp) {
+  grunt.registerHelper('replace', function(content, regexp) {
     return content.replace(regexp, function(match, src) {
       //do not touch external files
       if(src.match(/\/\//)) return match;
@@ -121,7 +117,7 @@ module.exports = function(grunt) {
 
       // todo: don't lookup for every files on each replace. suboptimal.
       // files won't change, the filepath should filter the original list of files.
-      var filepath = file.expand(path.join('**/*') + basename)[0];
+      var filepath = grunt.file.expand(path.join('**/*') + basename)[0];
 
       // not a file in intermediate, skip it
       if(!filepath) return match;

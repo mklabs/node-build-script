@@ -11,31 +11,8 @@ var fs = require('fs'),
 // not implemented tasks (add noop waithing for their impl): manifest images
 //
 
-// environment and common configuration values
-// for futher usage in tasks that needs them.
-var env = {
-  platform: process.platform,
-  win32: process.platform === 'win32'
-};
 
 module.exports = function(grunt) {
-
-  // store the current working directory, a subset of tasks needs to update
-  // the grunt.file.setBase accordinly on intermediate/ dir. And we might want
-  // chdir back to the original one
-  var base = grunt.config('base') || grunt.option('base') || process.cwd();
-  grunt.config('base', base);
-
-  //
-  // might change
-  //
-  // will probably ends up with tasks requiring the utilities directly instead
-  // of relying on grunt.util augmentation.
-  //
-  // extend the grunt.utils object with h5bp's utilities, wrapping  require
-  // calls to utility libs (rimraf, ncp, mkdirp) as lazy-loaded getters.
-  //
-  h5bp.utils.extend(grunt.utils);
 
   // Setup some default alias...
   grunt.registerTask('default', 'build:default');

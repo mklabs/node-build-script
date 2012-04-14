@@ -1,6 +1,5 @@
-The root folder will be created the first time the init task is run with
-`h5bp` template (eg. `grunt init:h5bp`) by downloading latest version of
-html5-boilerplate.
+First time the init task is run with `h5bp` template, the latest version
+of html5-boilerplate is downloaded locally.
 
 The resulting output depends on the few question grunt asks during the
 process. This includes some path rewrites (like renaming the
@@ -8,7 +7,7 @@ process. This includes some path rewrites (like renaming the
 
 Simply keep pressing enter for the default h5bp layout.
 
-There's three "step" of prompts:
+There's four "step" of prompts:
 
 - project:    Basic project configuration (name, description, version, ...)
 - layout:     [D]efault, [C]ustom, [S]illy

@@ -1,23 +1,24 @@
 
-var path = require('path');
+var path = require('path'),
+  utils = require('../').utils;
 
 module.exports = function(grunt) {
 
-  var task = grunt.task,
-    utils = grunt.utils,
-    file = grunt.file,
-    log = grunt.log,
-    join = utils.join;
-
-  task.registerTask('intro', 'Kindly inform the developer about the impending magic', function() {
+  grunt.registerTask('intro', 'Kindly inform the developer about the impending magic', function() {
     var intro = grunt.config('intro') || '';
     intro = Array.isArray(intro) ? intro : [intro];
-    log.writeln(intro.join(utils.linefeed));
+    grunt.log.writeln(intro.join(utils.linefeed));
   });
 
-  task.registerMultiTask('mkdirs', 'Prepares the build dirs', function() {
+  grunt.registerMultiTask('mkdirs', 'Prepares the build dirs', function() {
     this.requires('clean');
-    this.requiresConfig('staging', 'base');
+    this.requiresConfig('staging');
+
+    // store the current working directory, a subset of tasks needs to update
+    // the grunt.file.setBase accordinly on intermediate/ dir. And we might want
+    // chdir back to the original one
+    var base = grunt.config('base') || grunt.option('base') || process.cwd();
+    grunt.config('base', base);
 
     var name = this.target,
       ignores = this.data,
@@ -27,13 +28,13 @@ module.exports = function(grunt) {
     // support for #3. Append the staging / output directories to the list of .ignore files
     ignores = ignores.concat([path.join(grunt.config('staging') + '/**'), path.join(grunt.config('output') + '/**')]);
 
-    log
+    grunt.log
       .writeln('Copying into ' + dirname)
-      .writeln('Ignoring ' + log.wordlist(ignores));
+      .writeln('Ignoring ' + grunt.log.wordlist(ignores));
 
-    task.helper('copy', grunt.config('base'), dirname, { ignores: ignores }, function(e) {
-      if(e) log.error(e.stack || e.message);
-      else log.ok(grunt.config('base') + ' -> ' + dirname);
+    grunt.helper('copy', grunt.config('base'), dirname, { ignores: ignores }, function(e) {
+      if(e) grunt.log.error(e.stack || e.message);
+      else grunt.log.ok(grunt.config('base') + ' -> ' + dirname);
 
       // Once copy done, ensure the current working directory is the intermediate one.
       grunt.file.setBase(grunt.config('staging'));
@@ -41,7 +42,7 @@ module.exports = function(grunt) {
     });
   });
 
-  task.registerTask('copy', 'Copies the whole staging(intermediate/) folder to output (publish/) one', function() {
+  grunt.registerTask('copy', 'Copies the whole staging(intermediate/) folder to output (publish/) one', function() {
     this.requiresConfig('staging', 'output');
 
     var config = grunt.config(),
@@ -52,16 +53,16 @@ module.exports = function(grunt) {
 
     // bypass the ignnore stuff
     var opts = { ignores: function() { return true; } };
-    task.helper('copy', config.staging, config.output, opts, function(e) {
-      if(e) log.error(e.stack || e.message);
-      else log.ok(path.resolve(config.staging) + ' -> ' + path.resolve(config.output));
+    grunt.task.helper('copy', config.staging, config.output, opts, function(e) {
+      if(e) grunt.log.error(e.stack || e.message);
+      else grunt.log.ok(path.resolve(config.staging) + ' -> ' + path.resolve(config.output));
       cb(!e);
     });
   });
 
-  task.registerTask('clean', 'Wipe the previous build dirs', function() {
+  grunt.registerTask('clean', 'Wipe the previous build dirs', function() {
     var dirs = [grunt.config('staging'), grunt.config('output')];
-    dirs.forEach(task._helpers.rimraf);
+    dirs.forEach(grunt.task._helpers.rimraf);
   });
 
   //
@@ -70,7 +71,7 @@ module.exports = function(grunt) {
   // given `cb` callback if passed in will make the call asynchronous,
   // otherwise `rimraf.sync` is used.
   //
-  task.registerHelper('rimraf', function(dir, cb) {
+  grunt.registerHelper('rimraf', function(dir, cb) {
     if(typeof cb !== 'function') return utils.rimraf.sync(dir);
     utils.rimraf(dir, cb);
   });
@@ -81,7 +82,7 @@ module.exports = function(grunt) {
   // Takes a `directory` path to create, process is async if a valid
   // callback function is passed in.
   //
-  task.registerHelper('mkdir', function(dir, cb) {
+  grunt.registerHelper('mkdir', function(dir, cb) {
     if(typeof cb !== 'function') return utils.mkdirp.sync(dir);
     utils.mkdirp(dir, cb);
   });
@@ -105,7 +106,7 @@ module.exports = function(grunt) {
   //
   // todo: consider fstream for that.
   //
-  task.registerHelper('copy', function(src, dest, opts, cb) {
+  grunt.registerHelper('copy', function(src, dest, opts, cb) {
     if(!cb) { cb = opts; opts = {}; }
 
     var ignores = opts.ignore = opts.ignore || opts.ignores || '';
@@ -132,7 +133,7 @@ module.exports = function(grunt) {
         return result;
       }).length;
 
-      if(!res) log.verbose.writeln('Copy » ' + path.join(dest, name).grey);
+      if(!res) grunt.log.verbose.writeln('Copy » ' + path.join(dest, name).grey);
       return !res;
     };
 
