@@ -33,13 +33,21 @@ var helpers = module.exports = function grunt(base, em) {
       // now that the stack is setup, run each command serially
       (function run(cmd) {
         if(!cmd) return em.emit('end');
+        cmd = Array.isArray(cmd) ? cmd : cmd.split(' ');
+
         // grunt process - maybe fork would avoid the exec use for this to work on windows, I dunno
         console.log('running in ', path.resolve(base));
         console.log(' » grunt ' + cmd);
         console.log();
 
-        cmd = Array.isArray(cmd) ? cmd : cmd.split(' ');
-        var gpr = fork(gruntpath, cmd, { cwd: path.resolve(base) });
+        // we want $PATH in forked process environment for
+        // which package to work appropriately when run via
+        // npm test
+        var env = { PATH: process.env.PATH };
+
+        // run grunt via child_process.fork, setting up cwd to test dir and
+        // necessary environment variables.
+        var gpr = fork(gruntpath, cmd, { cwd: path.resolve(base), env: env });
         gpr.on('exit', function(code, stdout, stderr) {
           assert.equal(code, 0, ' ✗ Grunt exited with errors. Code: ' + code);
           em.emit(cmd, code, stdout, stdout);
