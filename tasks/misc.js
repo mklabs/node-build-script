@@ -107,7 +107,7 @@ module.exports = function(grunt) {
   // todo: consider fstream for that.
   //
   task.registerHelper('copy', function(src, dest, opts, cb) {
-    if(!cb) cb = opts, opts = {};
+    if(!cb) { cb = opts; opts = {}; }
 
     var ignores = opts.ignore = opts.ignore || opts.ignores || '';
 

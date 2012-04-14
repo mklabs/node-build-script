@@ -37,19 +37,15 @@ function dom(grunt) {
   if(process.platform === 'win32') return;
 
   grunt.registerTask('dom', 'Dom-based build system', function() {
-
-    var jsdom = dom.jsdom || (dom.jsdom = ensure('jsdom'));
-
+    var jsdom = dom.jsdom || (dom.jsdom = ensures('jsdom'));
     if(!jsdom) return console.log('help install dom');
 
     config.requires('dom');
-
     var conf = config('dom'),
       files = file.expand(conf.files),
       cb = this.async();
 
     log.writeln('About to process following files\n » ' + log.wordlist(files, '\n » '));
-
     var selectors = Object.keys(conf).filter(function(key) { return key !== 'files'; });
     log.writeln('with the following set of selectors\n » ' + log.wordlist(selectors, '\n » '));
 
@@ -61,7 +57,7 @@ function dom(grunt) {
         return {
           el: key,
           plugin: conf[key]
-        }
+        };
       });
 
     (function run(files) {
@@ -80,7 +76,7 @@ function dom(grunt) {
         log.subhead(' ✔ ' + f);
         run(files);
       });
-    })(files);
+    }(files));
 
   });
 
@@ -131,7 +127,7 @@ function dom(grunt) {
       }
     });
   });
-};
+}
 
 
 
@@ -146,7 +142,7 @@ function dom(grunt) {
 // `window.document.innerHTML` is then used to replace the original file.
 //
 
-function processFile(file, cb) {
+function processFile(file, jsdom, cb) {
   fs.readFile(file, 'utf8', function(err, body) {
     if(err) return cb(err);
     jsdom.env({
@@ -161,6 +157,6 @@ function processFile(file, cb) {
 // ensures is a wrapper to `require`. Failsafe require catching loading error if
 // not installed, displaying a meaningfull help.
 function ensures(name) {
-  return require(name)
+  return require(name);
 }
 

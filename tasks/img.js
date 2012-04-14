@@ -81,16 +81,16 @@ module.exports = function(grunt) {
         );
         grunt.warn('optipng not found.', code);
       } else {
-        result.split(grunt.utils.linefeed).forEach(log.error, log);
         grunt.warn('optipng exited unexpectedly with exit code ' + code + '.', code);
       }
-      return cb(err);
+
+      return cb(false);
     };
 
     child.stdout.pipe(process.stdout);
     child.stderr.pipe(process.stderr);
 
-    child.on('exit', error).on('error', error)
+    child.on('exit', error).on('error', error);
 
   });
 
@@ -118,13 +118,13 @@ module.exports = function(grunt) {
           fs.createReadStream('jpgtmp.jpg')
             .pipe(fs.createWriteStream(file)).on('close', function() {
               run(files.shift());
-            })
+            });
         });
         child.stderr.pipe(process.stderr);
         child.on('exit', function(code) {
           if(code) grunt.warn('jpg exited unexpectedly with exit code ' + code + '.', code);
-        })
-      })(files.shift());
+        });
+      }(files.shift()));
     });
 
   });
@@ -138,7 +138,7 @@ module.exports = function(grunt) {
       'the command line, this task should work)'
     ].join(' ').replace(/:cmd/g, cmd));
     grunt.log.writeln('Skiping ' + cmd + ' task');
-    cb && cb();
+    if(cb) cb();
   });
 
 };

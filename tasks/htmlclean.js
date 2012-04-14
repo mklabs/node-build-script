@@ -54,7 +54,7 @@ module.exports = function(grunt) {
         file: file,
         body: body,
         minified: grunt.helper('htmlclean', body)
-      }
+      };
     });
 
     // now write back to the disk each optimized html file

@@ -22,7 +22,7 @@ module.exports = function(grunt) {
     var sockets = config('sockets'),
       errors = config('errors') || [];
 
-    sockets && Object.keys(sockets).forEach(function(s) {
+    if(sockets) Object.keys(sockets).forEach(function(s) {
       if(errors.length) return sockets[s].emit('error', errors);
       sockets[s].emit('changed');
     });
@@ -105,7 +105,7 @@ module.exports = function(grunt) {
     server.use(connect.favicon());
 
     // setup logs
-    data.logs && server.use(connect.logger(data.logs));
+    if(data.logs) server.use(connect.logger(data.logs));
 
     // custom static middleware, tricking the static one
     server.use(function(req, res, next) {
@@ -166,15 +166,12 @@ module.exports = function(grunt) {
     server.use(connect.static(dirname));
 
     // directory serving
-    data.dirs && server.use(connect.directory(dirname));
+    if(data.dirs) server.use(connect.directory(dirname));
 
     // start the server
     server.listen(data.port);
 
-    log.writeln('\033[90mserving \033[36m:path\033[90m on port \033[96m:port\033[0m'
-      .replace(':path', dirname)
-      .replace(':port', data.port)
-    );
+    log.writeln('Serving ' + dirname.bold + ' on port ' + data.port);
 
   });
 

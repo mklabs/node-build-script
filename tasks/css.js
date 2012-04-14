@@ -51,7 +51,7 @@ module.exports = function(grunt) {
   // options  - (optional) rjs configuration
   // cb       - callback function to call on completion
   task.registerHelper('rjs:optimize:css', function(file, options, cb) {
-    if(!cb) cb = options, options = {};
+    if(!cb) { cb = options; options = {}; }
     options.cssIn = file;
     options.out = options.out || file;
     options.optimizeCss = 'standard.keepLines';

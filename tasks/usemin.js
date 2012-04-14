@@ -68,7 +68,7 @@ module.exports = function(grunt) {
       Object.keys(blocks).forEach(function(key) {
         var block = blocks[key].join(linefeed),
           parts = key.split(':'),
-          type = parts[0];
+          type = parts[0],
           target = parts[1];
 
         content = task.helper('usemin', content, block, target, type);

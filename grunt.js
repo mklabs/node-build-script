@@ -6,19 +6,21 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     lint: {
-      files: ['grunt.js', 'lib/**/*.js', 'tasks/**/*.js']
+      grunt: ['grunt.js', 'tasks/*.js'],
+      lib: ['lib/plugins/*.js']
     },
     watch: {
-      files: '<config:lint.files>',
-      tasks: 'lint'
+      files: '<config:lint.grunt>',
+      tasks: 'lint:grunt'
     },
     jshint: {
       options: {
+        es5: true,
         node: true,
-        curly: true,
+        curly: false,
         eqeqeq: true,
         immed: true,
-        latedef: true,
+        latedef: false,
         newcap: true,
         noarg: true,
         sub: true,
