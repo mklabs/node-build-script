@@ -108,7 +108,7 @@ module.exports = function(grunt) {
     content = task.helper('replace', content, /<link rel=["']?stylesheet["']?\shref=['"](.+)["']\s*>/gm);
 
     log.verbose.writeln('Update the HTML with the new img filename');
-    content = task.helper('replace', content, /<img.+src=['"](.+)["'][\/>]?>/);
+    content = task.helper('replace', content, /<img[^\>]+src=['"]([^"']+)["']/gm);
     return content;
   });
 

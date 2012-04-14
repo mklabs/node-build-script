@@ -12,8 +12,10 @@ module.exports = function(grunt) {
     noop = function() {};
 
   task.registerTask('serve', 'Spawns up a local http server on both staging / output directory', function() {
+    this.requiresConfig('serve');
+
     var serve = config('serve'),
-      targets = Object.keys(serve); 
+      targets = Object.keys(serve);
 
     targets.forEach(function(target) {
       task.helper('serve', serve[target], target);

@@ -47,29 +47,24 @@ module.exports = function(grunt) {
   // defined a single task and use arguments to trigger the appropriate
   // target
   var targets = {
-    // these tasks run before any target runs
-    pre: 'intro clean mkdirs',
-
     // build - minor html optimizations (extra quotes removed). inline script/style minified (default)
-    default: 'concat css min rev usemin manifest htmlclean images',
+    default: 'concat css min img rev usemin manifest htmlclean',
 
     // text - same as build but without image (png/jpg) optimizing
     text: 'concat css min rev usemin manifest htmlclean',
 
     // buildkit - all html whitespace/comments maintained . inline script/style minified
-    buildkit: 'concat css min rev usemin manifest htmlclean:minor',
+    buildkit: 'concat css min img rev usemin manifest htmlclean:minor',
 
-    // basics - same as build minus the basic html minfication
-    basics: 'intro clean mkdirs concat css min rev usemin manifest',
+    // basics - same as build minus the html minfication
+    basics: 'concat css min img rev usemin manifest',
 
     // minify - same as build plus full html minification,
-    minify: 'intro clean mkdirs concat css min rev usemin manifest htmlclean:compress images',
-
-    // this runs after every valid target
-    post: 'copy time'
+    minify: 'concat css min img rev usemin manifest htmlclean:compress'
   };
 
-  grunt.registerTask('build', 'Run a predefined target - build:<target> \n' + grunt.log.wordlist(Object.keys(targets)), function(target) {
+  var targetList = grunt.log.wordlist(Object.keys(targets));
+  grunt.registerTask('build', 'Run a predefined target - build:<target> \n' + targetList, function(target) {
     var valid = Object.keys(targets);
     if(!~valid.indexOf(target)) {
       grunt.log
@@ -78,7 +73,7 @@ module.exports = function(grunt) {
       return false;
     }
 
-    var tasks = [targets.pre, targets[target], targets.post].join(' ');
+    var tasks = ['intro clean mkdirs', targets[target], 'copy time'].join(' ');
     grunt.task.run(tasks);
   });
 
@@ -108,10 +103,13 @@ module.exports = function(grunt) {
     grunt.log.ok('Build sucess. Done in ' + ((+new Date - now) / 1000) + 's');
   });
 
-  grunt.registerTask('images', 'TBD - Optimizes .jpg/.png images using jpegtan/optipng', function() {
-    // *.png            --> optipng
-    // *.jpg / *.jpeg   --> jpegtran
-    grunt.log.error('not yet implemented');
+  // Output some size info about a file, from a stat object.
+  grunt.registerHelper('min_max_stat', function(min, max) {
+    min = typeof min === 'string' ? fs.statSync(min) : min;
+    max = typeof max === 'string' ? fs.statSync(max) : max;
+    console.log(max.size, min.size);
+    grunt.log.writeln('Uncompressed size: ' + String(max.size).green + ' bytes.');
+    grunt.log.writeln('Compressed size: ' + String(min.size).green + ' bytes minified.');
   });
 
 };

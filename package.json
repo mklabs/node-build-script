@@ -23,7 +23,8 @@
     "request": "~2.9.200",
     "tar": "~0.1.13",
     "grunt-help": "http://nodeload.github.com/mklabs/grunt-help/tarball/dev",
-    "html-minifier": "~0.4.5"
+    "html-minifier": "~0.4.5",
+    "which": "~1.0.5"
   },
   "scripts": {
     "install": "node scripts/install.js",
