@@ -14,21 +14,17 @@
     "mkdirp": "~0.3.1",
     "ncp": "~0.2.6",
     "requirejs": "~1.0.7",
-    "minimatch": "~0.2.4",
     "clean-css": "~0.3.2",
-    "connect": "~2.1.0",
-    "serve": "~1.0.3",
+    "connect": "~1.8.6",
     "grunt": "~0.3.8",
     "socket.io": "~0.9.5",
     "request": "~2.9.200",
     "tar": "~0.1.13",
-    "grunt-help": "http://nodeload.github.com/mklabs/grunt-help/tarball/dev",
     "html-minifier": "~0.4.5",
     "which": "~1.0.5"
   },
   "scripts": {
-    "install": "node scripts/install.js",
     "pretest": "git submodule update --init",
-    "test": "node test"
+    "test": "node test build:minify"
   }
 }

@@ -1,51 +1,27 @@
 
-Usage:
-    h5bp [options] [task [task ...]]
+Usage: h5bp [options] [task [task ...]]
 
-    h5bp help       Display this help text
-    h5bp --help     Display grunt help text
-    h5bp --version  Print the h5bp version
-
-A built-in help "task" may be used to get further information on a given topic:
-
-    h5bp help configuration
-    h5bp help overview
-    h5bp help tasks css
-    ...
-
-Available tasks the h5bp plugin provides (for a full list, type h5bp --help)
+Available tasks the h5bp plugin provides (for a full list, type h5bp --help
 
      clean  Wipe the previous build dirs
       copy  Copies the whole staging(intermediate/) folder to output
             (publish/) one
        css  Concats, replaces @imports and minifies the CSS files *
        dom  dom-based build system
- htmlclean  Basic to aggresive html minification
+      html  Basic to aggresive html minification
+       img  Optimizes .png/.jpg images using optipng/jpegtran
     mkdirs  Prepares the build dirs *
        rev  Automate the hash renames of assets filename *
+    server  Start a custom static web server
     usemin  Replaces references to non-minified scripts / stylesheets *
 
-Support
+Build targets: h5bp build:<target>
 
-   connect  Spawns up a local http server with socket.io enabled
-    reload  Alias for "default connect watch:reload" tasks.
-     serve  Spawns up a local http server on both staging / output
-            directory
-
-Alias
-
-   default  Alias for "help" task.
-     build  Alias for "intro clean mkdirs concat css min rev usemin
-            manifest htmlclean images copy" tasks.
-      text  Alias for "intro clean mkdirs concat css min rev usemin
-            manifest htmlclean copy" tasks.
-  buildkit  Alias for "intro clean mkdirs concat css min rev usemin
-            manifest htmlclean:minor copy" tasks.
-    basics  Alias for "intro clean mkdirs concat css min rev usemin
-            manifest copy" tasks.
-    minify  Alias for "intro clean mkdirs concat css min rev usemin
-            manifest htmlclean:compress images copy" tasks.
-
+   default  concat css min img rev usemin manifest
+      text  concat css min rev usemin manifest
+  buildkit  concat css min img rev usemin manifest html:buildkit
+    basics  concat css min img rev usemin manifest html:basics
+    minify  concat css min img rev usemin manifest html:compress
 
 For more information on the h5bp plugin, see https://github.com/h5bp/node-build-script/wiki
 

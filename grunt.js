@@ -48,12 +48,4 @@ module.exports = function(grunt) {
     grunt.helper('inspect', grunt.task._tasks[t]);
   });
 
-  grunt.registerHelper('inspect', function(o) {
-    var lf = grunt.utils.linefeed;
-    var output = (lf + util.inspect(o, false, 4, true) + lf).split(lf).map(function(line) {
-      return line;
-    });
-    output.forEach(grunt.log.ok, grunt.log);
-  });
-
 };

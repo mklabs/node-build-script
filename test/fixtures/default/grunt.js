@@ -67,7 +67,7 @@ module.exports = function(grunt) {
       files: ['**/*.html']
     },
 
-    htmlclean: '<config:usemin>',
+    html: '<config:usemin>',
 
     serve: {
       staging: { port: 3000 },

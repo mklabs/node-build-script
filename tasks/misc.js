@@ -1,6 +1,5 @@
 
-var path = require('path'),
-  minimatch = require('minimatch');
+var path = require('path');
 
 module.exports = function(grunt) {
 
@@ -128,7 +127,7 @@ module.exports = function(grunt) {
 
       name = name.replace(src, '').replace(/^[\/\\]/, '');
       var res = ignores.concat(gitignore).map(function(ignore) {
-        return minimatch(name, ignore, { matchBase: true });
+        return grunt.file.isMatch(name, ignore);
       }).filter(function(result) {
         return result;
       }).length;

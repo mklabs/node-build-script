@@ -1,6 +1,7 @@
 
 var fs = require('fs'),
   join = require('path').join,
+  util = require('util'),
   h5bp = require('../');
 
 //
@@ -36,9 +37,6 @@ module.exports = function(grunt) {
   //
   h5bp.utils.extend(grunt.utils);
 
-  // configuration for the grunt-help plugin
-  require('./help')(grunt);
-
   // Setup some default alias...
   grunt.registerTask('default', 'build:default');
   grunt.registerTask('reload', 'default connect watch:reload');
@@ -47,20 +45,24 @@ module.exports = function(grunt) {
   // defined a single task and use arguments to trigger the appropriate
   // target
   var targets = {
-    // build - minor html optimizations (extra quotes removed). inline script/style minified (default)
-    default: 'concat css min img rev usemin manifest htmlclean',
+    // build - (default) no html optimizations
+    default: 'concat css min img rev usemin manifest',
 
     // text - same as build but without image (png/jpg) optimizing
-    text: 'concat css min rev usemin manifest htmlclean',
+    text: 'concat css min rev usemin manifest',
 
-    // buildkit - all html whitespace/comments maintained . inline script/style minified
-    buildkit: 'concat css min img rev usemin manifest htmlclean:minor',
+    // buildkit - minor html optimizations, all html whitespace/comments
+    // maintained
+    // (todo: inline script/style minified)
+    buildkit: 'concat css min img rev usemin manifest html:buildkit',
 
-    // basics - same as build minus the html minfication
-    basics: 'concat css min img rev usemin manifest',
+    // basics - same as build minus plugs minor html optimizations
+    // (extra quotes and comments removed)
+    // (todo: inline script/style minified)
+    basics: 'concat css min img rev usemin manifest html:basics',
 
     // minify - same as build plus full html minification,
-    minify: 'concat css min img rev usemin manifest htmlclean:compress'
+    minify: 'concat css min img rev usemin manifest html:compress'
   };
 
   var targetList = grunt.log.wordlist(Object.keys(targets));
@@ -110,5 +112,16 @@ module.exports = function(grunt) {
     grunt.log.writeln('Uncompressed size: ' + String(max.size).green + ' bytes.');
     grunt.log.writeln('Compressed size: ' + String(min.size).green + ' bytes minified.');
   });
+
+  // Output some info on given object, using util.inspect
+  grunt.registerHelper('inspect', function(o) {
+    var lf = grunt.utils.linefeed;
+    var output = (lf + util.inspect(o, false, 4, true) + lf).split(lf).map(function(line) {
+      return line;
+    });
+    output.forEach(grunt.log.ok, grunt.log);
+    return grunt;
+  });
+
 
 };

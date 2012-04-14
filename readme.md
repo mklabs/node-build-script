@@ -37,7 +37,8 @@ $ h5bp init
 * Concats / Compresses JS
 * Concats / Compresses CSS
 * Inline CSS imports via
-* Basic to aggressive html minification
+* Basic to aggressive html minification (via [html-minfier][])
+* Optimizes JPGs and PNGs (with jpegtran & optipng)
 * Renames JS/CSS to prepend a hash of their contents for easier versioning
 * Does the necessary regex replacements in html files and templates
 * Experimental dom-based (with [JSDOM]()) build system.
@@ -75,4 +76,4 @@ $ npm test
 [JSDOM]: https://github.com/tmpvar/jsdom
 [ant-build-script]: https://github.com/h5bp/ant-build-script
 [socket.io]: http://socket.io
-
+[html-minifier]: https://github.com/kangax/html-minifier

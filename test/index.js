@@ -28,7 +28,6 @@ assert.file = function(actual, expect, message) {
     ''
   ].join('\n');
 
-
   assert.ok(ok, message);
 };
 
