@@ -40,28 +40,27 @@ var test = new EventEmitter;
 //
 
 runner.setup(function(err) {
-  var commands = [
-    'intro'
-  ];
-
-  commands.forEach(function(cmd) {
-    runner('.test', test)(cmd);
+  var imgs = ['1.png', '2.png', '3.png', '4.png', '5.jpg', '6.jpg'].map(function(img) {
+    return 'default/' + img;
   });
 
+  runner.copy(['default/usemin.html', 'default/index.html'], '.test', next);
+  runner.copy(imgs, '.test/img', next);
 
-  runner.copy('test/fixtures/default/usemin.html', '.test/usemin.html', function(err) {
+  var ln = 2;
+  function next(err) {
     if(err) throw err;
-
+    if(--ln) return;
     // run the default task
     var cmd = process.argv.slice(2);
     runner('.test', test)(cmd.length ? cmd : 'default');
-  });
+  };
 });
 
 // global check on index.html
 test.on('end', function(err) {
   assert.ifError(err);
-  assert.file('.test/intermediate/index.html', 'test/fixtures/default/expected.html');
+  assert.file('.test/publish/index.html', 'test/fixtures/default/expected.html');
 });
 
 //
@@ -73,7 +72,7 @@ test.on('end', function(err) {
 //
 test.on('end', function(err) {
   assert.ifError(err);
-  assert.file('.test/intermediate/usemin.html', 'test/fixtures/default/usemin.expected.html');
+  assert.file('.test/publish/usemin.html', 'test/fixtures/default/usemin.expected.html');
 });
 
 

@@ -104,6 +104,10 @@ helpers.setup = function setup(o, cb) {
 //
 helpers.copy = function(sources, destination, cb) {
   sources = Array.isArray(sources) ? sources : sources.split(' ');
+  sources = sources.map(function(file) {
+    return path.resolve('test/fixtures', file);
+  });
+
   var ln = sources.length;
   if(!ln) return cb(new Error('Sources array is empty'));
 

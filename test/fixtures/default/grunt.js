@@ -53,11 +53,14 @@ module.exports = function(grunt) {
       'css/style.css': ['css/style.css']
     },
 
-    // are resolved below the output directory
     rev: {
       js: 'js/**/*.js',
       css: 'css/**/*.css',
-      img: 'img/**'
+      img: 'img/**/*'
+    },
+
+    img: {
+      dist: '<config:rev.img>'
     },
 
     usemin: {
@@ -65,6 +68,11 @@ module.exports = function(grunt) {
     },
 
     htmlclean: '<config:usemin>',
+
+    serve: {
+      staging: { port: 3000 },
+      output: { port: 3001 }
+    },
 
     dom: {
 
