@@ -107,7 +107,6 @@ module.exports = function(grunt) {
   grunt.registerHelper('min_max_stat', function(min, max) {
     min = typeof min === 'string' ? fs.statSync(min) : min;
     max = typeof max === 'string' ? fs.statSync(max) : max;
-    console.log(max.size, min.size);
     grunt.log.writeln('Uncompressed size: ' + String(max.size).green + ' bytes.');
     grunt.log.writeln('Compressed size: ' + String(min.size).green + ' bytes minified.');
   });
