@@ -7,6 +7,7 @@ Available tasks the h5bp plugin provides (for a full list, type h5bp --help
       copy  Copies the whole staging(intermediate/) folder to output
             (publish/) one
        css  Concats, replaces @imports and minifies the CSS files *
+      docs  grunt h5bp plugin documentation
        dom  dom-based build system
       html  Basic to aggresive html minification
        img  Optimizes .png/.jpg images using optipng/jpegtran
