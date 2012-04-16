@@ -4,36 +4,49 @@ var fs = require('fs'),
   path = require('path'),
   crypto = require('crypto');
 
-//
-// ### Tasks
-//
 
-task.registerBasicTask('rev', 'Automate the revving of assets filename', function(data, name) {
-  log.writeln('Processing revving of ' + name + ' files');
-  var files = file.expand(data);
-
-  files.forEach(function(f) {
-    var p = path.resolve(f),
-      md5 = task.helper('md5', p),
-      renamed = [md5.slice(0, 8), path.basename(f)].join('.');
-
-    log.writeln('md5 for ' + f + ' is ' + md5);
-
-    // create the new file
-    fs.renameSync(p, path.resolve(path.dirname(f), renamed));
-
-    log.writeln('New filename is ' + renamed);
+module.exports = function(grunt) {
+  // rev task - reving is done in the `output/` directory
+  grunt.registerMultiTask('rev', 'Automate the hash renames of assets filename', function() {
+    grunt.helper('hash', this.data);
   });
-});
+
+  // **hash** helper takes care of files revving, by renaming any files
+  // in the given `files` pattern(s), with passed in `options`.
+  //
+  // - files      - String or Array of glob pattern
+  // - options    - (optional) An Hash object where:
+  //    - cwd     - Base directory to work from, glob patterns are
+  //                prepended to this path.
+  //
+  grunt.registerHelper('hash', function(files, opts) {
+    opts = opts || {};
+
+    files = Array.isArray(files) ? files : [files];
+    grunt.file.expand(files).forEach(function(f) {
+      var md5 = grunt.helper('md5', f),
+        renamed = [md5.slice(0, 8), path.basename(f)].join('.');
+
+      grunt.verbose.ok().ok(md5);
+      // create the new file
+      fs.renameSync(f, path.resolve(path.dirname(f), renamed));
+      grunt.log.write(f + ' ').ok(renamed);
+    });
+  });
 
 
-//
-// ### Helpers
-//
+  // **md5** helper is a basic wrapper around crypto.createHash, with
+  // given `algorithm` and `encoding`. Both are optional and defaults to
+  // `md5` and `hex` values.
+  grunt.registerHelper('md5', function(filepath, algorithm, encoding) {
+    algorithm = algorithm || 'md5';
+    encoding = encoding || 'hex';
+    var hash = crypto.createHash(algorithm);
+    hash.update(grunt.file.read(filepath));
+    grunt.log.verbose.write('Hashing ' + filepath + '...');
+    return hash.digest(encoding);
+  });
+};
 
-task.registerHelper('md5', function(filepath) {
-  var md5 = crypto.createHash('md5');
-  md5.update(file.read(filepath));
-  return md5.digest('hex');
-});
+
 

@@ -1,2 +1,8 @@
 node_modules
 test/fixtures/h5bp
+.test
+npm-debug.log
+tasks/init/h5bp/root
+docs/css
+docs/index.html
+docs/api

@@ -1,171 +1,68 @@
+var util = require('util'),
+  path = require('path');
 
-var path = require('path');
+/*global module:false*/
+module.exports = function(grunt) {
 
-
-// This is the main html5-boilerplate build configuration file.
-//
-// Builds depends on two specific directory created during the process
-// `intermediate/` and `publish/`, the first is used as a staging area, the
-// second is the final result of the build that was run.
-//
-// These two values may be changed to something else with the `staging` and
-// `output` config property below, and by changing any task config to match the new value.
-//
-
-config.init({
-  // the staging directory used during the process
-  staging: 'intermediate/',
-  // final build output
-  output: 'publish/',
-
-  // filter any files matching one of the below pattern during mkdirs task
-  exclude: 'build/** node_modules/** grunt.js package.json *.md'.split(' '),
-
-  mkdirs: {
-    staging: '<config:exclude>',
-    output: '<config:exclude>'
-  },
-
-  // concat task - files are concat'd into `staging/subprop.js`
-  // (eg. intermediate/js/scripts.js)
-  concat: {
-    'js/scripts.js': [ 'js/plugins.js', 'js/script.js' ],
-    'css/style.css': [ 'css/*.css' ]
-  },
-
-  // css task - optimized files is generated into `output/subprop.css`
-  // (eg. publish/css/style.css)
-  css: {
-    'css/style.css': [ 'css/style.css' ]
-  },
-
-  // min task - like the css task, minified files are generated into
-  // `output/subprop.js` (eg. publish/js/scripts.js). Files in subprop value
-  // are resolved with `staging` dir value (eg. intermediate/js/scripts.js)
-  min: {
-    'js/scripts.js': [ 'js/scripts.js' ]
-  },
-
-  // rev task - File patterns in suprops values are resolved with `output` value
-  // (eg. publish/js/*.js)
-  rev: {
-    js: ['js/**/*.js'],
-    css: ['css/**/*.css'],
-    img: ['img/**']
-  },
-
-  // rev task - File pattern in suprops values are resolved with `output` value
-  // (eg. publish/*.html)
-  usemin: {
-    files: ['**/*.html']
-  },
-
-  manifest: '<config:usemin>',
-
-  watch: {
-    files: ['js/**/*.js', 'css/**', '*.html'],
-    tasks: 'default',
-
-    reload: {
-      files: '<config:watch.files>',
-      tasks: 'default emit'
-    }
-  },
-
-  serve: {
-    staging: { port: 3000 },
-    output: { port: 3001 }
-  },
-
-  connect: {
-    staging: {
-      hostname: 'localhost',
-      port: 3000,
-      logs: 'dev',
-      dirs: true
+  // Project configuration.
+  grunt.initConfig({
+    lint: {
+      grunt: ['grunt.js', 'tasks/*.js'],
+      lib: ['lib/plugins/*.js']
     },
-    output: {
-      hostname: 'localhost',
-      port: 3001,
-      logs: 'default',
-      dirs: true
+    watch: {
+      files: '<config:lint.grunt>',
+      tasks: 'lint:grunt'
+    },
+    jshint: {
+      options: {
+        es5: true,
+        node: true,
+        curly: false,
+        eqeqeq: true,
+        immed: true,
+        latedef: false,
+        newcap: true,
+        noarg: true,
+        sub: true,
+        undef: true,
+        boss: true,
+        eqnull: true
+      }
     }
-  },
-
-  lint: {
-    files: ['js/*.js'],
-    build: ['grunt.js', 'tasks/*.js']
-  }
-
-});
-
-// Run the following tasks...
-task.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
-task.registerTask('reload', 'default connect watch:reload');
-
-// Advanced configuration, doing the necessary logic to map any task needed
-// values to top level staging / output dir
-//
-// ---
-//
-
-// exclude - add both staging / output dir as excluded folder during file copy (mkdirs)
-config('exclude', config('exclude')
-  .concat(path.join(config('staging'), '**'))
-  .concat(path.join(config('output'), '**'))
-);
-
-// concat - same here prepend the necessary `staging` value into subprop name
-var concat = config('concat');
-Object.keys(concat).forEach(function(key) {
-  var dir = path.join(config('staging'), key);
-  concat[dir] = concat[key];
-  delete concat[key];
-});
-
-// min - same here prepend the necessary `output` and `staging` value into
-// subprop name and values
-var min = config('min');
-Object.keys(min).forEach(function(key) {
-  var dir = path.join(config('output'), key);
-  min[dir] = min[key].map(function(files) {
-    return path.join(config('staging'), files);
   });
-  delete min[key];
-});
 
-// css - prepend the necessary `output` value into subprop name
-var css = config('css');
-Object.keys(css).forEach(function(key) {
-  var dir = path.join(config('output'), key);
-  css[dir] = css[key];
-  delete css[key];
-});
+  // Default task.
+  grunt.registerTask('default', 'lint');
 
-// css - prepend the necessary `output` dir value into files pattern to handle
-var rev = config('rev');
-Object.keys(rev).forEach(function(key) {
-  rev[key] = rev[key].map(function(files) {
-    return path.join(config('output'), files);
+  // some debugging helpers
+  grunt.registerTask('list-helpers', 'List all grunt registered helpers', function(helper) {
+    var ls = grunt.log.wordlist(Object.keys(grunt.task._helpers), grunt.utils.linefeed);
+    if(!helper) return grunt.log.ok(ls);
+    grunt.log.subhead(helper + ' source:').ok(grunt.task._helpers[helper]);
   });
-});
 
-// usemin - same here, prepend the necessary `output` dir value into files
-// pattern to handle
-var usemin = config('usemin');
-usemin.files = usemin.files.map(function(files) {
-  return path.join(config('output'), files);
-});
+  grunt.registerTask('list-task', 'List all grunt registered tasks', function(t) {
+    var ls = grunt.log.wordlist(Object.keys(grunt.task._tasks), grunt.utils.linefeed);
+    if(!t) return grunt.log.ok(ls);
+    grunt.log.subhead(t + ' source:');
+    grunt.helper('inspect', grunt.task._tasks[t]);
+  });
 
-// serve / connect - simply replace staging / output suprop name by their relevant value
-var serve = config('serve');
-Object.keys(serve).forEach(function(key) {
-  serve[config(key)] = serve[key];
-  delete serve[key];
-});
+  // and the doc generation for the docs task
+  grunt.registerTask('gendocs', 'Generates docs/index.html from wiki pages', function() {
+    var cb = this.async();
 
-var connect = config('connect');
-Object.keys(connect).forEach(function(key) {
-  connect[config(key)] = connect[key];
-  delete connect[key];
-});
+    var gendoc = grunt.utils.spawn({
+      cmd: 'grunt', opts: { cwd: path.join(__dirname, 'scripts/docs') }
+    }, function() {});
+
+    gendoc.stdout.pipe(process.stdout);
+    gendoc.stderr.pipe(process.stderr);
+    gendoc.on('exit', function(code) {
+      if(code) grunt.warn('Something bad happend', code);
+      cb();
+    });
+  });
+
+};

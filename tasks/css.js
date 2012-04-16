@@ -1,67 +1,60 @@
 
-var path = require('path'),
-  rimraf = require('rimraf'),
+var fs = require('fs'),
+  path = require('path'),
   cleanCSS = require("clean-css"),
-  rUrl = /@import url\(['"]([^\)]+)['"]\)/g,
-  rQuote = /@import "([^"]+)"/g,
-  rSingle = /@import '[^']+'/g;
+  rjs = require('requirejs');
 
-//
-// ### Tasks
-//
+module.exports = function(grunt) {
 
-task.registerBasicTask('css', 'Concats, replaces @imports and minifies the CSS files', function(data, name) {
-  var files = task.helper('cssimport', file.expand(data));
-  file.write(name, task.helper('mincss', files));
-  log.writeln("File :file created".replace(':file', name));
-});
+  // **css* task works pretty much the same as grunt's min task. The task
+  // target is the destination, data is an array of glob patterns. These
+  // files are concataned and run through requirejs optimizer to handle
+  // @import inlines in CSS files.
+  grunt.task.registerMultiTask('css', 'Concats, replaces @imports and minifies the CSS files', function() {
+    this.requiresConfig('staging');
 
-//
-// ### Helpers
-//
+    // if defined, files get prepended by the output config value
+    var files = this.data;
 
-task.registerHelper("mincss", function(files) {
-  return files ? files.map(function(filecontent) {
-    return cleanCSS.process(filecontent);
-  }).join("") : "";
-});
+    // concat css files matching the glob patterns and write to destination
+    grunt.file.write(this.target, grunt.helper('mincss', files, { nocompress: true }));
 
-// returns an array of files, in the order they appear as @imported
-//
-// Output a warning message for each invalid uri (eg, path refers to unexisting file)
-task.registerHelper("cssimport", function(files) {
+    // replace @import statements
+    grunt.helper('rjs:optimize:css', this.target, this.async());
+  });
 
-  // For each file content, let's lookup any @import statements
-  // This is done by iterating through each file, and replacing these @import
-  // statements by the actual content of the file.
   //
-  // Process is recursive (and synchronous). All the magic happen in
-  // replaceImports function.
-
-  return files.map(function(name) {
-    return replaceImports(name);
-  });
-});
-
-
-// Recursive css @imports replace helper.
-function replaceImports(filepath, content) {
-  var filecontent = file.read(filepath);
-
-  var reg = rUrl.test(filecontent) ? rUrl :
-    rQuote.test(filecontent) ? rQuote :
-    rSingle.test(filecontent) ? rSingle :
-    null;
-
-  filecontent = filecontent.replace(reg, function(w, match) {
-    var p = path.resolve(path.dirname(filepath), match);
-    if(!path.existsSync(p)) {
-      log.error('Invalid @import file → ' + match);
-      return w;
-    }
-
-    return replaceImports(p);
+  // **mincss** basic utility to concat CSS files and run them through
+  // [cleanCSS](https://github.com/GoalSmashers/clean-css), might opt to use
+  // [https://github.com/jzaefferer/grunt-css] plugin.
+  //
+  grunt.registerHelper('mincss', function(files, o) {
+    o = o || {};
+    files = grunt.file.expandFiles(files);
+    return files.map(function(filepath) {
+      var content = grunt.file.read(filepath);
+      return o.nocompress ? content : cleanCSS.process(content);
+    }).join('');
   });
 
-  return filecontent;
-}
+  // **rjs:optimize:css** is an helper using rjs to optimize a single file,
+  // mainly to properly import multi-level of @import statements, which can be
+  // tricky with all the url rewrites.
+  //
+  // file     - Path to the css file to optimize
+  // options  - (optional) rjs configuration
+  // cb       - callback function to call on completion
+  grunt.registerHelper('rjs:optimize:css', function(file, options, cb) {
+    if(!cb) { cb = options; options = {}; }
+    options.cssIn = file;
+    options.out = options.out || file;
+    options.optimizeCss = 'standard.keepLines';
+    var before = grunt.file.read(file);
+    rjs.optimize(options, function() {
+      grunt.helper('min_max_info', grunt.file.read(file), before);
+      cb();
+    });
+  });
+
+};
+
