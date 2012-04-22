@@ -38,7 +38,7 @@ module.exports = function(grunt) {
       files: '<config:lint.files>',
       tasks: 'lint {%= test_task %}'
     },
-    {% if (min_concat) { if (package_json) { %}
+    {% if (min_concat || require_js) { if (package_json) { %}
     pkg: '<json:package.json>',
     meta: {
       banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
@@ -94,7 +94,10 @@ module.exports = function(grunt) {
         jQuery: true
       {% } %}}
     }{% if (min_concat) { %},
-    uglify: {}{% } %}
+    uglify: {}{% } %}{% if (require_js) { %},
+    rjs: {
+      name: 'main'
+    }{% } %}
   });
 
 };
