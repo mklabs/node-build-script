@@ -58,9 +58,11 @@ module.exports = function(grunt) {
     // todo: far from ideal, would most likely go into other problem here
     grunt.file.setBase(config.base);
 
+    // todo a way to configure this from Gruntfile
+    var ignores = ['.gitignore', '.ignore', '.buildignore'];
+
     // bypass the ignnore stuff
-    var opts = { ignores: function() { return true; } };
-    grunt.task.helper('copy', config.staging, config.output, opts, function(e) {
+    grunt.task.helper('copy', config.staging, config.output, ignores, function(e) {
       if(e) grunt.log.error(e.stack || e.message);
       else grunt.log.ok(path.resolve(config.staging) + ' -> ' + path.resolve(config.output));
       cb(!e);
@@ -155,7 +157,7 @@ module.exports = function(grunt) {
     if(type === 'tar') return grunt.helper('packer', stream, dest, error);
 
     // dir type, create a new fstream.Writer and let fstream do all the complicated stuff for us
-    if(type === 'tar') return stream.pipe(fstream.Writer({ path: dest, type: 'Directory' }))
+    if(type === 'dir') return stream.pipe(fstream.Writer({ path: dest, type: 'Directory' }))
       .on('error', error('pipe error with dir stream'))
       .on('close', error());
   });
