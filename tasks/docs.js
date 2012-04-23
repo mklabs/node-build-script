@@ -23,11 +23,11 @@ module.exports = function(grunt) {
     var app = grunt.helper('serve', config);
 
     app.on('start', function() {
-      var open = spawn(browser, ['http://localhost:' + config.port]);
-      open.on('error', function(er) { console.error(er); });
-      open.on('exit', function(code) {
-        if(code) grunt.warn('Something bad happend', code);
-      });
+      // spawn and forget, would probably ends up with no browser opening
+      // but output to console webserver url.
+      spawn(browser, ['http://localhost:' + config.port]);
+      // windows kinda werid on explorer, getting an error code even though everything is ok
+
     });
   });
 
