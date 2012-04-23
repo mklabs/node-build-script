@@ -1,6 +1,11 @@
 
-var path = require('path'),
-  utils = require('../').utils;
+var fs = require('fs'),
+  path = require('path'),
+  utils = require('../').utils,
+  Ignore = require('fstream-ignore'),
+  fstream = require('fstream'),
+  zlib = require('zlib'),
+  tar = require('tar');
 
 module.exports = function(grunt) {
 
@@ -21,20 +26,21 @@ module.exports = function(grunt) {
     grunt.config('base', base);
 
     var name = this.target,
-      ignores = this.data,
-      dirname = path.resolve(grunt.config(name)),
+      target = path.resolve(grunt.config(name)),
+      source = path.resolve(this.data),
       cb = this.async();
 
-    // support for #3. Append the staging / output directories to the list of .ignore files
-    ignores = ignores.concat([path.join(grunt.config('staging') + '/**'), path.join(grunt.config('output') + '/**')]);
+    // todo a way to configure this from Gruntfile
+    var ignores = ['.gitignore', '.ignore', '.buildignore'];
 
     grunt.log
-      .writeln('Copying into ' + dirname)
+      .writeln('Copying into ' + target)
       .writeln('Ignoring ' + grunt.log.wordlist(ignores));
 
-    grunt.helper('copy', grunt.config('base'), dirname, { ignores: ignores }, function(e) {
+
+    grunt.helper('copy', source, target, ignores, function(e) {
       if(e) grunt.log.error(e.stack || e.message);
-      else grunt.log.ok(grunt.config('base') + ' -> ' + dirname);
+      else grunt.log.ok(source + ' -> ' + target);
 
       // Once copy done, ensure the current working directory is the intermediate one.
       grunt.file.setBase(grunt.config('staging'));
@@ -49,6 +55,7 @@ module.exports = function(grunt) {
       cb = this.async();
 
     // prior to run the last copy step, switch back the cwd to the original one
+    // todo: far from ideal, would most likely go into other problem here
     grunt.file.setBase(config.base);
 
     // bypass the ignnore stuff
@@ -87,59 +94,88 @@ module.exports = function(grunt) {
     utils.mkdirp(dir, cb);
   });
 
+
   //
-  // **copy** helper uses [ncp](https://github.com/AvianFlu/ncp#readme)
-  // and [minimatch](https://github.com/isaacs/minimatch#readme) to copy
-  // the files under the current directory to the specified `dir`,
-  // optionnaly ignoring files specified by the `options.ignore` property.
+  // **copy** helper uses [fstream-ignore](https://github.com/isaacs/fstream-ignore)
+  // to copy the files under the `src` (usually current directory) to the specified
+  // `dest`, optionnaly ignoring files specified by the `ignores` list of files.
   //
-  // `options.ignore` can be a String of space delimited glob patterns,
-  // an Array of glob patterns, or a filter function.
+  // It filters out files that match globs in .ignore files throughout the tree,
+  // like how git ignores files based on a .gitignore file.
   //
-  // This helper is asynchronous only. Paths are always relative to
-  // current working directory.
+  // This helper is asynchronous only. The whole stream "pipeline" of fstream-
+  // ignore is returned so that events mighh be listen to and furter streaming
+  // can be done, the result would be the final stream destination instance.
   //
-  // - source     - Path to the source directory
-  // - dest       - where the files will be copied to
-  // - opts       - (optional) An Hash object with an `ignore` property
+  // The task will "stream" the result of fstream.Ignore to `dest`, which might
+  // be a raw writable Stream, or a String in which case a new fstream.Writer is
+  // created automatically. If the `dest` string ends with `.tar`, then the copy
+  // is done by creating a new/single `.tar` file.
+  //
+  // - source     - Path to the source directory.
+  // - dest       - where the files will be copied to. Can be a String or a
+  //                writable Stream. A new fstream.Writer (type directory) is
+  //                created is dest is a String.
+  // - ignores    - (optional) An Array of ignores files
   // - cb         - callback to call on completion
   //
-  // todo: consider fstream for that.
   //
-  grunt.registerHelper('copy', function(src, dest, opts, cb) {
-    if(!cb) { cb = opts; opts = {}; }
+  grunt.registerHelper('copy', function(src, dest, ignores, cb) {
+    if(!cb) { cb = ignores; ignores = ['.gitignore', '.ignore', '.buildignore']; }
 
-    var ignores = opts.ignore = opts.ignore || opts.ignores || '';
+    function error(msg) { return function(e) {
+      if(!e) {
+        grunt.log.writeln();
+        return cb();
+      }
 
-    // default for src is always $cwd
-    src = src || process.cwd();
+      grunt.log.error('Oh snap >> ' + msg);
+      grunt.log.error(e);
+      return cb(false);
+    }}
 
-    // gitignore
-    var gitignore = path.join(src, '.gitignore');
-    gitignore = !path.existsSync(gitignore) ? '' :
-        grunt.file.read(gitignore).trim().split(grunt.utils.linefeed);
+    var type = typeof dest !== 'string' ? 'stream' :
+      path.extname(dest) === '.tar' ? 'tar' :
+      'dir';
 
-    var fn = typeof ignores === 'function';
-    if(!fn) ignores = Array.isArray(ignores) ? ignores : ignores.split(' ');
-    var filter = function(name) {
-      if(fn) return ignores(name);
-      if(name === src) return true;
-      if(name === dest) return false;
+    var stream = new Ignore({ path: src, ignoreFiles: ignores })
+      .on('child', function (c) {
+        var p = c.path.substr(c.root.path.length + 1);
+        grunt.log.verbose.writeln('>>' + p.grey);
+        grunt.log.verbose.or.write('.');
+      })
+      .on('error', error('fstream-ignore reading error'));
 
-      name = name.replace(src, '').replace(/^[\/\\]/, '');
-      var res = ignores.concat(gitignore).map(function(ignore) {
-        return grunt.file.isMatch(name, ignore);
-      }).filter(function(result) {
-        return result;
-      }).length;
+    // raw stream pipe it trhough
+    if(type === 'stream') return stream.pipe(dest)
+      .on('error', error('pipe error with raw stream'))
+      .on('close', error());
 
-      if(!res) grunt.log.verbose.writeln('Copy » ' + path.join(dest, name).grey);
-      return !res;
-    };
+    // tar type, create a new "packer": tar.Pack(), zlib.Gzip(), fs.WriteStream
+    if(type === 'tar') return grunt.helper('packer', stream, dest, error);
 
-    utils.ncp(src, dest, { filter: filter }, cb);
+    // dir type, create a new fstream.Writer and let fstream do all the complicated stuff for us
+    if(type === 'tar') return stream.pipe(fstream.Writer({ path: dest, type: 'Directory' }))
+      .on('error', error('pipe error with dir stream'))
+      .on('close', error());
   });
 
+  //
+  // **packker** is a simple pass-thourgh stream helper using zlib and isaacs/node-tar.
+  // Takes a readable fstream (like a fstream.Reader or fstream-ignore), pass it through
+  // tar.Pack() with default option, then into zlib.Gzip() and finaly to a writable fs Stream.
+  //
+  // gzipping should be optional.
+  //
+  grunt.registerHelper('packer', function(input, dest, error) {
+    return input.pipe(tar.Pack())
+      .on('close', error('tar creation error' + dest))
+      .pipe(zlib.Gzip())
+      .on('error', error('gzip error ' + dest))
+      .pipe(fs.createWriteStream(dest))
+      .on('error', error('Could not write ' + dest))
+      .on('close', error());
+  });
 };
 
 
