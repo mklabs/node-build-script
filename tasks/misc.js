@@ -3,9 +3,7 @@ var fs = require('fs'),
   path = require('path'),
   utils = require('../').utils,
   Ignore = require('fstream-ignore'),
-  fstream = require('fstream'),
-  zlib = require('zlib'),
-  tar = require('tar');
+  fstream = require('fstream');
 
 module.exports = function(grunt) {
 
@@ -61,7 +59,6 @@ module.exports = function(grunt) {
     // todo a way to configure this from Gruntfile
     var ignores = ['.gitignore', '.ignore', '.buildignore'];
 
-    // bypass the ignnore stuff
     grunt.task.helper('copy', config.staging, config.output, ignores, function(e) {
       if(e) grunt.log.error(e.stack || e.message);
       else grunt.log.ok(path.resolve(config.staging) + ' -> ' + path.resolve(config.output));
@@ -138,6 +135,7 @@ module.exports = function(grunt) {
 
     var type = typeof dest !== 'string' ? 'stream' :
       path.extname(dest) === '.tar' ? 'tar' :
+      path.extname(dest) === '.tgz' ? 'tgz' :
       'dir';
 
     var stream = new Ignore({ path: src, ignoreFiles: ignores })
@@ -148,13 +146,13 @@ module.exports = function(grunt) {
       })
       .on('error', error('fstream-ignore reading error'));
 
-    // raw stream pipe it trhough
+    // raw stream pipe it through
     if(type === 'stream') return stream.pipe(dest)
       .on('error', error('pipe error with raw stream'))
       .on('close', error());
 
     // tar type, create a new "packer": tar.Pack(), zlib.Gzip(), fs.WriteStream
-    if(type === 'tar') return grunt.helper('packer', stream, dest, error);
+    if(/tar|tgz/.test(type)) return grunt.helper('packer', stream, dest, error);
 
     // dir type, create a new fstream.Writer and let fstream do all the complicated stuff for us
     if(type === 'dir') return stream.pipe(fstream.Writer({ path: dest, type: 'Directory' }))
@@ -162,22 +160,6 @@ module.exports = function(grunt) {
       .on('close', error());
   });
 
-  //
-  // **packker** is a simple pass-thourgh stream helper using zlib and isaacs/node-tar.
-  // Takes a readable fstream (like a fstream.Reader or fstream-ignore), pass it through
-  // tar.Pack() with default option, then into zlib.Gzip() and finaly to a writable fs Stream.
-  //
-  // gzipping should be optional.
-  //
-  grunt.registerHelper('packer', function(input, dest, error) {
-    return input.pipe(tar.Pack())
-      .on('close', error('tar creation error' + dest))
-      .pipe(zlib.Gzip())
-      .on('error', error('gzip error ' + dest))
-      .pipe(fs.createWriteStream(dest))
-      .on('error', error('Could not write ' + dest))
-      .on('close', error());
-  });
 };
 
 
