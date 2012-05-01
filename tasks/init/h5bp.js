@@ -108,7 +108,7 @@ h5bp.gruntfile = function(cb) {
     },
     {
       name: 'min_concat',
-      message: 'Will files be concatenated or minified?',
+      message: 'Will files be concatenated or minified? (Select no if using require.js to organize and minify your javascript.)',
       default: 'Y/n',
       warning: 'Yes: min + concat tasks. No: nothing to see here.'
     },
@@ -150,6 +150,12 @@ h5bp.gruntfile = function(cb) {
       message: 'What is the IMG directory?',
       default: 'img/',
       warning: 'This is used in the rev task.'
+    },
+    {
+      name: 'require_js',
+      message: 'Will this project use require.js to organize it\'s javascript?',
+      default: 'y/N',
+      warning: 'This is used in the rjs task.'
     }
   ], function(err, props) {
     props.dom = /y/i.test(props.dom);
