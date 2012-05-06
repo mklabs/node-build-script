@@ -1,5 +1,6 @@
 var util = require('util'),
-  path = require('path');
+  path = require('path'),
+  spawn = require('child_process').spawn;
 
 /*global module:false*/
 module.exports = function(grunt) {
@@ -31,7 +32,7 @@ module.exports = function(grunt) {
       }
     },
     test: {
-      all: ['test/tasks/foo*.js']
+      tasks: ['test/tasks/*.js']
     }
   });
 
@@ -68,41 +69,25 @@ module.exports = function(grunt) {
     });
   });
 
+  // basic override of built-in test task to spawn mocha instead.
   //
-  // test helpers
+  // should be improved and put in another grunt plugin.
   //
-  // These are task to help generating test for a given task. Running this will generate:
-  //
-  // - a basic feature file in test/features/<name>.feature
-  // - a step definition in test/features/steps/<name>.js
-  // - a mocha test file with basic skeleton in test/tasks/<name>.js
-  //
-  // Usage:
-  //
-  //      grunt genmocha:<taskname>
-  //      grunt genmocha --task <taskname>
-  //
+  grunt.registerMultiTask('test', 'Redefine the test task to spawn mocha instead', function() {
+    var files = grunt.file.expandFiles(this.file.src);
 
-  grunt.registerTask('genmocha', 'Auto generate test files for a given task', function(taskname) {
-      taskname = taskname || grunt.option('task');
-      if(!taskname) return grunt.fail.fatal('A taskname must be provided');
+    // path to mocha executable, set as devDependencies in package.json
+    var mocha = path.join(__dirname, 'node_modules/mocha/bin/mocha');
 
-      // async task
-      var cb = this.async();
+    var cb = this.async();
+    var child = spawn('node', [mocha].concat(files));
 
-      console.log('task>>', taskname);
-
-
-
-      grunt.utils.prompt('foo', function() {
-        console.log(arguments);
-      });
+    child.stdout.pipe(process.stdout);
+    child.stderr.pipe(process.stderr);
+    child.on('exit', function(code) {
+      if(code) grunt.warn(new Error('cmd failed'), code);
+      cb();
+    });
   });
-
-
-  // grunt.registerTask('test', 'Redefine the test task to spawn mocha instead', function() {
-  //
-  //
-  // });
 
 };
