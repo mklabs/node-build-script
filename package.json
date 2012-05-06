@@ -31,6 +31,6 @@
   },
   "scripts": {
     "pretest": "git submodule update --init",
-    "test": "node node_modules/mocha/bin/mocha test/tasks/*.js"
+    "test": "grunt test"
   }
 }

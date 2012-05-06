@@ -35,11 +35,15 @@ module.exports = function(grunt) {
       }
     },
     test: {
-      tasks: ['test/tasks/*.js'],
+      tasks: ['test/tasks/test-*.js'],
+
+      // will run the whole script. Two times. One with default config,
+      // the other will full html minification.
+      runThemAll: ['test/default.js', 'test/minify.js']
 
       // this is usually where I put the test I'm working on
       // then run grunt test:last to run only this one
-      last: ['test/tasks/css.js']
+      // last: ['test/tasks/css.js']
     }
   });
 
@@ -155,7 +159,7 @@ module.exports = function(grunt) {
     }, {
       name: 'outcome',
       message: 'Then ?',
-      default: '".test/publish/:task" should be the same as "test/fixtures/:task/expected/"'
+      default: '".test/:task" should be the same as "test/fixtures/:task/expected/"'
         .replace(/:task/g, taskname)
     }], function(err, props) {
       if(err) return grunt.warn(err);

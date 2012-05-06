@@ -14,3 +14,8 @@ Then(/'(.+)' should be the same as '(.+)'/, function() {
   helpers.assertFile('$1', '$2');
   done();
 });
+
+Then(/'(.+)' dir should be the same as '(.+)'/, function() {
+  helpers.assertFile('$1', '$2');
+  done();
+});
