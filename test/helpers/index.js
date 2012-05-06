@@ -156,10 +156,39 @@ helpers.copy = function(sources, destination, cb) {
 };
 
 
-// assertion helper to compate files, length and output.
+// assertion helper to compare files, output.
 helpers.assertFile = function(actual, expected) {
   var actualBody = fs.readFileSync(actual, 'utf8');
   var expectBody = fs.readFileSync(expected, 'utf8');
   assert.equal(actualBody, expectBody);
+};
+
+// assertion helper to compare directories, length and output.
+helpers.assertDir = function(actual, expected) {
+
+  var actualFiles = fs.readdirSync(actual).map(function(file) {
+    return path.join(actual, file);
+  });
+
+  var expectedFiles = fs.readdirSync(expected).map(function(file) {
+    return path.join(expected, file);
+  });
+
+  assert.equal(actualFiles.length, expectedFiles.length, 'Should both compared dirs have the same files');
+
+  actualFiles.forEach(function(actual, i) {
+    var expectHex = fs.readFileSync(expectedFiles[i], 'base64');
+    var actualHex = fs.readFileSync(actual, 'base64');
+    // if it's not, it might take a little while for mocha to do the diff
+    try {
+      assert.equal(expectHex, actualHex, 'Should both base64 encode value be the same');
+    } catch(e) {
+      console.log('\n\n');
+      console.log('    ... Wooops, error processing.', actual, '. Mocha will now generate the diff for you ...');
+      console.log('    ... Please, be patient. It might take a while (few seconds maybe) ...');
+      console.log('');
+      throw e;
+    }
+  });
 };
 
