@@ -86,9 +86,6 @@ module.exports = function(grunt) {
     // path to mocha executable, set as devDependencies in package.json
     var mocha = path.join(__dirname, 'node_modules/mocha/bin/mocha');
 
-    // path to gherkin feature to mocha converter executable
-    var Parser = path.join(__dirname, 'node_modules/mocha-gherkin/bin');
-
     var cb = this.async();
     var child = spawn('node', [mocha].concat(files));
 
