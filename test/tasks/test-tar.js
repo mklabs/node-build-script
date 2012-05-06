@@ -2,17 +2,25 @@
 // Mocha generated tests
 //
 
-var helpers = require('../helpers');
+var fs = require('fs'),
+  path = require('path'),
+  helpers = require('../helpers');
 
 describe("TAR task", function() {
 
-  describe("As a  build script user I want to be able to run the tar task So that I can see the tar task in action", function() {
+  // mocha converter should expose hook for before, after, beforeEach and afterEach
+  // note: stop copy-pasting this everywhere, do it.
+  before(helpers.before);
+
+  describe("As a build script user I want to be able to run the tar task So that I can see the tar task in action", function() {
 
     describe("tar task", function() {
 
       it("Given I run the 'tar' task", function(done) {
-        // runt the tar task
-        helpers.run('tar', done);
+        // runs the tar task
+        // we gonna pack the whole '.test' dir in '.test/test.tar.gz'
+        // curious to see how the task handle output within input..
+        helpers.run('tar --input ./ --output ./test.tgz', done);
       });
 
       it("When the script ends", function(done) {
@@ -21,9 +29,8 @@ describe("TAR task", function() {
         done();
       });
 
-      it("Then '.test/tar' should be the same as 'test/fixtures/tar/expected/'", function(done) {
-        helpers.assertFile('.test/tar', 'test/fixtures/tar/expected/');
-        done();
+      it("Then '.test/test.tgz' should be the same as 'test/fixtures/tar/test.tgz'", function(done) {
+        helpers.assertLength('.test/test.tgz', 'test/fixtures/tar/test.tgz', done);
       });
 
     });

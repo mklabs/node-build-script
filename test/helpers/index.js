@@ -157,10 +157,12 @@ helpers.copy = function(sources, destination, cb) {
 
 
 // assertion helper to compare files, output.
-helpers.assertFile = function(actual, expected) {
-  var actualBody = fs.readFileSync(actual, 'utf8');
-  var expectBody = fs.readFileSync(expected, 'utf8');
-  assert.equal(actualBody, expectBody);
+helpers.assertFile = function(actual, expected, mode) {
+  // unless mode is specifically set to null, defaults to utf8
+  mode = mode === null ? mode : 'utf8';
+  var actualBody = fs.readFileSync(actual, mode);
+  var expectBody = fs.readFileSync(expected, mode);
+  helpers.equal(actualBody, expectBody);
 };
 
 // assertion helper to compare directories, length and output.
@@ -180,15 +182,36 @@ helpers.assertDir = function(actual, expected) {
     var expectHex = fs.readFileSync(expectedFiles[i], 'base64');
     var actualHex = fs.readFileSync(actual, 'base64');
     // if it's not, it might take a little while for mocha to do the diff
-    try {
-      assert.equal(expectHex, actualHex, 'Should both base64 encode value be the same');
-    } catch(e) {
-      console.log('\n\n');
-      console.log('    ... Wooops, error processing.', actual, '. Mocha will now generate the diff for you ...');
-      console.log('    ... Please, be patient. It might take a while (few seconds maybe) ...');
-      console.log('');
-      throw e;
-    }
+    helpers.equal(actualHex, expectHex);
   });
 };
 
+// for when comparing actual file is a bit tricky (like binary file)
+helpers.assertLength = function(actual, expected, done) {
+  // sync if done not provided
+  if(!done) {
+    actual = fs.statSync(actual).length;
+    expected = fs.statSync(expected).length;
+    return helpers.equal(actual, expected);
+  }
+
+  fs.stat(actual, function(e, actualStat) {
+    if(done) return done(e);
+    fs.stat(expected, function(e, expectedStat) {
+      if(done) return done(e);
+      helpers.equal(actualStat, expectedStat, 'Length should be the same');
+    });
+  });
+};
+
+helpers.equal = function(actual, expected, msg) {
+  try {
+    assert.equal(actual, expected, msg || 'Should both base64 encode value be the same');
+  } catch(e) {
+    console.log('\n\n');
+    console.log('    ... Wooops, error processing.', actual, '. Mocha will now generate the diff for you ...');
+    console.log('    ... Please, be patient. It might take a while (few seconds maybe) ...');
+    console.log('');
+    throw e;
+  }
+};
