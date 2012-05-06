@@ -1,0 +1,371 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Mocha generated documentation</title>
+  <meta name="description" content="Mocha generated documentation">
+  <meta name="viewport" content="width=device-width">
+
+  <style>
+    article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
+    audio, canvas, video { display: inline-block; *display: inline; *zoom: 1; }
+    audio:not([controls]) { display: none; }
+    [hidden] { display: none; }
+
+    html { font-size: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    html, button, input, select, textarea { font-family: sans-serif; color: #222; }
+    body { margin: 0; font-size: 1em; line-height: 1.4; }
+    ::-moz-selection { background: #4d4d4d; color: #aaa; text-shadow: none; }
+    ::selection { background: #4d4d4d; color: #aaa; text-shadow: none; }
+
+    a { color: #00e; }
+    a:visited { color: #551a8b; }
+    a:hover { color: #06e; }
+    a:focus { outline: thin dotted; }
+    a:hover, a:active { outline: 0; }
+
+    abbr[title] { border-bottom: 1px dotted; }
+    b, strong { font-weight: bold; }
+    blockquote { margin: 1em 40px; }
+    dfn { font-style: italic; }
+    hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0; }
+    ins { background: #ff9; color: #000; text-decoration: none; }
+    mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
+    pre, code, kbd, samp { font-family: monospace, serif; _font-family: 'courier new', monospace; font-size: 1em; }
+    pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; }
+    q { quotes: none; }
+    q:before, q:after { content: ""; content: none; }
+    small { font-size: 85%; }
+    sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+    sup { top: -0.5em; }
+    sub { bottom: -0.25em; }
+
+    ul, ol { margin: 1em 0; padding: 0 0 0 40px; }
+    dd { margin: 0 0 0 40px; }
+    nav ul, nav ol { list-style: none; list-style-image: none; margin: 0; padding: 0; }
+
+    img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+    svg:not(:root) { overflow: hidden; }
+
+    figure { margin: 0; }
+
+    form { margin: 0; }
+    fieldset { border: 0; margin: 0; padding: 0; }
+    label { cursor: pointer; }
+    legend { border: 0; *margin-left: -7px; padding: 0; white-space: normal; }
+    button, input, select, textarea { font-size: 100%; margin: 0; vertical-align: baseline; *vertical-align: middle; }
+    button, input { line-height: normal; }
+    button, input[type="button"], input[type="reset"], input[type="submit"] { cursor: pointer; -webkit-appearance: button; *overflow: visible; }
+    button[disabled], input[disabled] { cursor: default; }
+    input[type="checkbox"], input[type="radio"] { box-sizing: border-box; padding: 0; *width: 13px; *height: 13px; }
+    input[type="search"] { -webkit-appearance: textfield; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+    input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; }
+    button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+    textarea { overflow: auto; vertical-align: top; resize: vertical; }
+    input:valid, textarea:valid {  }
+    input:invalid, textarea:invalid { background-color: #f0dddd; }
+
+    table { border-collapse: collapse; border-spacing: 0; }
+    td { vertical-align: top; }
+
+    /** Docs specific style **/
+    body {
+      font: 14px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: #5e5e5e;
+      background: #eee;
+    }
+
+    .container {
+      position: relative;
+      overflow: hidden;
+      width: 25em;
+      border: 1px solid #ccc;
+      padding: 1em;
+      margin: 0 auto;
+      background: #fff;
+      -webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+              box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+
+      -webkit-transition: width 0.3s ease-out;
+         -moz-transition: width 0.3s ease-out;
+          -ms-transition: width 0.3s ease-out;
+           -o-transition: width 0.3s ease-out;
+              transition: width 0.3s ease-out;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin: 10px 0;
+      font-weight: 700;
+      color: #393939;
+      font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
+      letter-spacing: -1px;
+
+      /* same font-size for all heading, i know.. **/
+      font-size: 1.2em;
+      font-weight: 700;
+    }
+
+    .suite .suite h1:first-child {
+      color: #4d4d4d;
+      font-size: 0.9em;
+    }
+
+    .suite .suite .suite h1:first-child {
+      padding-left: 10px;
+    }
+
+    .suite .suite .suite h1:first-child:before {
+      content: '» ';
+    }
+
+    .status ul {
+      margin-top: 20px;
+      padding: 0 15px;
+      width: 100%;
+      list-style: none;
+    }
+
+    .status ul li {
+      margin-top: 5px;
+      margin-right: 60px;
+      border-bottom: 1px solid #eee;
+      padding: 5px 0;
+      font-size: 12px;
+    }
+
+    code .keyword              { color: #e3ceaB; }
+    code .string, code .regexp { color: #7b9721; }
+    code .class, code .special { color: #efef8f; }
+    code .number               { color: #8cd0d3; }
+    code .comment              { color: #7f9f7f; }
+
+
+    @media only screen and (min-width: 35em) {
+      .container {
+        width: 30em;
+        padding: 2em 3em;
+        margin: 2em auto 1em;
+      }
+
+      .status ul::after {
+        content: '.';
+        height: 0;
+        display: block;
+        visibility: hidden;
+        clear: both;
+      }
+
+      .status ul li {
+        float: left;
+        width: 34%;
+        margin-top: 5px;
+        margin-right: 60px;
+        border-bottom: 1px solid #EEE;
+      }
+    }
+
+    @media only screen and (min-width: 70em) {
+      .container {
+        width: 70em;
+      }
+
+      .status ul li {
+        width: 40%;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="suite">
+
+      <section class="status">
+        <em>Mocha generated tests</em>
+
+        <ul>
+          <li>✔ css.js</li>
+          <li>✔ img.js</li>
+          <li>✔ tar.js</li>
+          <li>✔ usemin.js</li>
+        </ul>
+
+        <p><strong>to be done</strong></p>
+        <ul>
+          <li>docs.js</li>
+          <li>dom.js</li>
+          <li>h5bp.js</li>
+          <li>html.js</li>
+          <li>init</li>
+          <li>misc.js</li>
+          <li>rev.js</li>
+          <li>rjs.js</li>
+          <li>serve.js</li>
+        </ul>
+      </section>
+
+
+      <hr />
+
+      <h1>Default task</h1>
+      <dl>
+        <section class="suite">
+          <h1>As a build script user I want to be able to run the default task So that I can see the whole tasks in action</h1>
+          <dl>
+            <section class="suite">
+              <h1>Default task</h1>
+              <dl>
+                <dt>Given I run the 'default' task</dt>
+                <dd><pre><code>
+  helpers.run('default', done);</code></pre></dd>
+                <section class="suite">
+                  <h1>When the build script ends</h1>
+                  <dl>
+                    <dt>Then the outcome should be 'test/fixtures/default'</dt>
+                    <dd><pre><code>
+  helpers.assertFile('.test/publish/index.html', 'test/fixtures/default/expected.html');</code></pre></dd>
+                  </dl>
+                </section>
+              </dl>
+            </section>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>CSS task</h1>
+      <dl>
+        <section class="suite">
+          <h1>As a  build script user I want to be able to run the css task So that I can see the css task in action</h1>
+          <dl>
+            <section class="suite">
+              <h1>css task</h1>
+              <dl>
+                <dt>Given I run the 'css' task</dt>
+                <dd><pre><code>
+  // runt the css task
+  helpers.run('css', done);</code></pre></dd>
+                <dt>When the script ends</dt>
+                <dd><pre><code>
+  // not doing particularly usefull in this step
+  // but the hook is here is we need to
+  done();</code></pre></dd>
+                <dt>Then './test/css/style.css' should be the same as 'test/fixtures/css/style.css'</dt>
+                <dd><pre><code>
+  helpers.assertFile('.test/css/style.css', 'test/fixtures/css/style.css');
+  done();</code></pre></dd>
+              </dl>
+            </section>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>IMG task</h1>
+      <dl>
+        <section class="suite">
+          <h1>As a  build script user I want to be able to run the img task So that I can see the img task in action</h1>
+          <dl>
+            <section class="suite">
+              <h1>img task</h1>
+              <dl>
+
+                <dt>Given I run the 'img' task</dt>
+                <dd><pre><code>
+  // run the img task
+  //
+  // note: try commenting out this and execute done callback right away
+  // to see mocha generate diff output on base64 encoded value in its
+  // full glory
+  helpers.run('img', done);</code></pre></dd>
+                <dt>When the script ends</dt>
+                <dd><pre><code>
+  // not doing particularly usefull in this step
+  // but the hook is here is we need to
+  done();</code></pre></dd>
+                <dt>Then '.test/img' dir should be the same as 'test/fixtures/img/expected/'</dt>
+                <dd><pre><code>
+  helpers.assertDir('.test/img', 'test/fixtures/img/expected/');
+  done();</code></pre></dd>
+              </dl>
+            </section>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>TAR task</h1>
+      <dl>
+        <section class="suite">
+          <h1>As a build script user I want to be able to run the tar task So that I can see the tar task in action</h1>
+          <dl>
+            <section class="suite">
+              <h1>tar task</h1>
+              <dl>
+
+                <dt>Given I run the 'tar' task</dt>
+                <dd><pre><code>
+  // runs the tar task
+  // we gonna pack the whole '.test' dir in '.test/test.tar.gz'
+  // curious to see how the task handle output within input..
+  helpers.run('tar --input ./ --output ./test.tgz', done);</code></pre></dd>
+                <dt>When the script ends</dt>
+                <dd><pre><code>
+  // not doing particularly usefull in this step
+  // but the hook is here is we need to
+  done();</code></pre></dd>
+                <dt>Then '.test/test.tgz' should be the same as 'test/fixtures/tar/test.tgz'</dt>
+                <dd><pre><code>
+  helpers.assertLength('.test/test.tgz', 'test/fixtures/tar/test.tgz', done);</code></pre></dd>
+              </dl>
+            </section>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>USEMIN task</h1>
+      <dl>
+        <section class="suite">
+          <h1>As a  build script user I want to be able to run the usemin task So that I can see the usemin task in action</h1>
+          <dl>
+            <section class="suite">
+              <h1>usemin task</h1>
+              <dl>
+                <dt>Given I run the 'usemin' task</dt>
+                <dd><pre><code>
+  // runt the usemin task
+  helpers.run('usemin', done);</code></pre></dd>
+                <dt>When the script ends</dt>
+                <dd><pre><code>
+  // not doing anything particularly usefull in this step
+  // but the hook is here if we need to
+  done();</code></pre></dd>
+                <dt>Then '.test/usemin.html' should be the same as 'test/fixtures/usemin/index.html'</dt>
+                <dd><pre><code>
+  // todo: task log output doesn't return things that were changed between
+  // &lt;!-- build:&lt;target&gt; path/to/foo.js --&gt; directives
+  helpers.assertFile('.test/usemin.html', 'test/fixtures/usemin/index.html');
+  done();</code></pre></dd>
+              </dl>
+            </section>
+          </dl>
+        </section>
+      </dl>
+    </section>
+  </div>
+
+  <script>
+    //
+    // hijs - JavaScript Syntax Highlighter
+    //
+    // Copyright (c) 2010 Alexis Sellier
+    //
+    (function(a){function l(a){return a.replace(/</g,"&lt;").replace(/>/g,"&gt;")}function m(a,b){return g[b=a.split("").map(function(a){return a.charCodeAt(0)>127?a:String.fromCharCode(a.charCodeAt(0)+10240)}).join("")]=a,b}function n(a){return a in g?g[a]:a.trim().split("").map(function(a){return a.charCodeAt(0)-10240>127?a:String.fromCharCode(a.charCodeAt(0)-10240)}).join("")}var b=a||"code",c="var function if else for while break switch case do new null in with void continue delete return this true false throw catch typeof with instanceof".split(" "),d="eval window document undefined NaN Infinity parseInt parseFloat encodeURI decodeURI encodeURIComponent decodeURIComponent".split(" "),e=[["comment",/(\/\*(?:[^*\n]|\*+[^\/*])*\*+\/)/g],["comment",/(\/\/[^\n]*)/g],["string",/("(?:(?!")[^\\\n]|\\.)*"|'(?:(?!')[^\\\n]|\\.)*')/g],["regexp",/(\/.+\/[mgi]*)(?!\s*\w)/g],["class",/\b([A-Z][a-zA-Z]+)\b/g],["number",/\b([0-9]+(?:\.[0-9]+)?)\b/g],["keyword",new RegExp("\\b("+c.join("|")+")\\b","g")],["special",new RegExp("\\b("+d.join("|")+")\\b","g")]],f,g={};/^[a-z]+$/.test(b)?f=document.getElementsByTagName(b):/^\.[\w-]+$/.test(b)?f=document.getElementsByClassName(b.slice(1)):document.querySelectorAll?f=document.querySelectorAll(b):f=[];for(var h=0,i;h<f.length;h++){i=f[h].childNodes;for(var j=0,k;j<i.length;j++)code=i[j],code.length>=0&&(/^\$\s/.test(code.nodeValue.trim())||e.forEach(function(a){var b=a[0],c=a[1];code.nodeValue=code.nodeValue.replace(c,function(a,c){return"«"+m(b)+"·"+m(c)+"·"+m(b)+"»"})}))}for(var h=0;h<f.length;h++)f[h].innerHTML=f[h].innerHTML.replace(/\u00ab(.+?)\u00b7(.+?)\u00b7\1\u00bb/g,function(a,b,c){return c=c.replace(/\u00ab[^\u00b7]+\u00b7/g,"").replace(/\u00b7[^\u00bb]+\u00bb/g,""),'<span class="'+n(b)+'">'+l(n(c))+"</span>"})})(window.hijs);
+  </script>
+</body>
+</html>

@@ -40,10 +40,6 @@ module.exports = function(grunt) {
       // will run the whole script. Two times. One with default config,
       // the other will full html minification.
       runThemAll: ['test/default.js', 'test/minify.js']
-
-      // this is usually where I put the test I'm working on
-      // then run grunt test:last to run only this one
-      , last: ['test/tasks/test-usemin.js']
     }
   });
 
