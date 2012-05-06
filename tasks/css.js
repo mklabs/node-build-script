@@ -1,7 +1,7 @@
 
 var fs = require('fs'),
   path = require('path'),
-  cleanCSS = require("clean-css"),
+  cleanCSS = require('clean-css'),
   rjs = require('requirejs');
 
 module.exports = function(grunt) {
@@ -55,6 +55,7 @@ module.exports = function(grunt) {
       cb();
     });
   });
+
 
 };
 

@@ -29,6 +29,9 @@ module.exports = function(grunt) {
         boss: true,
         eqnull: true
       }
+    },
+    test: {
+      all: ['test/tasks/foo*.js']
     }
   });
 
@@ -64,5 +67,42 @@ module.exports = function(grunt) {
       cb();
     });
   });
+
+  //
+  // test helpers
+  //
+  // These are task to help generating test for a given task. Running this will generate:
+  //
+  // - a basic feature file in test/features/<name>.feature
+  // - a step definition in test/features/steps/<name>.js
+  // - a mocha test file with basic skeleton in test/tasks/<name>.js
+  //
+  // Usage:
+  //
+  //      grunt genmocha:<taskname>
+  //      grunt genmocha --task <taskname>
+  //
+
+  grunt.registerTask('genmocha', 'Auto generate test files for a given task', function(taskname) {
+      taskname = taskname || grunt.option('task');
+      if(!taskname) return grunt.fail.fatal('A taskname must be provided');
+
+      // async task
+      var cb = this.async();
+
+      console.log('task>>', taskname);
+
+
+
+      grunt.utils.prompt('foo', function() {
+        console.log(arguments);
+      });
+  });
+
+
+  // grunt.registerTask('test', 'Redefine the test task to spawn mocha instead', function() {
+  //
+  //
+  // });
 
 };

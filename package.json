@@ -25,8 +25,11 @@
     "fstream-ignore": "0.0.5",
     "tar": "~0.1.13"
   },
+  "devDependencies": {
+    "mocha": "~1.0.3"
+  },
   "scripts": {
     "pretest": "git submodule update --init",
-    "test": "node test build:minify"
+    "test": "node node_modules/mocha/bin/mocha test/tasks/*"
   }
 }
