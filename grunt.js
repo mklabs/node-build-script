@@ -43,7 +43,7 @@ module.exports = function(grunt) {
 
       // this is usually where I put the test I'm working on
       // then run grunt test:last to run only this one
-      // last: ['test/tasks/css.js']
+      , last: ['test/tasks/test-usemin.js']
     }
   });
 

@@ -5,8 +5,8 @@ Given(/I run the '(\w+)' task/, function() {
 });
 
 When(/the script ends/, function(done) {
-  // not doing particularly usefull in this step
-  // but the hook is here if we need to
+  // not doing anything particularly usefull in this step but the hook is here
+  // if we need to
   done();
 });
 
