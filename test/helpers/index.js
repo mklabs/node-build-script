@@ -7,55 +7,67 @@ var fs = require('fs'),
   ncp = require('ncp').ncp,
   EventEmitter = require('events').EventEmitter;
 
+// path to the grunt executable
+var gruntpath = path.resolve('node_modules/grunt/bin/grunt');
+
+// helpers exports
+var helpers = module.exports;
+
+
+// mocha `before()` handler, to execute on each task test
+helpers.before = function(done) {
+  helpers.setup(function(err) {
+    if(err) return done(err);
+
+    var imgs = ['default/1.png', 'default/2.png', 'default/3.png', 'default/4.png', 'default/5.jpg', 'default/6.jpg'];
+
+    // img to copy
+    helpers.copy(['default/usemin.html', 'default/index.html'], '.test', function(err) {
+      if(err) return done(err);
+      helpers.copy(imgs, '.test/img', done);
+    });
+  });
+};
+
 //
 // Grunt runner helper. A stack of command is built when called, to finally run
 // them sequentially on the next event loop.
 //
 // Depending on grunt's exit code, the test fails or pass.
 //
-var helpers = module.exports = function grunt(base, em) {
-  if(!em) em = base, base = '';
-  base = base || 'test/h5bp';
-  em = em || (new EventEmitter);
+// todo: if options.silent, rework this to redirect spawned process output to a file.
+helpers.run = function grunt(cmd, options, done) {
+  if(!done) done = options, options = {};
 
-  return function(cmd) {
-    var stack = grunt.stack || (grunt.stack = []);
-    stack.push(cmd);
+  options = options || {};
+  options.base = options.base || '.test';
 
-    process.nextTick(function() {
-      if(grunt.started) return;
-      grunt.started = true;
+  cmd = Array.isArray(cmd) ? cmd : cmd.split(' ');
 
-      // path to the grunt executable, going to node dependency but could be done
-      // with the global grunt instead
-      var gruntpath = path.resolve('node_modules/grunt/bin/grunt');
+  console.log([
+    '', '', '',
+    '... Running in ' + path.resolve(options.base) + ' ...',
+    '... » grunt ' + cmd + ' ...',
+    '', '', ''
+  ].join('\n'));
 
-      // now that the stack is setup, run each command serially
-      (function run(cmd) {
-        if(!cmd) return em.emit('end');
-        cmd = Array.isArray(cmd) ? cmd : cmd.split(' ');
+  // we want $PATH in forked process environment for the which package to
+  // work appropriately when run via npm test
+  var env = { PATH: process.env.PATH };
 
-        // grunt process - maybe fork would avoid the exec use for this to work on windows, I dunno
-        console.log('running in ', path.resolve(base));
-        console.log(' » grunt ' + cmd);
-        console.log();
-
-        // we want $PATH in forked process environment for
-        // which package to work appropriately when run via
-        // npm test
-        var env = { PATH: process.env.PATH };
-
-        // run grunt via child_process.fork, setting up cwd to test dir and
-        // necessary environment variables.
-        var gpr = fork(gruntpath, cmd, { cwd: path.resolve(base), env: env });
-        gpr.on('exit', function(code, stdout, stderr) {
-          assert.equal(code, 0, ' ✗ Grunt exited with errors. Code: ' + code);
-          em.emit(cmd, code, stdout, stdout);
-          run(stack.shift());
-        });
-      })(stack.shift());
-    });
-  }
+  // run grunt via child_process.fork, setting up cwd to test dir and
+  // necessary environment variables.
+  var gpr = fork(gruntpath, cmd, { cwd: path.resolve(options.base), env: env });
+  gpr.on('exit', function(code, stdout, stderr) {
+    assert.equal(code, 0, ' ✗ Grunt exited with errors. Code: ' + code);
+    console.log([
+      '', '', '',
+      '... Done, without errors.',
+      '... ✔ grunt ' + cmd + ' ...',
+      '', '', ''
+    ].join('\n'));
+    done();
+  });
 };
 
 //
@@ -66,7 +78,7 @@ var helpers = module.exports = function grunt(base, em) {
 //    mkdir .test
 //    cp -r test/h5bp/* test/h5bp/.htaccess test/fixtures/grunt.js .test/
 //
-// ncp doesn't have a sync api -> async process.
+// todo: do copy with fstream
 helpers.setup = function setup(o, cb) {
   if(!cb) cb = o, o = {};
 
@@ -110,6 +122,11 @@ helpers.setup = function setup(o, cb) {
 // call the callback on completion. sources can be a single or an Array of source files,
 // destination is the destination directory.
 //
+// Single file copy helper, meant to be used by tests and beforeTest handler to
+// copy specific files from fixtures to the .test directory
+//
+// Source are always resolved with test/fixtures
+//
 helpers.copy = function(sources, destination, cb) {
   sources = Array.isArray(sources) ? sources : sources.split(' ');
   sources = sources.map(function(file) {
@@ -137,3 +154,12 @@ helpers.copy = function(sources, destination, cb) {
     rs.pipe(ws);
   });
 };
+
+
+// assertion helper to compate files, length and output.
+helpers.assertFile = function(actual, expected) {
+  var actualBody = fs.readFileSync(actual, 'utf8');
+  var expectBody = fs.readFileSync(expected, 'utf8');
+  assert.equal(actualBody, expectBody);
+};
+
