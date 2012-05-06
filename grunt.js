@@ -188,7 +188,6 @@ module.exports = function(grunt) {
 
       var step = path.join('test/features/steps', props.taskname);
       step = path.existsSync(step) ? step : 'test/features/steps/default.js';
-      console.log(step);
       var parser = new Parser({
         missing: missing,
         step: fs.readFileSync(step, 'utf8'),
@@ -198,7 +197,7 @@ module.exports = function(grunt) {
         }]
       });
 
-      var testfile = path.join('test', (missing ? 'features/steps' : 'tasks'), props.taskname);
+      var testfile = path.join('test', (missing ? 'features/steps' : 'tasks'), 'test-' + props.taskname);
       grunt.log.ok('Generate ' + (missing ? 'step definition file ' : 'testfile ') + testfile);
 
       parser.pipe(process.stdout);
