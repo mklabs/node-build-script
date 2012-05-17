@@ -32,6 +32,14 @@ $ h5bp help
 $ h5bp init
 ```
 
+**Developing locally**
+
+```sh
+$ git clone git://github.com/h5bp/node-build-script.git
+$ cd node-build-script
+$ npm link
+```
+
 ## Features
 
 * Concats / Compresses JS
