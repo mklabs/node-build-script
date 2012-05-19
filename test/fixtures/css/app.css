@@ -10,8 +10,8 @@
 
 
 
-body:after {
-  content: '☺ H E L L O ☺';
+body:before {
+  content: ' ☺ H E L L O ☺ ';
   font: 10em Helvetica, sans-serif;
   color: hotPink;
 }
