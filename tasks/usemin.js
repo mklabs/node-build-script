@@ -97,6 +97,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerHelper('usemin:replace', function(content) {
+
     grunt.log.verbose.writeln('Update the HTML to reference our concat/min/revved script files');
     content = grunt.helper('replace', content, /<script.+src=['"](.+)["'][\/>]?><[\\]?\/script>/gm);
 
@@ -105,6 +106,10 @@ module.exports = function(grunt) {
 
     grunt.log.verbose.writeln('Update the HTML with the new img filename');
     content = grunt.helper('replace', content, /<img[^\>]+src=['"]([^"']+)["']/gm);
+
+    grunt.log.verbose.writeln('Update the HTML with background imgs, case there is some inline style');
+    content = grunt.helper('replace', content, /url\(\s*['"]([^"']+)["']\s*\)/gm);
+
     return content;
   });
 
