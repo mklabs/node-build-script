@@ -50,22 +50,6 @@ module.exports = function(grunt) {
 
   grunt.loadTasks('./support/');
 
-  // and the doc generation for the docs task
-  grunt.registerTask('gendocs', 'Generates docs/index.html from wiki pages', function() {
-    var cb = this.async();
-
-    var gendoc = grunt.utils.spawn({
-      cmd: 'grunt', opts: { cwd: path.join(__dirname, 'scripts/docs') }
-    }, function() {});
-
-    gendoc.stdout.pipe(process.stdout);
-    gendoc.stderr.pipe(process.stderr);
-    gendoc.on('exit', function(code) {
-      if(code) grunt.warn('Something bad happend', code);
-      cb();
-    });
-  });
-
   // basic override of built-in test task to spawn mocha instead.
   //
   // should be improved and put in another grunt plugin.
