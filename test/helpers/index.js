@@ -142,19 +142,28 @@ helpers.copy = function(sources, destination, cb) {
   // if we get a single file to copy and destination is not a dir
   // direct file copy
   if(ln === 1 && path.extname(destination)) {
-    return fs.createReadStream(sources[0])
-      .pipe(fs.createWriteStream(destination).on('close', cb));
+    return mkdirp(path.dirname(destination), function(err) {
+      if(err) return cb(err);
+      fs.createReadStream(sources[0])
+        .pipe(fs.createWriteStream(destination).on('close', cb));
+    });
   }
 
   sources.forEach(function(src) {
-    var to = path.join(destination, path.basename(src)),
-      rs = fs.createReadStream(src),
-      ws = fs.createWriteStream(to).on('close', function() {
+    var to = path.join(destination, path.basename(src));
+
+    mkdirp(path.dirname(to), function(err) {
+      if(err) return cb(err);
+      var rs = fs.createReadStream(src),
+        ws = fs.createWriteStream(to);
+
+      ws.on('close', function() {
         if(--ln) return;
         cb();
       });
 
-    rs.pipe(ws);
+      rs.pipe(ws);
+    });
   });
 };
 
@@ -222,6 +231,13 @@ helpers.equal = function(actual, expected, msg) {
 // a simple copy helper, mostly used to update a fixture file no longer up to
 // date
 helpers.copyFile = function(src, dst, cb) {
-  if(!cb) return fs.writeFileSync(dst, fs.readFileSync(src));
-  fs.createReadStream(src).pipe(fs.createWriteStream(dst)).on('close', cb);
+  if(!cb) {
+    mkdirp.sync(path.dirname(dst));
+    return fs.writeFileSync(dst, fs.readFileSync(src));
+  }
+
+  mkdirp(path.dirname(dst), function(err) {
+    if(err) return cb(err);
+    fs.createReadStream(src).pipe(fs.createWriteStream(dst)).on('close', cb);
+  });
 };

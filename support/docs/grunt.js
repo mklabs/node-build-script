@@ -69,10 +69,10 @@ module.exports = function(grunt) {
       cb(err);
     });
 
-    var now = +new Date;
+    var now = +new Date();
     site.on('end', function() {
       grunt.log
-        .ok(' ✔ Site generated in ' + ((+new Date - now) / 1000) + 's')
+        .ok(' ✔ Site generated in ' + ((+new Date() - now) / 1000) + 's')
         .writeln(data.serve ? 'Try opening http://localhost:3000' : 'Try running: open docs/_site/index.html');
 
       grunt.helper('copy', '../../docs/wiki/_site/index.html', '../../docs/index.html', function() {
@@ -188,7 +188,6 @@ module.exports = function(grunt) {
   grunt.registerHelper('copy', function(src, dest, cb) {
     src = path.join(__dirname, src);
     dest = path.join(__dirname, dest);
-    console.log('Copy files %s -> %s', src, dest);
     var type = path.extname(dest) ? 'File' : 'Directory';
     fs.Reader(src).pipe(fs.Writer({ path: dest, type: type })).on('close', cb);
   });

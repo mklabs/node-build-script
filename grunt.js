@@ -68,12 +68,12 @@ module.exports = function(grunt) {
     test: {
       // each task is tested individually, with basic files comparison with
       // what is in test/fixtures/
-      // tasks: ['test/tasks/test-*.js'],
+      tasks: ['test/tasks/test-*.js']
 
       // css:    'test/tasks/test-css.js'
       // img:    'test/tasks/test-img.js'
       // tar:    'test/tasks/test-tar.js'
-      usemin: 'test/tasks/test-usemin.js'
+      // usemin: 'test/tasks/test-usemin.js'
 
       // default task with default options
       // runThemAll: ['test/tasks/default.js']

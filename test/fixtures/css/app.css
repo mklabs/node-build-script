@@ -2,16 +2,17 @@
 /* =============================================================================
    App specific CSS file.
 
-   This is usually where the site/app's CSS specific rules are setup. Note that you could
-   do exactly the same using less by adding a '@import app.less;' at the end of
-   css/less/bootstrap.less file.
+   This is usually where the site/app's CSS specific rules are setup.
 
    ========================================================================== */
 
 
+@import url('ui/widget.css');
 
 body:before {
   content: ' ☺ H E L L O ☺ ';
   font: 10em Helvetica, sans-serif;
   color: hotPink;
 }
+
+.css-reved .img-6 { background: url('../img/6.jpg'); }

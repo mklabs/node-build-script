@@ -15,7 +15,7 @@ describe("CSS task", function() {
     // copy in some files, with @imports to test out the inline imports
     var files = fs.readdirSync(path.join(__dirname, '../fixtures/css'))
       .filter(function(f) {
-        return !(/expected/).test(f);
+        return !(/expected/).test(f) && path.extname(f);
       })
       .map(function(f) {
         return path.join('css', f);
