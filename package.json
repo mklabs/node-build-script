@@ -18,7 +18,7 @@
     "connect": "~1.8.6",
     "grunt": "~0.3.8",
     "socket.io": "~0.9.5",
-    "request": "~2.9.200",
+    "request": "~2.9.202",
     "html-minifier": "~0.4.5",
     "which": "~1.0.5",
     "fstream": "~0.1.18",
