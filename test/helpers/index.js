@@ -218,3 +218,10 @@ helpers.equal = function(actual, expected, msg) {
     throw e;
   }
 };
+
+// a simple copy helper, mostly used to update a fixture file no longer up to
+// date
+helpers.copyFile = function(src, dst, cb) {
+  if(!cb) return fs.writeFileSync(dst, fs.readFileSync(src));
+  fs.createReadStream(src).pipe(fs.createWriteStream(dst)).on('close', cb);
+};
