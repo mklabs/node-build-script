@@ -212,7 +212,7 @@ helpers.equal = function(actual, expected, msg) {
     assert.equal(actual, expected, msg || 'Should both base64 encode value be the same');
   } catch(e) {
     console.log('\n\n');
-    console.log('    ... Wooops, error processing.', actual, '. Mocha will now generate the diff for you ...');
+    console.log('    ... Wooops, got error. Mocha will now generate the diff for you ...');
     console.log('    ... Please, be patient. It might take a while (few seconds maybe) ...');
     console.log('');
     throw e;
