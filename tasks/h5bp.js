@@ -32,6 +32,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', 'build:default');
   grunt.registerTask('reload', 'default connect watch:reload');
 
+  // XXX move targets to the gruntfile? easier for user to tweak build profiles
   var targets = {
     default:  'concat css min img rev usemin manifest',
     text:     'concat css min     rev usemin manifest',
