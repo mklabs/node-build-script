@@ -1,0 +1,21 @@
+{
+  "name": "name",
+  "description": "The best project ever.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/h5bp/node-build-script",
+  "author": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/h5bp/node-build-script.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/h5bp/node-build-script/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "node-build-script": "http://nodeload.github.com/h5bp/node-build-script/tarball/dev"
+  },
+  "keywords": []
+}

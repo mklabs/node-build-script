@@ -4,9 +4,9 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     // the staging directory used during the process
-    staging: '{%= staging %}',
+    staging: 'intermediate',
     // final build output
-    output: '{%= output %}',
+    output: 'publish',
     // filter any files matching one of the below pattern during mkdirs task
     // the pattern in the .gitignore file should work too.
     exclude: '.git* build/** node_modules/** grunt.js package.json *.md'.split(' '),
@@ -15,14 +15,14 @@ module.exports = function(grunt) {
     },
     // concat css/**/*.css files, inline @import, output a single minified css
     css: {
-      'css/style.css': ['{%= css_dir %}/**/*.css']
+      'css/style.css': ['css/**/*.css']
     },
     // Renames JS/CSS to prepend a hash of their contents for easier
     // versioning
     rev: {
-      js: '{%= js_dir %}/**/*.js',
-      css: '{%= css_dir %}/**/*.css',
-      img: '{%= img_dir %}/**'
+      js: 'js/**/*.js',
+      css: 'css/**/*.css',
+      img: 'img/**'
     },
     // update references in html to revved files
     usemin: {
@@ -36,9 +36,9 @@ module.exports = function(grunt) {
     },
     watch: {
       files: '<config:lint.files>',
-      tasks: 'lint {%= test_task %}'
+      tasks: 'lint qunit'
     },
-    {% if (min_concat || require_js) { if (package_json) { %}
+    
     pkg: '<json:package.json>',
     meta: {
       banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
@@ -46,36 +46,25 @@ module.exports = function(grunt) {
         '<%= pkg.homepage ? "* " + pkg.homepage + "\n" : "" %>' +
         '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
         ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
-    },{% } else { %}
-    meta: {
-      version: '0.1.0',
-      banner: '/*! PROJECT_NAME - v<%= meta.version %> - ' +
-        '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-        '* http://PROJECT_WEBSITE/\n' +
-        '* Copyright (c) <%= grunt.template.today("yyyy") %> ' +
-        'YOUR_NAME; Licensed MIT */'
-    },{% } } %}
+    },
     lint: {
-      files: ['grunt.js', '{%= js_dir %}/**/*.js', '{%= test_dir %}/**/*.js']
-    },{% if (dom) { %}
+      files: ['grunt.js', 'js/**/*.js', 'test/**/*.js']
+    },
     qunit: {
-      files: ['{%= test_dir %}/**/*.html']
-    },{% } else { %}
-    test: {
-      files: ['{%= test_dir %}/**/*.js']
-    },{% } %}{% if (min_concat) { %}
+      files: ['test/**/*.html']
+    },
     concat: {
       dist: {
-        src: ['{%= js_dir %}/plugins.js', '{%= js_dir %}/main.js'],
-        dest: '{%= js_dir %}/{%= name %}-{%= version %}.js'
+        src: ['js/plugins.js', 'js/main.js'],
+        dest: 'js/name-0.1.0.js'
       }
     },
     min: {
       dist: {
-        src: '{%= js_dir %}/{%= name %}-{%= version %}.js',
-        dest: '{%= js_dir %}/main.js'
+        src: 'js/name-0.1.0.js',
+        dest: 'js/main.js'
       }
-    },{% } %}
+    },
     jshint: {
       options: {
         curly: true,
@@ -87,26 +76,26 @@ module.exports = function(grunt) {
         sub: true,
         undef: true,
         boss: true,
-        eqnull: true{% if (dom) { %},
-        browser: true{% } %}
+        eqnull: true,
+        browser: true
       },
-      globals: {{% if (jquery) { %}
+      globals: {
         jQuery: true
-      {% } %}}
-    }{% if (min_concat) { %},
-    uglify: {}{% } %}{% if (require_js) { %},
+      }
+    },
+    uglify: {},
     rjs: {
       name: 'main'
-    }{% } %}
+    }
   });
 
-  {% if (require_js) { %}
+  
   // in rjs setup, the concat and min task are overriden to use rjs optimizr
   grunt.renameTask('concat', '_concat').registerTask('concat', 'rjs (noop)', function() {
     grunt.log.writeln('the concat in rjs setup is a noop, rjs optimizer somewhat replace js concatenation');
   });
   grunt.renameTask('min', '_min').registerTask('min', 'rjs');
-  {% } %}
+  
 
   // uncomment this line if you're using the build script as a grunt plugin
   // it should be installed locally, even better if put in your package.json's

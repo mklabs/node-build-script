@@ -68,7 +68,10 @@ module.exports = function(grunt) {
     test: {
       // each task is tested individually, with basic files comparison with
       // what is in test/fixtures/
-      // tasks: ['test/tasks/test-*.js']
+      tasks: ['test/tasks/test-*.js'],
+
+      // default task with default options
+      builds: ['test/tasks/default.js', 'test/tasks/usemin.js']
 
       // css:    'test/tasks/test-css.js'
       // img:    'test/tasks/test-img.js'
@@ -76,9 +79,7 @@ module.exports = function(grunt) {
       // usemin: 'test/tasks/test-usemin.js'
       // docs: 'test/tasks/test-docs.js'
       // html: 'test/tasks/test-html.js'
-
-      // default task with default options
-      basics: ['test/tasks/default.js', 'test/tasks/usemin.js']
+      // init: 'test/tasks/test-init.js'
     }
   });
 

@@ -44,13 +44,14 @@ helpers.run = function(cmd, options, done) {
 
   options = options || {};
   options.base = options.base || '.test';
+  options.bin = options.bin || gruntpath;
 
   cmd = Array.isArray(cmd) ? cmd : cmd.split(' ');
 
   if(!silent) console.log([
     '', '', '',
     '... Running in ' + path.resolve(options.base) + ' ...',
-    '... » grunt ' + cmd + ' ...',
+    '... » grunt ' + cmd.join(' ') + ' ...',
     '', '', ''
   ].join('\n'));
 
@@ -60,7 +61,7 @@ helpers.run = function(cmd, options, done) {
 
   // run grunt via child_process.fork, setting up cwd to test dir and
   // necessary environment variables.
-  var grunt = spawn('node', [gruntpath].concat(cmd), { cwd: path.resolve(options.base), env: env });
+  var grunt = spawn('node', [options.bin].concat(cmd), { cwd: path.resolve(options.base), env: env });
   if(!silent) grunt.stderr.pipe(process.stderr);
   if(!silent) grunt.stdout.pipe(process.stdout);
   grunt.on('exit', function(code, stdout, stderr) {
@@ -71,11 +72,13 @@ helpers.run = function(cmd, options, done) {
     if(!silent) console.log([
       '', '', '',
       '... Done, without errors.',
-      '... ✔ grunt ' + cmd + ' ...',
+      '... ✔ grunt ' + cmd.join(' ') + ' ...',
       '', '', ''
     ].join('\n'));
     done();
   });
+
+  return grunt;
 };
 
 //
@@ -85,6 +88,9 @@ helpers.run = function(cmd, options, done) {
 //    rm -rf .test
 //    mkdir .test
 //    cp -r test/h5bp/* test/h5bp/.htaccess test/fixtures/grunt.js .test/
+//
+// If an hash object of options is passed in as first arg, with a nocopy prop
+// then the h5bp project copy is prevented (mostly useful with the init task test)
 //
 // todo: do copy with fstream
 helpers.setup = function setup(o, cb) {
@@ -111,6 +117,8 @@ helpers.setup = function setup(o, cb) {
     // && mkdirp ./test
     mkdirp(dest, function(err) {
       if(err) return cb(err);
+
+      if(o.nocopy) return cb();
 
       // cp -r test/h5bp/* test/fixtures/grunt.js .test/
       ncp(source, dest, { filter: ignore }, function(err) {
@@ -185,19 +193,12 @@ helpers.assertFile = function(actual, expected, mode) {
 // assertion helper to compare directories, length and output.
 helpers.assertDir = function(actual, expected) {
 
-  var actualFiles = fs.readdirSync(actual).map(function(file) {
-    return path.join(actual, file);
-  });
+  fs.readdirSync(actual).forEach(function(file, i) {
+    var fname = path.join(actual, file);
+    if(fs.statSync(fname).isDirectory()) return;
 
-  var expectedFiles = fs.readdirSync(expected).map(function(file) {
-    return path.join(expected, file);
-  });
-
-  assert.equal(actualFiles.length, expectedFiles.length, 'Should both compared dirs have the same files');
-
-  actualFiles.forEach(function(actual, i) {
-    var expectHex = fs.readFileSync(expectedFiles[i], 'base64');
-    var actualHex = fs.readFileSync(actual, 'base64');
+    var expectHex = fs.readFileSync(path.join(expected, file), 'base64');
+    var actualHex = fs.readFileSync(fname, 'base64');
     // if it's not, it might take a little while for mocha to do the diff
     helpers.equal(actualHex, expectHex);
   });
