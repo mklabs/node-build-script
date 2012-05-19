@@ -90,15 +90,4 @@ module.exports = function(grunt) {
     grunt.log.writeln('Compressed size: ' + String(min.size).green + ' bytes minified.');
   });
 
-  // Output some info on given object, using util.inspect
-  grunt.registerHelper('inspect', function(o) {
-    var lf = grunt.utils.linefeed;
-    var output = (lf + util.inspect(o, false, 4, true) + lf).split(lf).map(function(line) {
-      return line;
-    });
-    output.forEach(grunt.log.ok, grunt.log);
-    return grunt;
-  });
-
-
 };
