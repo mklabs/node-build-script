@@ -59,7 +59,10 @@ helpers.run = function grunt(cmd, options, done) {
   // necessary environment variables.
   var gpr = fork(gruntpath, cmd, { cwd: path.resolve(options.base), env: env });
   gpr.on('exit', function(code, stdout, stderr) {
-    assert.equal(code, 0, ' ✗ Grunt exited with errors. Code: ' + code);
+    if(code) {
+      assert.equal(code, 0, ' ✗ Grunt exited with errors. Code: ' + code);
+      process.exit(code);
+    }
     console.log([
       '', '', '',
       '... Done, without errors.',

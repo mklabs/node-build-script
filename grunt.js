@@ -35,30 +35,20 @@ module.exports = function(grunt) {
       }
     },
     test: {
+      // each task is tested individually, with basic files comparison with
+      // what is in test/fixtures/
       tasks: ['test/tasks/test-*.js'],
 
-      // will run the whole script. Two times. One with default config,
-      // the other will full html minification.
-      runThemAll: ['test/default.js', 'test/minify.js']
+      // default task with default options
+      runThemAll: ['test/tasks/default.js']
     }
   });
 
   // Default task.
   grunt.registerTask('default', 'lint');
 
-  // some debugging helpers
-  grunt.registerTask('list-helpers', 'List all grunt registered helpers', function(helper) {
-    var ls = grunt.log.wordlist(Object.keys(grunt.task._helpers), grunt.utils.linefeed);
-    if(!helper) return grunt.log.ok(ls);
-    grunt.log.subhead(helper + ' source:').ok(grunt.task._helpers[helper]);
-  });
 
-  grunt.registerTask('list-task', 'List all grunt registered tasks', function(t) {
-    var ls = grunt.log.wordlist(Object.keys(grunt.task._tasks), grunt.utils.linefeed);
-    if(!t) return grunt.log.ok(ls);
-    grunt.log.subhead(t + ' source:');
-    grunt.helper('inspect', grunt.task._tasks[t]);
-  });
+  grunt.loadTasks('./support/');
 
   // and the doc generation for the docs task
   grunt.registerTask('gendocs', 'Generates docs/index.html from wiki pages', function() {
@@ -87,14 +77,23 @@ module.exports = function(grunt) {
     var mocha = path.join(__dirname, 'node_modules/mocha/bin/mocha');
 
     var cb = this.async();
-    var child = spawn('node', [mocha].concat(files));
 
-    child.stdout.pipe(process.stdout);
-    child.stderr.pipe(process.stderr);
-    child.on('exit', function(code) {
-      if(code) grunt.warn(new Error('cmd failed'), code);
-      cb();
-    });
+    // run each file serially, take care of exiting on first fail
+    (function run(file) {
+      if(!file) return cb();
+      var child = spawn('node', [mocha].concat(file));
+      child.stdout.pipe(process.stdout);
+      child.stderr.pipe(process.stderr);
+      child.on('exit', function(code) {
+        if(code) {
+          grunt.warn(new Error('cmd failed'), code);
+          return;
+        }
+
+        run(files.shift());
+      });
+
+    })(files.shift());
   });
 
   //
