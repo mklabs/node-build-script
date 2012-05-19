@@ -74,10 +74,11 @@ module.exports = function(grunt) {
       // img:    'test/tasks/test-img.js'
       // tar:    'test/tasks/test-tar.js'
       // usemin: 'test/tasks/test-usemin.js'
-      docs: 'test/tasks/test-docs.js'
+      // docs: 'test/tasks/test-docs.js'
+      // html: 'test/tasks/test-html.js'
 
       // default task with default options
-      // runThemAll: ['test/tasks/default.js']
+      basics: ['test/tasks/default.js', 'test/tasks/usemin.js']
     }
   });
 

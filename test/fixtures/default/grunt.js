@@ -60,7 +60,9 @@ module.exports = function(grunt) {
       css: ['**/*style.css']
     },
 
-    html: '<config:usemin>',
+    html: {
+      files: ['**/*.html']
+    },
 
     serve: {
       staging: { port: 3000 },
