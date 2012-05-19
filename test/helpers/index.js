@@ -47,7 +47,7 @@ helpers.run = function(cmd, options, done) {
 
   cmd = Array.isArray(cmd) ? cmd : cmd.split(' ');
 
-  console.log([
+  if(!silent) console.log([
     '', '', '',
     '... Running in ' + path.resolve(options.base) + ' ...',
     '... » grunt ' + cmd + ' ...',
@@ -68,7 +68,7 @@ helpers.run = function(cmd, options, done) {
       assert.equal(code, 0, ' ✗ Grunt exited with errors. Code: ' + code);
       process.exit(code);
     }
-    console.log([
+    if(!silent) console.log([
       '', '', '',
       '... Done, without errors.',
       '... ✔ grunt ' + cmd + ' ...',

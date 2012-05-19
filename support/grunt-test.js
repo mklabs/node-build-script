@@ -32,7 +32,7 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('test', 'Redefine the test task to spawn mocha instead', function() {
 
     // pass in any positional arguments after the `test` task
-    var args = ['-- '].concat(process.argv.slice(3));
+    var args = process.argv.slice(3);
 
     // expand all the files for this subtask
     var files = grunt.file.expandFiles(this.file.src);
