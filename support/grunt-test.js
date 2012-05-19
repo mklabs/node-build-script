@@ -82,7 +82,7 @@ module.exports = function(grunt) {
     }, {
       name: 'role',
       message: 'As a ?',
-      default: ' build script user'
+      default: 'build script user'
     }, {
       name: 'action',
       message: 'I want to ?',

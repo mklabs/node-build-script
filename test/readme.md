@@ -8,9 +8,9 @@
 - ✔ img.js
 - ✔ tar.js
 - ✔ usemin.js
+- ✔ docs.js
 
 **to be done**
-- docs.js
 - dom.js
 - h5bp.js
 - html.js
