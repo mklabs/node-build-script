@@ -16,6 +16,8 @@ var fs = require('fs'),
 // Todo: Use a file dictionary during build process and rev task to
 // store each optimized assets and their associated sha1.
 //
+// Thx to @krzychukula for the new, super handy replace helper.
+//
 
 module.exports = function(grunt) {
 
