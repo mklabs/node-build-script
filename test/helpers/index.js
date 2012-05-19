@@ -1,6 +1,6 @@
 var fs = require('fs'),
   path = require('path'),
-  fork = require('child_process').fork,
+  spawn = require('child_process').spawn,
   assert = require('assert'),
   rimraf = require('rimraf'),
   mkdirp = require('mkdirp'),
@@ -36,8 +36,11 @@ helpers.before = function(done) {
 // Depending on grunt's exit code, the test fails or pass.
 //
 // todo: if options.silent, rework this to redirect spawned process output to a file.
-helpers.run = function grunt(cmd, options, done) {
+helpers.run = function(cmd, options, done) {
   if(!done) done = options, options = {};
+
+  // wheter we redirect stdout/stderr output or not
+  var silent = /silent/.test(process.argv.slice(-1)[0]);
 
   options = options || {};
   options.base = options.base || '.test';
@@ -57,8 +60,10 @@ helpers.run = function grunt(cmd, options, done) {
 
   // run grunt via child_process.fork, setting up cwd to test dir and
   // necessary environment variables.
-  var gpr = fork(gruntpath, cmd, { cwd: path.resolve(options.base), env: env });
-  gpr.on('exit', function(code, stdout, stderr) {
+  var grunt = spawn('node', [gruntpath].concat(cmd), { cwd: path.resolve(options.base), env: env });
+  if(!silent) grunt.stderr.pipe(process.stderr);
+  if(!silent) grunt.stdout.pipe(process.stdout);
+  grunt.on('exit', function(code, stdout, stderr) {
     if(code) {
       assert.equal(code, 0, ' ✗ Grunt exited with errors. Code: ' + code);
       process.exit(code);

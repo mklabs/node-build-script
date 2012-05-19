@@ -31,6 +31,9 @@ module.exports = function(grunt) {
 
   grunt.registerMultiTask('test', 'Redefine the test task to spawn mocha instead', function() {
 
+    // pass in any positional arguments after the `test` task
+    var args = ['-- '].concat(process.argv.slice(3));
+
     // expand all the files for this subtask
     var files = grunt.file.expandFiles(this.file.src);
 
@@ -43,7 +46,7 @@ module.exports = function(grunt) {
     // run each file serially, taking care of exiting on first fail
     (function run(file) {
       if(!file) return cb();
-      var child = spawn('node', [mocha].concat(file));
+      var child = spawn('node', [mocha].concat(file).concat(args));
       child.stdout.pipe(process.stdout);
       child.stderr.pipe(process.stderr);
       child.on('exit', function(code) {

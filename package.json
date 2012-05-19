@@ -31,6 +31,6 @@
   },
   "scripts": {
     "pretest": "git submodule update --init",
-    "test": "grunt test"
+    "test": "grunt test --silent"
   }
 }
