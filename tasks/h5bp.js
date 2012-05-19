@@ -10,7 +10,21 @@ var fs = require('fs'),
 //
 // not implemented tasks (add noop waithing for their impl): manifest images
 //
-
+//
+//
+// build      (default) no html optimizations
+//
+// text       same as build but without image (png/jpg) optimizing
+//
+// buildkit   minor html optimizations, all html whitespace/comments
+//            maintained
+//
+// basics     same as build minus plugs minor html optimizations
+//            (extra quotes and comments removed)
+//            (todo: inline script/style minified)
+//
+// minify     same as build plus full html minification,
+//
 
 module.exports = function(grunt) {
 
@@ -18,28 +32,12 @@ module.exports = function(grunt) {
   grunt.registerTask('default', 'build:default');
   grunt.registerTask('reload', 'default connect watch:reload');
 
-  // and build targets, these are equivalent to alias except that we
-  // defined a single task and use arguments to trigger the appropriate
-  // target
   var targets = {
-    // build - (default) no html optimizations
-    default: 'concat css min img rev usemin manifest',
-
-    // text - same as build but without image (png/jpg) optimizing
-    text: 'concat css min rev usemin manifest',
-
-    // buildkit - minor html optimizations, all html whitespace/comments
-    // maintained
-    // (todo: inline script/style minified)
+    default:  'concat css min img rev usemin manifest',
+    text:     'concat css min     rev usemin manifest',
     buildkit: 'concat css min img rev usemin manifest html:buildkit',
-
-    // basics - same as build minus plugs minor html optimizations
-    // (extra quotes and comments removed)
-    // (todo: inline script/style minified)
-    basics: 'concat css min img rev usemin manifest html:basics',
-
-    // minify - same as build plus full html minification,
-    minify: 'concat css min img rev usemin manifest html:compress'
+    basics:   'concat css min img rev usemin manifest html:basics',
+    minify:   'concat css min img rev usemin manifest html:compress'
   };
 
   var targetList = grunt.log.wordlist(Object.keys(targets));
