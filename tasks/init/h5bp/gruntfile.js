@@ -100,4 +100,15 @@ module.exports = function(grunt) {
     }{% } %}
   });
 
+  {% if (require_js) { %}
+  // in rjs setup, the concat and min task are overriden to use rjs optimizr
+  grunt.renameTask('concat', '_concat').registerTask('concat', 'rjs (noop)', function() {
+    grunt.log.writeln('the concat in rjs setup is a noop, rjs optimizer somewhat replace js concatenation');
+  });
+  grunt.renameTask('min', '_min').registerTask('min', 'rjs');
+  {% } %}
+
+  {% if (plugin) { %}
+  grunt.loadNpmTasks('{%= plugin %}');
+  {% } %}
 };

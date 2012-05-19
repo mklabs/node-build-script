@@ -21,11 +21,41 @@ h5bp.steps = 'project setup files gruntfile'.split(' ');
 h5bp.template = function(grunt, init, done) {
   h5bp.grunt = grunt;
 
+  // --template bypass all the prompts and run the specified template
+  // a template is simply a json files including answers that otherwise would
+  // have been prompted
+  var template = grunt.option('template');
+
+  // get the list of template files
+  var templates = grunt.file.expandFiles(path.join(__dirname, 'templates/*.json'))
+    // map to only the basename, minus extension
+    .map(function(filename) {
+      return path.basename(filename).replace(path.extname(filename), '');
+    })
+    // reduce the array down to a single hash object with key mapping the
+    // template name, value the path to the json template
+    .reduce(function(o, file) {
+      o[file] = path.join(__dirname, 'templates', file + '.json');
+      return o;
+    }, {});
+
+  if(template && templates[template]) return fs.readFile(templates[template], 'utf8', function(err, body) {
+    if(err) {
+      grunt.log.error(err);
+      return done(false);
+    }
+
+    h5bp.end(init, JSON.parse(body), done);
+  });
+
   // setup custom prompt
   h5bp.customPrompt();
 
   (function run(step) {
-    if(!step) return h5bp.end(init, h5bp.props, done);
+    if(!step) {
+      fs.writeFileSync(path.join(__dirname, 'templates/rjs.json'), JSON.stringify(h5bp.props, null, 2));
+      return h5bp.end(init, h5bp.props, done);
+    }
 
     h5bp[step](function(err, props) {
       if(err) {
@@ -37,7 +67,7 @@ h5bp.template = function(grunt, init, done) {
       else h5bp.props[step] = props;
       run(h5bp.steps.shift());
     });
-  })(h5bp.steps.shift())
+  })(h5bp.steps.shift());
 
 };
 
@@ -108,7 +138,7 @@ h5bp.gruntfile = function(cb) {
     },
     {
       name: 'min_concat',
-      message: 'Will files be concatenated or minified? (Select no if using require.js to organize and minify your javascript.)',
+      message: 'Will files be concatenated or minified? (Select no if using require.js to organize and minify your javascript)',
       default: 'Y/n',
       warning: 'Yes: min + concat tasks. No: nothing to see here.'
     },
@@ -118,7 +148,6 @@ h5bp.gruntfile = function(cb) {
       default: 'Y/n',
       warning: 'This changes how filenames are determined and banners are generated.'
     },
-
     {
       name: 'staging',
       message: 'What is the intermediate/ directory for the build script?',
