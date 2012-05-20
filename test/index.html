@@ -188,22 +188,24 @@
         <em>Mocha generated tests</em>
 
         <ul>
+          <li>✔ default</li>
+          <li>✔ build:minify</li>
           <li>✔ css.js</li>
           <li>✔ img.js</li>
           <li>✔ tar.js</li>
           <li>✔ usemin.js</li>
+          <li>✔ docs.js</li>
+          <li>✔ html.js</li>
+          <li>✔ init.js</li>
+          <li>✔ rjs.js</li>
         </ul>
 
         <p><strong>to be done</strong></p>
         <ul>
-          <li>docs.js</li>
           <li>dom.js</li>
           <li>h5bp.js</li>
-          <li>html.js</li>
-          <li>init</li>
           <li>misc.js</li>
           <li>rev.js</li>
-          <li>rjs.js</li>
           <li>serve.js</li>
         </ul>
       </section>
@@ -211,6 +213,8 @@
 
       <hr />
 
+
+    <section class="suite">
       <h1>Default task</h1>
       <dl>
         <section class="suite">
@@ -221,13 +225,39 @@
               <dl>
                 <dt>Given I run the 'default' task</dt>
                 <dd><pre><code>
-  helpers.run('default', done);</code></pre></dd>
+helpers.run('default', done);</code></pre></dd>
                 <section class="suite">
                   <h1>When the build script ends</h1>
                   <dl>
                     <dt>Then the outcome should be 'test/fixtures/default'</dt>
                     <dd><pre><code>
-  helpers.assertFile('.test/publish/index.html', 'test/fixtures/default/expected.html');</code></pre></dd>
+helpers.assertFile('.test/publish/index.html', 'test/fixtures/default/expected.html');</code></pre></dd>
+                  </dl>
+                </section>
+              </dl>
+            </section>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>build:minify task</h1>
+      <dl>
+        <section class="suite">
+          <h1>As a build script user I want to run the build:minify task</h1>
+          <dl>
+            <section class="suite">
+              <h1>build:minify task</h1>
+              <dl>
+                <dt>Given I run the 'build:minify' task</dt>
+                <dd><pre><code>
+helpers.run('build:minify', done);</code></pre></dd>
+                <section class="suite">
+                  <h1>When the build script ends</h1>
+                  <dl>
+                    <dt>Then the outcome should be 'test/fixtures/default/build.minify.html'</dt>
+                    <dd><pre><code>
+helpers.copyFile('.test/publish/index.html', 'test/fixtures/default/build.minify.html');</code></pre></dd>
                   </dl>
                 </section>
               </dl>
@@ -247,17 +277,77 @@
               <dl>
                 <dt>Given I run the 'css' task</dt>
                 <dd><pre><code>
-  // runt the css task
-  helpers.run('css', done);</code></pre></dd>
+// runt the css task
+helpers.run('css', done);</code></pre></dd>
                 <dt>When the script ends</dt>
                 <dd><pre><code>
-  // not doing particularly usefull in this step
-  // but the hook is here is we need to
-  done();</code></pre></dd>
-                <dt>Then './test/css/style.css' should be the same as 'test/fixtures/css/style.css'</dt>
+// not doing particularly usefull in this step
+// but the hook is here is we need to
+done();</code></pre></dd>
+                <dt>Then './test/css/style.css' should be the same as 'test/fixtures/css/expected.css'</dt>
                 <dd><pre><code>
-  helpers.assertFile('.test/css/style.css', 'test/fixtures/css/style.css');
-  done();</code></pre></dd>
+helpers.assertFile('.test/css/style.css', 'test/fixtures/css/expected.css');
+done();</code></pre></dd>
+              </dl>
+            </section>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>DOCS task</h1>
+      <dl>
+        <section class="suite">
+          <h1>As a build script user I want to be able to run the docs task So that I can see the docs task in action</h1>
+          <dl>
+            <section class="suite">
+              <h1>docs task</h1>
+              <dl>
+                <dt>Given I run the 'docs' task</dt>
+                <dd><pre><code>
+// runt the docs task
+helpers.run('docs', done);</code></pre></dd>
+                <dt>When the script ends</dt>
+                <dd><pre><code>
+// not doing anything particularly usefull in this step but the hook is here
+// if we need to
+done();</code></pre></dd>
+                <section class="suite">
+                  <h1>Then it should not fail miserably</h1>
+                  <dl>
+                    <dt>(and you should see the documention in a web browser by now..)</dt>
+                    <dd><pre><code>
+assert.ok(true);</code></pre></dd>
+                  </dl>
+                </section>
+              </dl>
+            </section>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>HTML task</h1>
+      <dl>
+        <section class="suite">
+          <h1>As a build script user I want to be able to run the html task So that I can see the html task in action</h1>
+          <dl>
+            <section class="suite">
+              <h1>html task</h1>
+              <dl>
+                <dt>Given I run the 'html' task</dt>
+                <dd><pre><code>
+// runt the html task
+helpers.run('html', done);</code></pre></dd>
+                <dt>When the script ends</dt>
+                <dd><pre><code>
+// not doing anything particularly usefull in this step but the hook is here
+// if we need to
+done();</code></pre></dd>
+                <dt>Then './test/index.html' should be the same as 'test/fixtures/html/index.html'</dt>
+                <dd><pre><code>
+helpers.assertFile('.test/index.html', 'test/fixtures/html/index.html');
+done();</code></pre></dd>
               </dl>
             </section>
           </dl>
@@ -273,24 +363,101 @@
             <section class="suite">
               <h1>img task</h1>
               <dl>
-
                 <dt>Given I run the 'img' task</dt>
                 <dd><pre><code>
-  // run the img task
-  //
-  // note: try commenting out this and execute done callback right away
-  // to see mocha generate diff output on base64 encoded value in its
-  // full glory
-  helpers.run('img', done);</code></pre></dd>
+// run the img task
+//
+// note: try commenting out this and execute done callback right away
+// to see mocha generate diff output on base64 encoded value in its
+// full glory
+helpers.run('img', done);</code></pre></dd>
                 <dt>When the script ends</dt>
                 <dd><pre><code>
-  // not doing particularly usefull in this step
-  // but the hook is here is we need to
-  done();</code></pre></dd>
+// not doing particularly usefull in this step
+// but the hook is here is we need to
+done();</code></pre></dd>
                 <dt>Then '.test/img' dir should be the same as 'test/fixtures/img/expected/'</dt>
                 <dd><pre><code>
-  helpers.assertDir('.test/img', 'test/fixtures/img/expected/');
-  done();</code></pre></dd>
+helpers.assertDir('.test/img', 'test/fixtures/img/expected/');
+done();</code></pre></dd>
+              </dl>
+            </section>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>INIT task</h1>
+      <dl>
+        <section class="suite">
+          <h1>As a build script user I want to be able to run the init task So that I can see this in action</h1>
+          <dl>
+            <section class="suite">
+              <h1>init task default template</h1>
+              <dl>
+                <dt>Given I run the 'init' task with default template</dt>
+                <dd><pre><code>
+// runt the init task
+var grunt = helpers.run('init --template defaults', {
+  bin: path.join(__dirname, '../../bin/h5bp')
+}, done);</code></pre></dd>
+                <dt>When the script ends</dt>
+                <dd><pre><code>
+// not doing anything particularly usefull in this step but the hook is here
+// if we need to
+done();</code></pre></dd>
+                <dt>Then '.test/' should be the same as 'test/fixtures/init/expected/'</dt>
+                <dd><pre><code>
+helpers.assertDir('.test/', 'test/fixtures/init/expected/');
+done();</code></pre></dd>
+              </dl>
+            </section>
+            <section class="suite">
+              <h1>init task rjs template</h1>
+              <dl>
+                <dt>Given I run the 'init' task with rjs template</dt>
+                <dd><pre><code>
+// runt the init task
+var grunt = helpers.run('init --template rjs --force', {
+  bin: path.join(__dirname, '../../bin/h5bp')
+}, done);</code></pre></dd>
+                <section class="suite">
+                  <h1>When the script ends</h1>
+                  <dl>
+                    <dt>Then '.test/gruntfile.js' should be the same as 'test/fixtures/init/rjs.gruntfile.js'</dt>
+                    <dd><pre><code>
+helpers.assertFile('.test/grunt.js', 'test/fixtures/init/rjs.gruntfile.js');
+done();</code></pre></dd>
+                  </dl>
+                </section>
+              </dl>
+            </section>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>RJS task</h1>
+      <dl>
+        <section class="suite">
+          <h1>As a build script user I want to be able to run the rjs task So that I can see the rjs task in action</h1>
+          <dl>
+            <section class="suite">
+              <h1>rjs task</h1>
+              <dl>
+                <dt>Given I run the 'rjs' task</dt>
+                <dd><pre><code>
+// runt the rjs task
+helpers.run('rjs', done);</code></pre></dd>
+                <dt>When the script ends</dt>
+                <dd><pre><code>
+// not doing anything particularly usefull in this step but the hook is here
+// if we need to
+done();</code></pre></dd>
+                <dt>Then '.test/js' should be the same as 'test/fixtures/rjs/expected/'</dt>
+                <dd><pre><code>
+helpers.assertDir('.test/js', 'test/fixtures/rjs/expected/');
+done();</code></pre></dd>
               </dl>
             </section>
           </dl>
@@ -306,21 +473,20 @@
             <section class="suite">
               <h1>tar task</h1>
               <dl>
-
                 <dt>Given I run the 'tar' task</dt>
                 <dd><pre><code>
-  // runs the tar task
-  // we gonna pack the whole '.test' dir in '.test/test.tar.gz'
-  // curious to see how the task handle output within input..
-  helpers.run('tar --input ./ --output ./test.tgz', done);</code></pre></dd>
+// runs the tar task
+// we gonna pack the whole '.test' dir in '.test/test.tar.gz'
+// curious to see how the task handle output within input..
+helpers.run('tar --input ./ --output ./test.tgz', done);</code></pre></dd>
                 <dt>When the script ends</dt>
                 <dd><pre><code>
-  // not doing particularly usefull in this step
-  // but the hook is here is we need to
-  done();</code></pre></dd>
+// not doing particularly usefull in this step
+// but the hook is here is we need to
+done();</code></pre></dd>
                 <dt>Then '.test/test.tgz' should be the same as 'test/fixtures/tar/test.tgz'</dt>
                 <dd><pre><code>
-  helpers.assertLength('.test/test.tgz', 'test/fixtures/tar/test.tgz', done);</code></pre></dd>
+helpers.assertLength('.test/test.tgz', 'test/fixtures/tar/test.tgz', done);</code></pre></dd>
               </dl>
             </section>
           </dl>
@@ -331,32 +497,78 @@
       <h1>USEMIN task</h1>
       <dl>
         <section class="suite">
-          <h1>As a  build script user I want to be able to run the usemin task So that I can see the usemin task in action</h1>
+          <h1>As a build script user I want to be able to run the usemin task So that I can see the usemin task in action</h1>
           <dl>
             <section class="suite">
               <h1>usemin task</h1>
               <dl>
                 <dt>Given I run the 'usemin' task</dt>
                 <dd><pre><code>
-  // runt the usemin task
-  helpers.run('usemin', done);</code></pre></dd>
+// runt the usemin task
+helpers.run(&quot;usemin&quot;, done);</code></pre></dd>
                 <dt>When the script ends</dt>
                 <dd><pre><code>
-  // not doing anything particularly usefull in this step
-  // but the hook is here if we need to
-  done();</code></pre></dd>
+// not doing anything particularly usefull in this step
+// but the hook is here if we need to
+done();</code></pre></dd>
                 <dt>Then '.test/usemin.html' should be the same as 'test/fixtures/usemin/index.html'</dt>
                 <dd><pre><code>
-  // todo: task log output doesn't return things that were changed between
-  // &lt;!-- build:&lt;target&gt; path/to/foo.js --&gt; directives
-  helpers.assertFile('.test/usemin.html', 'test/fixtures/usemin/index.html');
-  done();</code></pre></dd>
+// todo: task log output doesn&quot;t return things that were changed between
+// &lt;!-- build:&lt;target&gt; path/to/foo.js --&gt; directives
+helpers.assertFile(&quot;.test/usemin.html&quot;, &quot;test/fixtures/usemin/index.html&quot;);
+done();</code></pre></dd>
+              </dl>
+            </section>
+            <section class="suite">
+              <h1>usemin task with reved imgs</h1>
+              <dl>
+                <dt>Given I run the 'rev usemin' task</dt>
+                <dd><pre><code>
+// runt the usemin task
+helpers.run(&quot;css rev usemin&quot;, done);</code></pre></dd>
+                <dt>When the script ends</dt>
+                <dd><pre><code>
+// not doing anything particularly usefull in this step
+// but the hook is here if we need to
+done();</code></pre></dd>
+                <dt>Then '.test/usemin.html' should be the same as 'test/fixtures/usemin/index.html'</dt>
+                <dd><pre><code>
+// todo: task log output doesn&quot;t return things that were changed between
+// &lt;!-- build:&lt;target&gt; path/to/foo.js --&gt; directives
+helpers.copyFile(&quot;.test/usemin.html&quot;, &quot;test/fixtures/usemin/reved.html&quot;);
+helpers.assertFile(&quot;.test/usemin.html&quot;, &quot;test/fixtures/usemin/reved.html&quot;);
+done();</code></pre></dd>
+                <dt>And I should see 'img/59928801.1.png' in '.test/usemin.html'</dt>
+                <dd><pre><code>
+var test = new RegExp(&quot;img/59928801.1.png&quot;);
+fs.readFile(&quot;.test/usemin.html&quot;, function(err, body) {
+  if(err) return done(err);
+  assert.ok(test.test(body));
+  done();
+});</code></pre></dd>
+                <dt>And I should see 'img/f67f4a27.6.jpg' in '.test/css/style.css'</dt>
+                <dd><pre><code>
+var test = new RegExp(&quot;img/f67f4a27.6.jpg&quot;);
+fs.readFile(&quot;.test/css/e1823e1a.style.css&quot;, function(err, body) {
+  if(err) return done(err);
+  assert.ok(test.test(body), 'Missing reved img in style.css');
+  done();
+});</code></pre></dd>
+                <dt>And I should see 'img/f67f4a27.6.jpg' in '.test/css/style.css'</dt>
+                <dd><pre><code>
+var test = new RegExp(&quot;img/f67f4a27.6.jpg&quot;);
+fs.readFile(&quot;.test/css/e1823e1a.style.css&quot;, function(err, body) {
+  if(err) return done(err);
+  assert.ok(test.test(body), 'Missing reved img in style.css');
+  done();
+});</code></pre></dd>
               </dl>
             </section>
           </dl>
         </section>
       </dl>
     </section>
+
   </div>
 
   <script>
