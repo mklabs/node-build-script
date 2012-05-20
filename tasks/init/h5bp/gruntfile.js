@@ -96,7 +96,18 @@ module.exports = function(grunt) {
     }{% if (min_concat) { %},
     uglify: {}{% } %}{% if (require_js) { %},
     rjs: {
-      name: 'main'
+      modules: [{
+        name: 'main',
+      }],
+      dir: '{%= output %}/js',
+      appDir: 'js',
+      baseUrl: './',
+      pragmas: {
+        doExclude: true
+      },
+      skipModuleInsertion: false,
+      optimizeAllPluginResources: true,
+      findNestedDependencies: true
     }{% } %}
   });
 

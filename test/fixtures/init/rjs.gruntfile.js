@@ -72,7 +72,18 @@ module.exports = function(grunt) {
       }
     },
     rjs: {
-      name: 'main'
+      modules: [{
+        name: 'main',
+      }],
+      dir: 'publish/js',
+      appDir: 'js',
+      baseUrl: './',
+      pragmas: {
+        doExclude: true
+      },
+      skipModuleInsertion: false,
+      optimizeAllPluginResources: true,
+      findNestedDependencies: true
     }
   });
 

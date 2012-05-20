@@ -200,7 +200,7 @@ helpers.assertDir = function(actual, expected) {
     var expectHex = fs.readFileSync(path.join(expected, file), 'base64');
     var actualHex = fs.readFileSync(fname, 'base64');
     // if it's not, it might take a little while for mocha to do the diff
-    helpers.equal(actualHex, expectHex);
+    helpers.equal(file + ' - ' + actualHex, file + ' - ' + expectHex);
   });
 };
 

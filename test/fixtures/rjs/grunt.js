@@ -38,32 +38,11 @@ module.exports = function(grunt) {
       files: '<config:lint.files>',
       tasks: 'lint qunit'
     },
-    
-    pkg: '<json:package.json>',
-    meta: {
-      banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-        '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-        '<%= pkg.homepage ? "* " + pkg.homepage + "\n" : "" %>' +
-        '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-        ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
-    },
     lint: {
       files: ['grunt.js', 'js/**/*.js', 'test/**/*.js']
     },
     qunit: {
       files: ['test/**/*.html']
-    },
-    concat: {
-      dist: {
-        src: ['js/plugins.js', 'js/main.js'],
-        dest: 'js/name-0.1.0.js'
-      }
-    },
-    min: {
-      dist: {
-        src: 'js/name-0.1.0.js',
-        dest: 'js/main.js'
-      }
     },
     jshint: {
       options: {
@@ -83,12 +62,11 @@ module.exports = function(grunt) {
         jQuery: true
       }
     },
-    uglify: {},
     rjs: {
       modules: [{
         name: 'main',
       }],
-      dir: 'publish/js',
+      dir: 'js',
       appDir: 'js',
       baseUrl: './',
       pragmas: {
@@ -100,17 +78,17 @@ module.exports = function(grunt) {
     }
   });
 
-  
+
   // in rjs setup, the concat and min task are overriden to use rjs optimizr
   grunt.renameTask('concat', '_concat').registerTask('concat', 'rjs (noop)', function() {
     grunt.log.writeln('the concat in rjs setup is a noop, rjs optimizer somewhat replace js concatenation');
   });
   grunt.renameTask('min', '_min').registerTask('min', 'rjs');
-  
+
 
   // uncomment this line if you're using the build script as a grunt plugin
   // it should be installed locally, even better if put in your package.json's
   // dependency
   //
-  // grunt.loadNpmTasks('node-build-script');
+  grunt.loadNpmTasks(require('path').join(__dirname, '../'));
 };

@@ -13,7 +13,7 @@
 - ✔ usemin.js
 - ✔ docs.js
 - ✔ html.js
-- init
+- ✔ init.js
 
 **to be done**
 - dom.js
