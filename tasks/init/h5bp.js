@@ -52,10 +52,7 @@ h5bp.template = function(grunt, init, done) {
   h5bp.customPrompt();
 
   (function run(step) {
-    if(!step) {
-      fs.writeFileSync(path.join(__dirname, 'templates/rjs.json'), JSON.stringify(h5bp.props, null, 2));
-      return h5bp.end(init, h5bp.props, done);
-    }
+    if(!step) return h5bp.end(init, h5bp.props, done);
 
     h5bp[step](function(err, props) {
       if(err) {
