@@ -32,9 +32,6 @@ module.exports = function(grunt) {
     files.map(grunt.file.read).forEach(function(content, i) {
       var p = files[i];
 
-      // get extension and trigger corresponding helpers
-      var ext = path.extname(p).slice(1);
-
       grunt.log.subhead('usemin - ' + p);
 
       // make sure to convert back into utf8, `file.read` when used as a
@@ -43,13 +40,13 @@ module.exports = function(grunt) {
       content = content.toString();
 
       // ext-specific directives handling and replacement of blocks
-      if(!!grunt.task._helpers['usemin:pre:' + ext]) {
-        content = grunt.helper('usemin:pre:' + ext, content);
+      if(!!grunt.task._helpers['usemin:pre:' + name]) {
+        content = grunt.helper('usemin:pre:' + name, content);
       }
 
       // actual replacement of revved assets
-      if(!!grunt.task._helpers['usemin:post:' + ext]) {
-        content = grunt.helper('usemin:post:' + ext, content);
+      if(!!grunt.task._helpers['usemin:post:' + name]) {
+        content = grunt.helper('usemin:post:' + name, content);
       }
 
       // write the new content to disk

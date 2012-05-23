@@ -11,6 +11,10 @@ describe("USEMIN task", function() {
 
   before(helpers.before);
 
+  before(function(done) {
+    helpers.copy(['usemin/tmpl.hbs', 'usemin/tmpl.mustache'], '.test/views', done);
+  });
+
   describe("As a build script user I want to be able to run the usemin task So that I can see the usemin task in action", function() {
 
     describe("usemin task", function() {
@@ -95,13 +99,14 @@ describe("USEMIN task", function() {
         });
       });
 
-      it("And I should see 'img/f67f4a27.6.jpg' in '.test/css/style.css'", function(done) {
-        var test = new RegExp("img/f67f4a27.6.jpg");
-        fs.readFile(".test/css/e1823e1a.style.css", function(err, body) {
-          if(err) return done(err);
-          assert.ok(test.test(body), 'Missing reved img in style.css');
-          done();
-        });
+      it("And '.test/views/tmpl.hbs' should be the same as 'test/fixtures/usemin/expected/tmpl.hbs'", function(done) {
+        helpers.assertFile(".test/views/tmpl.hbs", "test/fixtures/usemin/expected/tmpl.hbs");
+        done();
+      });
+
+      it("And '.test/views/tmpl.mustache' should be the same as 'test/fixtures/usemin/expected/tmpl.mustache'", function(done) {
+        helpers.assertFile(".test/views/tmpl.mustache", "test/fixtures/usemin/expected/tmpl.mustache");
+        done();
       });
 
     });
