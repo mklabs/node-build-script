@@ -15,16 +15,21 @@ describe("CSS task", function() {
     // copy in some files, with @imports to test out the inline imports
     var files = fs.readdirSync(path.join(__dirname, '../fixtures/css'))
       .filter(function(f) {
-        return !(/expected/).test(f) && path.extname(f);
+        return !(/expected/).test(f) && path.extname(f) === '.css';
       })
       .map(function(f) {
         return path.join('css', f);
       });
 
-    helpers.copy(files, '.test/css', done);
+    // gruntfile with our css config for test
+    helpers.copyFile('test/fixtures/css/grunt.js', '.test/grunt.js', function(err) {
+      if(err) return done(err);
+      helpers.copy(files, '.test/css', done);
+    });
+
   });
 
-  describe("As a  build script user I want to be able to run the css task So that I can see the css task in action", function() {
+  describe("As a build script user I want to be able to run the css task So that I can see the css task in action", function() {
 
     describe("css task", function() {
 
@@ -39,8 +44,8 @@ describe("CSS task", function() {
         done();
       });
 
-      it("Then './test/css/style.css' should be the same as 'test/fixtures/css/expected.css'", function(done) {
-        helpers.assertFile('.test/css/style.css', 'test/fixtures/css/expected.css');
+      it("Then './test/css/compressed.css' should be the same as 'test/fixtures/css/expected.css'", function(done) {
+        helpers.assertFile('.test/css/compressed.css', 'test/fixtures/css/expected.css');
         done();
       });
 

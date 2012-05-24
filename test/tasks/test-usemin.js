@@ -72,9 +72,6 @@ describe("USEMIN task", function() {
       });
 
       it("Then '.test/usemin.html' should be the same as 'test/fixtures/usemin/index.html'", function(done) {
-        // todo: task log output doesn"t return things that were changed between
-        // <!-- build:<target> path/to/foo.js --> directives
-        helpers.copyFile(".test/usemin.html", "test/fixtures/usemin/reved.html");
         helpers.assertFile(".test/usemin.html", "test/fixtures/usemin/reved.html");
         done();
       });

@@ -6,16 +6,12 @@ var fs = require('fs'),
 
 module.exports = function(grunt) {
 
-
-
   // **css* task works pretty much the same as grunt's min task. The task
   // target is the destination, data is an array of glob patterns. These
   // files are concataned and run through requirejs optimizer to handle
   // @import inlines in CSS files.
   grunt.task.registerMultiTask('css', 'Concats, replaces @imports and minifies the CSS files', function() {
-    this.requiresConfig('staging');
-
-    // if defined, files get prepended by the output config value
+    // css files for this subtarget destination
     var files = this.data;
 
     // subtarget name is the output destination
@@ -23,6 +19,12 @@ module.exports = function(grunt) {
 
     // async task
     var cb = this.async();
+
+    // write the destination css, a simple concat of the original files
+    // without compression
+    grunt.file.write(target, grunt.helper('mincss', files, {
+      nocompress: true
+    }));
 
     // replace @import statements
     //

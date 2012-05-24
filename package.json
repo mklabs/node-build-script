@@ -2,7 +2,7 @@
   "author": "Paul Irish, Divya Manian",
   "name": "node-build-script",
   "description": "HTML5 Boilerplate node build script - Professional front-end template. So much goodness baked in by default",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "homepage": "http://h5bp.com",
   "bin": {
     "html5-boilerplate": "./bin/h5bp",

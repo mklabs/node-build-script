@@ -17,7 +17,7 @@ describe("build:minify task", function() {
 
       describe("When the build script ends", function() {
         it("Then the outcome should be 'test/fixtures/default/build.minify.html'", function() {
-          helpers.copyFile('.test/publish/index.html', 'test/fixtures/default/build.minify.html');
+          helpers.assertFile('.test/publish/index.html', 'test/fixtures/default/build.minify.html');
         });
       });
     });
