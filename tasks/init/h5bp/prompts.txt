@@ -13,7 +13,7 @@
 create. The defaults values will create a standars h5bp project, but you
 might want to go for something different like:
 
-    js/   → javascritps/
+    js/   → javascripts/
     css/  → stylesheets/
     img/  → images/
 
