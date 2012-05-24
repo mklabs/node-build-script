@@ -56,7 +56,7 @@ help:    You can change here the basic layout of the project you're about to
 help:   create. The defaults values will create a standars h5bp project, but you
 help:   might want to go for something different like:
 help:
-help:       js/   → javascritps/
+help:       js/   → javascripts/
 help:       css/  → stylesheets/
 help:       img/  → images/
 help:
