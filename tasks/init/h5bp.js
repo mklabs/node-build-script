@@ -180,13 +180,14 @@ h5bp.gruntfile = function(cb) {
     {
       name: 'require_js',
       message: 'Will this project use require.js to organize it\'s javascript?',
-      default: 'y/N',
+      default: 'Y/n',
       warning: 'This is used in the rjs task.'
     }
   ], function(err, props) {
     props.dom = /y/i.test(props.dom);
     props.min_concat = /y/i.test(props.min_concat);
     props.package_json = /y/i.test(props.package_json);
+    props.require_js = /y/i.test(props.require_js);
     props.test_task = props.dom ? 'qunit' : 'test';
     props.file_name = '<%= pkg.name %>';
 
