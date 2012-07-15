@@ -7,16 +7,17 @@ module.exports = function(grunt) {
     staging: '{%= staging %}',
     // final build output
     output: '{%= output %}',
-    // filter any files matching one of the below pattern during mkdirs task
-    // the pattern in the .gitignore file should work too.
-    exclude: '.git* build/** node_modules/** grunt.js package.json *.md'.split(' '),
+
+    // Create the build dirs
     mkdirs: {
-      staging: '<config:exclude>'
+      staging: './'
     },
+
     // concat css/**/*.css files, inline @import, output a single minified css
     css: {
       'css/style.css': ['{%= css_dir %}/**/*.css']
     },
+
     // Renames JS/CSS to prepend a hash of their contents for easier
     // versioning
     rev: {
@@ -24,20 +25,28 @@ module.exports = function(grunt) {
       css: '{%= css_dir %}/**/*.css',
       img: '{%= img_dir %}/**'
     },
+
     // update references in html to revved files
     usemin: {
-      files: ['**/*.html']
+      html: ['**/*.html'],
+      css: ['**/*.css']
     },
+
     // html minification
-    html: '<config:usemin>',
+    html: {
+      files: '<config:usemin.html>'
+    },
+
     // Optimizes JPGs and PNGs (with jpegtran & optipng)
     img: {
       dist: '<config:rev.img>'
     },
+
     watch: {
       files: '<config:lint.files>',
       tasks: 'lint {%= test_task %}'
     },
+
     {% if (min_concat || require_js) { if (package_json) { %}
     pkg: '<json:package.json>',
     meta: {
@@ -99,7 +108,7 @@ module.exports = function(grunt) {
       modules: [{
         name: 'main',
       }],
-      dir: '{%= output %}/js',
+      dir: 'js/',
       appDir: 'js',
       baseUrl: './',
       pragmas: {
