@@ -1,4 +1,3 @@
-
 var fs = require('fs'),
   path = require('path'),
   utils = require('../').utils,
@@ -14,8 +13,10 @@ module.exports = function(grunt) {
   });
 
   grunt.registerMultiTask('mkdirs', 'Prepares the build dirs', function() {
+    var name = this.target;
+    
     this.requires('clean');
-    this.requiresConfig('staging');
+    this.requiresConfig(name);
 
     // store the current working directory, a subset of tasks needs to update
     // the grunt.file.setBase accordinly on intermediate/ dir. And we might want
@@ -23,8 +24,7 @@ module.exports = function(grunt) {
     var base = grunt.config('base') || grunt.option('base') || process.cwd();
     grunt.config('base', base);
 
-    var name = this.target,
-      target = path.resolve(grunt.config(name)),
+    var target = path.resolve(grunt.config(name)),
       source = path.resolve(this.data),
       cb = this.async();
 
@@ -41,7 +41,7 @@ module.exports = function(grunt) {
       else grunt.log.ok(source + ' -> ' + target);
 
       // Once copy done, ensure the current working directory is the intermediate one.
-      grunt.file.setBase(grunt.config('staging'));
+      grunt.file.setBase(grunt.config(name));
       cb(!e);
     });
   });
