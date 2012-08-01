@@ -1,0 +1,1 @@
+define(["require","exports","module"],function(a,b){b.name="alpha"})
