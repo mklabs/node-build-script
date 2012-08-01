@@ -19,6 +19,22 @@ module.exports = function(grunt) {
       };
     });
 
+    if (options.almond === true) {
+      grunt.log.ok('Including almond.js');
+      // resolve almond path
+      options.paths.almond = require.resolve('almond').replace('.js', '');
+      // include almond to each module
+      options.modules.forEach(function (module, idx) {
+        grunt.verbose.ok('Adding almond to module: ' + module.name);
+        // append almond to includes
+        if (module.include) {
+          module.include.push('almond');
+        } else {
+          module.include = ['almond'];
+        }
+      });
+    }
+
     rjs.optimize(options, function() {
       originals.forEach(function(m) {
         var filepath = path.join(options.dir, m.name + '.js');
