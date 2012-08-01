@@ -22,6 +22,9 @@ module.exports = function(grunt) {
     if (options.almond === true) {
       grunt.log.ok('Including almond.js');
       // resolve almond path
+      if (typeof options.paths === 'undefined') {
+        options.paths = {};
+      }
       options.paths.almond = require.resolve('almond').replace('.js', '');
       // include almond to each module
       options.modules.forEach(function (module, idx) {

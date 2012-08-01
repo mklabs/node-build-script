@@ -247,3 +247,11 @@ helpers.copyFile = function(src, dst, cb) {
     fs.createReadStream(src).pipe(fs.createWriteStream(dst)).on('close', cb);
   });
 };
+
+// a simple file remove helper
+helpers.rmFile = function(path, cb) {
+  if (!cb) {
+    return fs.unlinkSync(path);
+  }
+  fs.unlink(path, cb);
+}
