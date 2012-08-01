@@ -106,6 +106,15 @@ module.exports = function(grunt) {
     grunt.log.verbose.writeln('Update the HTML to reference our concat/min/revved script files');
     content = grunt.helper('replace', content, /<script.+src=['"](.+)["'][\/>]?><[\\]?\/script>/gm);
     content = grunt.helper('replace', content, /<script.+data-main=['"](.+)["'].*src=.*[\/>]?><[\\]?\/script>/gm);
+    if (grunt.config('rjs.almond')) {
+      content = content.replace(/<script.+data-main=['"](.+)["'].*src=.*[\/>]?><[\\]?\/script>/gm, function(match, src) {
+        var res = match.replace(/\s*src=['"].*["']/gm, '').replace('data-main', 'src');
+        grunt.log.ok('almond')
+          .writeln('was ' + match)
+          .writeln('now ' + res);
+        return res;
+      });
+    }
 
     grunt.log.verbose.writeln('Update the HTML with the new css filenames');
     content = grunt.helper('replace', content, /<link rel=["']?stylesheet["']?\shref=['"](.+)["']\s*>/gm);
