@@ -11,8 +11,7 @@ environment.
 This node/grunt-based build script tries to be as close as possible to
 the [ant-build-script][], a really great project you should check out.
 
-It is still in early stage of development, but it'll get
-better and better, based on [your feedback](https://github.com/h5bp/node-build-script/issues).
+It is still in early stage of development, but will get better, thanks to [your feedback](https://github.com/h5bp/node-build-script/issues).
 
 ## Quick start
 
