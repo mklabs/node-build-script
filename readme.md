@@ -42,7 +42,7 @@ $ npm link
 
 * Concats / Compresses JS
 * Concats / Compresses CSS
-* Inline CSS imports via
+* Inline CSS imports via RequireJS
 * Basic to aggressive html minification (via [html-minfier][])
 * Optimizes JPGs and PNGs (with jpegtran & optipng)
 * Renames JS/CSS to prepend a hash of their contents for easier versioning
