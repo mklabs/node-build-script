@@ -1,7 +1,9 @@
 
 var fs = require('fs'),
   path = require('path'),
-  which = require('which');
+  which = require('which'),
+  exists = fs.exists || path.exists;
+
 
 //
 // This task takes care of img optimizations by running a set of `.png`
@@ -86,10 +88,28 @@ module.exports = function(grunt) {
     cb = cb || function() {};
     opts.args = opts.args ? opts.args : ['-copy', 'none', '-optimize', '-outfile', 'jpgtmp.jpg'];
 
+    var tmpfile = 'jpgtmp.jpg';
+
     grunt.helper('which', 'jpegtran', function(err, cmdpath) {
       if(err) return grunt.helper('not installed', 'jpegtran', cb);
+
+      // Remove temp JPEGtran file when finished
+      function clean() {
+        exists(tmpfile, function(exists) {
+          if (!exists) return cb();
+          grunt.log.subhead('** Removing: ' + tmpfile);
+          fs.unlink(tmpfile, function(err) {
+            if (err) {
+              grunt.log.error(err);
+              return cb(false);
+            }
+            return cb();
+          });
+        });
+      }
+
       (function run(file) {
-        if(!file) return cb();
+        if(!file) return clean();
         grunt.log.subhead('** Processing: ' + file);
         var jpegtran = grunt.utils.spawn({
           cmd: cmdpath,
@@ -102,9 +122,9 @@ module.exports = function(grunt) {
         jpegtran.on('exit', function(code) {
           if(code) return grunt.warn('jpgtran exited unexpectedly with exit code ' + code + '.', code);
           // output some size info about the file
-          grunt.helper('min_max_stat', 'jpgtmp.jpg', file);
+          grunt.helper('min_max_stat', tmpfile, file);
           // copy the temporary optimized jpg to original file
-          fs.createReadStream('jpgtmp.jpg')
+          fs.createReadStream(tmpfile)
             .pipe(fs.createWriteStream(file)).on('close', function() {
               run(files.shift());
             });
