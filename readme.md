@@ -77,10 +77,10 @@ $ npm link
 $ npm test
 ```
 
-[grunt]: https://github.com/cowboy/grunt
-[grunt documentation]: https://github.com/cowboy/grunt/blob/master/docs/toc.md
-[grunt plugin]: https://github.com/cowboy/grunt/blob/master/docs/plugins.md
-[Getting Started]: https://github.com/cowboy/grunt/blob/master/docs/getting_started.md#readme)
+[grunt]: https://github.com/gruntjs/grunt
+[grunt documentation]: https://github.com/gruntjs/grunt/blob/master/docs/toc.md
+[grunt plugin]: https://github.com/gruntjs/grunt/blob/master/docs/plugins.md
+[Getting Started]: https://github.com/gruntjs/grunt/blob/master/docs/getting_started.md#readme)
 [JSDOM]: https://github.com/tmpvar/jsdom
 [ant-build-script]: https://github.com/h5bp/ant-build-script
 [socket.io]: http://socket.io
