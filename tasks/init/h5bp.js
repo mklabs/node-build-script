@@ -89,7 +89,7 @@ h5bp.project = function project(cb) {
 
   h5bp.prompt(prompts.trim().split(' '), function(err, props) {
     if(/n/i.test(props.force_update) && exists) return cb(null, props);
-    var url = 'http://nodeload.github.com/h5bp/html5-boilerplate/tarball/master';
+    var url = 'http://github.com/h5bp/html5-boilerplate/tarball/master';
     utils.fetch.call(grunt, url, path.join(__dirname, 'h5bp/root'), function(err) {
       if(err) return cb(err);
       cb(null, props);
@@ -226,7 +226,7 @@ h5bp.end = function end(init, props, cb) {
 
   // Generate package.json file.
   props.dependencies = {
-    'node-build-script': 'http://nodeload.github.com/h5bp/node-build-script/tarball/dev'
+    'node-build-script': 'http://github.com/h5bp/node-build-script/tarball/master'
   };
 
   init.writePackageJSON('package.json', props);

@@ -25,7 +25,7 @@ $ curl https://raw.github.com/gist/2359881/install.sh | sh
 **Slightly less fancier**
 
 ```sh
-$ npm install https://github.com/h5bp/node-build-script/tarball/master -g
+$ npm install http://github.com/h5bp/node-build-script/tarball/master -g
 $ h5bp help
 $ h5bp init
 ```
