@@ -2,7 +2,7 @@ The h5bp build script now has three versions, the main one being
 the [ant-build-script][]. This
 project is the node version, and it uses [Grunt][grunt] as a build tool.
 
-It is packaged as a [grunt plugin][] and provides you a bunch of tasks and
+It is packaged as a [grunt plugin](https://github.com/gruntjs/grunt/wiki/Creating-plugins) and provides you a bunch of tasks and
 helpers to help improve the performance of your site/app in a production
 environment.
 
@@ -56,8 +56,8 @@ $ npm link
 ## Getting started
 
 * [Install](https://github.com/h5bp/node-build-script/wiki/install) the package
-* Check out the extensive [grunt documentation][], specifically the
-  [Getting Started][] section.
+* Check out the extensive [grunt documentation](https://github.com/gruntjs/grunt/blob/master/README.md), specifically the
+  [Getting Started](https://github.com/gruntjs/grunt/wiki/Getting-started) section.
 * Learn more about [Usage](https://github.com/h5bp/node-build-script/wiki/overview)
   and [Configuration](https://github.com/h5bp/node-build-script/wiki/configuration)
 * Look at the [available tasks](https://github.com/h5bp/node-build-script/wiki/tasks)
