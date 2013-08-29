@@ -1,0 +1,87 @@
+The h5bp build script now has three versions, the main one being
+the [ant-build-script][]. This
+project is the node version, and it uses [Grunt][grunt] as a build tool.
+
+It is packaged as a [grunt plugin](https://github.com/gruntjs/grunt/wiki/Creating-plugins) and provides you a bunch of tasks and
+helpers to help improve the performance of your site/app in a production
+environment.
+
+## Description
+
+This node/grunt-based build script tries to be as close as possible to
+the [ant-build-script][], a really great project you should check out.
+
+It is still in early stage of development, but will get better, thanks to [your feedback](https://github.com/h5bp/node-build-script/issues).
+
+## Quick start
+
+**Fancy one line install:**
+
+```sh
+# see the gist: https://gist.github.com/2359881
+$ curl https://raw.github.com/gist/2359881/install.sh | sh
+```
+
+**Slightly less fancier**
+
+```sh
+$ npm install http://github.com/h5bp/node-build-script/tarball/master -g
+$ h5bp help
+$ h5bp init
+```
+
+**Developing locally**
+
+```sh
+$ git clone git://github.com/h5bp/node-build-script.git
+$ cd node-build-script
+$ npm link
+```
+
+## Features
+
+* Concats / Compresses JS
+* Concats / Compresses CSS
+* Inline CSS imports via RequireJS
+* Basic to aggressive html minification (via [html-minfier][])
+* Optimizes JPGs and PNGs (with jpegtran & optipng)
+* Renames JS/CSS to prepend a hash of their contents for easier versioning
+* Revises the file names of your assets so that you can use heavy caching
+* Updates your HTML to reference these new hyper-optimized CSS + JS files
+* Experimental dom-based (with [JSDOM]()) build system.
+* May rerun the build script on file changes (grunt's watch task &#10084;)
+* May automatically reload the page in your browsers whenever watched files
+  change, through some [socket.io] magic.
+
+## Getting started
+
+* [Install](https://github.com/h5bp/node-build-script/wiki/install) the package
+* Check out the extensive [grunt documentation](https://github.com/gruntjs/grunt/blob/master/README.md), specifically the
+  [Getting Started](https://github.com/gruntjs/grunt/wiki/Getting-started) section.
+* Learn more about [Usage](https://github.com/h5bp/node-build-script/wiki/overview)
+  and [Configuration](https://github.com/h5bp/node-build-script/wiki/configuration)
+* Look at the [available tasks](https://github.com/h5bp/node-build-script/wiki/tasks)
+* Test out the experimental
+  [dom-based](https://github.com/h5bp/node-build-script/wiki/dom) build
+  system.
+
+## Project information
+
+* Source: http://github.com/h5bp/node-build-script
+* Docs: http://github.com/h5bp/node-build-script/wiki
+* Issues: http://github.com/h5bp/node-build-script/issues
+
+## Run the tests
+
+```sh
+$ npm test
+```
+
+[grunt]: https://github.com/gruntjs/grunt
+[grunt documentation]: https://github.com/gruntjs/grunt/blob/master/docs/toc.md
+[grunt plugin]: https://github.com/gruntjs/grunt/blob/master/docs/plugins.md
+[Getting Started]: https://github.com/gruntjs/grunt/blob/master/docs/getting_started.md#readme)
+[JSDOM]: https://github.com/tmpvar/jsdom
+[ant-build-script]: https://github.com/h5bp/ant-build-script
+[socket.io]: http://socket.io
+[html-minifier]: https://github.com/kangax/html-minifier
